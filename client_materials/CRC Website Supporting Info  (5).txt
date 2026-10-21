@@ -1,0 +1,84 @@
+Coast Road Capital Website Supporting Outline and Information
+*Any images such as logos will appear within google drive, if more are needed just let me know
+and I can get more for any area
+Website Styles in Similar Field
+Omnitrax - https://omnitrax.com/services/
+- I think this is the best rail oriented one out of all. Outlines all the basic info and processes
+(moreso than others) - but to the naked eye or prospective business owner it is very blunt
+and doesn’t provide a ton of detail
+Trinity Rail - https://www.trinityrail.com
+- Does good at showcasing equipment
+Herzog - https://www.herzog.com/
+- Contains multiple divisions similar to CRC, however I think they do an awful job of
+showing them off. This would be a good industry comparison site of a successful
+business but not a great website.
+Prologis - https://www.prologis.com/property-search
+- Property search tool and overall website feel, information readiness, and layout is really
+nice. Similar in a way to what Claude designed but this shows a pure execution. The
+essential solutions tab is also very good.
+Brand Colors and Fonts
+- The coloring and font is loosely based off two namesake historic railroads, the Seaboard
+Coast Line RR and the Milwaukee Road (Chicago, St. Paul, Milwaukee, and Pacific).
+- Attached at three logos (Will create a drive with files) along with two photos of the
+locomotives for both railroads
+- Logo is loosely based off the MILW herald under the cab window of the orange
+locomotive
+
+-- 1 of 4 --
+
+- Fonts are loosely based upon the Seaboard Coast Line “speed lettering” which is
+branding across the entire side of the locomotive “long hood
+- I was unable to find/source an exact font for the SCL speed lettering. But if you
+are able to find it, I would say implement it into the website. I had Claude attempt
+to recreate it and the skeleton shows that result. I’m not unhappy with it though
+- I was able to find a font called Seaboard Block from RailFonts, which is based on
+original Seaboard Coast Line lettering diagrams. This appears to be one of the closest
+available options to the historic SCL lettering.
+- Link:
+https://www.railfonts.com/cgi-bin/font_shop/fontshop.cgi?ACTION=enter&thisp
+age=page10.html
+- I haven't confirmed whether it is an exact match for the slanted "speed lettering"
+used on SCL locomotives, but I would like to explore using it for website
+headings and titles if it fits.
+- If the font isn't suitable, Barlow Condensed ExtraBold Italic or Roboto
+Condensed Black Italic could be alternatives. For regular website text and
+descriptions, I would prefer something cleaner and easier to read at, you can use
+your discretion
+- The lettering within the existing CRC logo should remain unchanged.
+Flavicon
+
+-- 2 of 4 --
+
+Red: #AA2E1F
+Cream: #EDE6D4
+Black: #0A0A09
+For the Railcar Leasing section, I would like the equipment catalog organized primarily by
+railcar type, with more specific sizes and configurations available within each category.
+The seven main categories should be Boxcars, Covered Hoppers, Open-Top Hoppers, Gondolas,
+Centerbeam Flatcars, General-Purpose/Bulkhead Flatcars, and Tank Cars. We do not plan to
+feature intermodal equipment or autoracks initially.
+Within each category, customers should be able to browse common lengths, cubic capacities,
+typical commodities, and loading/unloading configurations. I would like the structure to support
+more detailed manufacturer-specific railcar models and technical specification sheets in the
+future.
+For now, the catalog should function as an equipment sourcing and leasing inquiry tool, rather
+than displaying unverified inventory as immediately available.
+Under each equipment type, I think it would be best to do a broad outline of the car sizes and
+capacities, and some generic info on what industries they serve. Here are some examples:
+1. Boxcars - 50-ft standard, 50-ft high-cube, 60-ft standard, 60-ft high-cube, insulated, refrigerated
+2. Covered Hoppers - 3,230 cu ft pressure differential, 3,281 cu ft cement/mineral, 4,359 cu ft industrial, 4,650–4,750 cu ft,
+5,161–5,400 cu ft grain, 5,660–5,850 cu ft pneumatic, 6,241–6,541 cu ft large-capacity
+3. Open-Top Hoppers - 2,400 cu ft, 2,480 cu ft rapid discharge, 2,900 cu ft aggregate, 3,000–4,000 cu ft bulk
+4. Gondolas - 42-ft coil car, 52-ft mill gondola, 65/66-ft mill gondola, high-sided gondola, rotary gondola
+5. Centerbeam Flatcars - 65-ft, 73-ft, riser-deck, riserless-deck
+6. General-Purpose & Bulkhead Flatcars - 50-ft bulkhead, 60-ft bulkhead, 62-ft bulkhead, 60-ft general-purpose, 89-ft specialty
+flatcar, heavy-duty flatcar
+7. Tank Cars - 13,000–19,000 gallon, 20,000–25,000 gallon, 25,000–30,000+ gallon; insulated, non-insulated, pressure and
+non-pressure configurations
+
+-- 3 of 4 --
+
+
+
+-- 4 of 4 --
+

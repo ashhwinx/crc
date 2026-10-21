@@ -1,0 +1,17 @@
+{
+  "name": "coast-road-capital-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Coast Road Capital (CRC) Corporate MERN Application",
+  "scripts": {
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "dev": "concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build:client": "npm --prefix client run build",
+    "install:all": "npm install && npm --prefix client install && npm --prefix server install",
+    "start": "npm --prefix server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
