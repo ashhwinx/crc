@@ -87,9 +87,7 @@ export const Contact: React.FC = () => {
       >
         <div className="container">
           <div style={{ maxWidth: '840px' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1.25rem' }}>
-              Direct Inquiries &bull; Commercial Review
-            </span>
+          
             <h1
               style={{
                 fontSize: 'clamp(2.4rem, 4.8vw, 3.85rem)',
@@ -240,31 +238,31 @@ export const Contact: React.FC = () => {
                   marginBottom: '2rem',
                 }}
               >
-                <div style={{ height: '180px', overflow: 'hidden', position: 'relative' }}>
+                <div style={{ height: '180px', overflow: 'hidden' }}>
                   <img
                     src="/images/track-construction-2.jpg"
                     alt="Direct North American Rail Siding Connection"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
+                </div>
+                <div style={{ padding: '1.25rem 1.4rem' }}>
                   <div
                     style={{
-                      position: 'absolute',
-                      bottom: '10px',
-                      left: '10px',
-                      backgroundColor: 'rgba(10, 10, 9, 0.85)',
-                      backdropFilter: 'blur(4px)',
-                      color: '#F8FAFC',
-                      fontSize: '0.72rem',
-                      fontWeight: 600,
-                      padding: '0.25rem 0.6rem',
-                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: '#AA2E1F',
+                      marginBottom: '0.45rem',
                     }}
                   >
-                    CONTINENTAL SIDING INTERCHANGE
+                    <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                    <span>Continental Siding Interchange</span>
                   </div>
-                </div>
-                <div style={{ padding: '1.1rem 1.25rem' }}>
-                  <span style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.55, display: 'block' }}>
+                  <span style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.6, display: 'block' }}>
                     Coordinating direct rolling stock deliveries across Class I railroads, regional shortlines, and private customer sidings nationwide.
                   </span>
                 </div>

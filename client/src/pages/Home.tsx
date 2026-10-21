@@ -8,10 +8,8 @@ import {
   FileText,
   PhoneCall,
   ShieldCheck,
-  Sliders,
   TrainTrack,
   Check,
-  Activity,
   Layers,
 } from 'lucide-react';
 import { TrackMotif } from '../components/common/TrackMotif';
@@ -155,13 +153,7 @@ export const Home: React.FC = () => {
 
         <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
           <div style={{ maxWidth: '820px' }}>
-            {/* Railroad Eyebrow Badge */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.5rem' }}>
-              <span className="badge badge-amber" style={{ padding: '0.4rem 0.9rem' }}>
-                <ShieldCheck size={14} style={{ color: '#D97706' }} />
-                American Railroad Freight &bull; Equipment Sourcing &amp; Leasing
-              </span>
-            </div>
+           
 
             {/* Main Headline */}
             <h1
@@ -236,12 +228,7 @@ export const Home: React.FC = () => {
                   Tailored Lease Terms
                 </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#F87171' }} />
-                <span style={{ fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 500 }}>
-                  Dedicated Sourcing Team
-                </span>
-              </div>
+            
             </div>
           </div>
         </div>
@@ -369,18 +356,24 @@ export const Home: React.FC = () => {
 
                 <div
                   style={{
-                    padding: '1.25rem 0.75rem 0.5rem',
+                    padding: '1.15rem 0.75rem 0.4rem',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    fontSize: '0.82rem',
-                    color: '#64748B',
+                    gap: '0.75rem',
                   }}
                 >
-                  <span style={{ fontWeight: 600, color: '#0A0A09' }}>
-                    Heritage Inspiration: "Pulling For You!"
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                    <span style={{ fontWeight: 700, color: '#0A0A09', fontSize: '0.92rem', lineHeight: 1.3 }}>
+                      Heritage Inspiration
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                      "Pulling For You!" &bull; SCL Speed Lettering
+                    </span>
+                  </div>
+                  <span className="badge badge-red" style={{ flexShrink: 0 }}>
+                    CRC Brand Roots
                   </span>
-                  <span className="badge badge-red">CRC Brand Roots</span>
                 </div>
               </div>
             </div>
@@ -433,29 +426,10 @@ export const Home: React.FC = () => {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                   className="pillar-card-img"
                 />
-                <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-                  <span className="badge badge-dark" style={{ fontSize: '0.72rem' }}>
-                    MECHANICAL INTEGRITY
-                  </span>
-                </div>
               </div>
               <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      backgroundColor: 'var(--color-cream-light)',
-                      color: '#0A0A09',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '8px',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <ShieldCheck size={22} />
-                  </div>
+                
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', margin: 0 }}>
                     AAR &amp; FRA Mechanical Vetting
                   </h3>
@@ -489,29 +463,11 @@ export const Home: React.FC = () => {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                   className="pillar-card-img"
                 />
-                <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-                  <span className="badge badge-red" style={{ fontSize: '0.72rem' }}>
-                    FINANCIAL FLEXIBILITY
-                  </span>
-                </div>
+               
               </div>
               <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      backgroundColor: '#FDF3F2',
-                      color: '#AA2E1F',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '8px',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Sliders size={22} />
-                  </div>
+                  
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', margin: 0 }}>
                     Tailored Lease Architectures
                   </h3>
@@ -545,29 +501,10 @@ export const Home: React.FC = () => {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                   className="pillar-card-img"
                 />
-                <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
-                  <span className="badge badge-dark" style={{ fontSize: '0.72rem' }}>
-                    NETWORK REACH
-                  </span>
-                </div>
               </div>
               <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      backgroundColor: 'var(--color-cream-light)',
-                      color: '#0A0A09',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '8px',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <TrainTrack size={22} />
-                  </div>
+               
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', margin: 0 }}>
                     Continental Railway Routing
                   </h3>
@@ -670,45 +607,7 @@ export const Home: React.FC = () => {
 
               return (
                 <div key={cat.id} className="equipment-card-premium">
-                  {/* Top Bar with AAR Classification & Pulse Indicator */}
-                  <div
-                    style={{
-                      padding: '0.75rem 1.25rem',
-                      backgroundColor: '#FFFFFF',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      borderBottom: '1px solid #F1F5F9',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        color: '#AA2E1F',
-                        letterSpacing: '0.04em',
-                      }}
-                    >
-                      {tech.aarClass}
-                    </span>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                      <span
-                        className="pulse-emerald"
-                        style={{
-                          width: '7px',
-                          height: '7px',
-                          borderRadius: '50%',
-                          backgroundColor: '#10B981',
-                          display: 'inline-block',
-                        }}
-                      />
-                      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#059669' }}>
-                        Active Sourcing
-                      </span>
-                    </div>
-                  </div>
+                 
 
                   {/* Image Viewport with Zoom Effect */}
                   <div className="card-image-wrap" style={{ height: '210px' }}>
@@ -882,9 +781,7 @@ export const Home: React.FC = () => {
                   <div className="timeline-node" style={{ borderColor: '#0A0A09', color: '#0A0A09' }}>
                     01
                   </div>
-                  <span className="badge badge-dark scl-speed-lettering" style={{ letterSpacing: '0.06em' }}>
-                    MILEPOST 01 &bull; SPECIFICATION
-                  </span>
+                 
                 </div>
 
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
@@ -931,9 +828,7 @@ export const Home: React.FC = () => {
                   <div className="timeline-node" style={{ borderColor: '#AA2E1F', color: '#AA2E1F' }}>
                     02
                   </div>
-                  <span className="badge badge-red scl-speed-lettering" style={{ letterSpacing: '0.06em' }}>
-                    MILEPOST 02 &bull; ALLOCATION
-                  </span>
+                 
                 </div>
 
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
@@ -979,9 +874,7 @@ export const Home: React.FC = () => {
                   <div className="timeline-node" style={{ borderColor: '#0A0A09', color: '#0A0A09' }}>
                     03
                   </div>
-                  <span className="badge badge-dark scl-speed-lettering" style={{ letterSpacing: '0.06em' }}>
-                    MILEPOST 03 &bull; HANDOVER
-                  </span>
+                  
                 </div>
 
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
@@ -1025,52 +918,94 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Workflow Reassurance Banner */}
-          <div
-            style={{
-              marginTop: '3.5rem',
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #E2E8F0',
-              borderRadius: '12px',
-              padding: '1.5rem 2rem',
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '1.5rem',
-              boxShadow: 'var(--shadow-xs)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="commitment-card" style={{ marginTop: '3.75rem' }}>
+            {/* Top Mechanical Accent Line */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '3px',
+                background: 'linear-gradient(90deg, #AA2E1F 0%, #E05240 40%, #0F172A 100%)',
+              }}
+            />
+
+            {/* Left Content Area with ShieldCheck Icon & Professional Typography */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem', flex: 1 }}>
               <div
                 style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--color-cream-light)',
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '12px',
+                  backgroundColor: '#FEF2F2',
+                  border: '1px solid #FECACA',
                   color: '#AA2E1F',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
+                  boxShadow: '0 2px 8px rgba(170, 46, 31, 0.08)',
+                  marginTop: '2px',
                 }}
               >
-                <Activity size={20} />
+                <ShieldCheck size={26} style={{ color: '#AA2E1F' }} />
               </div>
+
               <div>
-                <strong style={{ fontSize: '0.98rem', color: '#0A0A09', display: 'block' }}>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                    marginBottom: '0.35rem',
+                  }}
+                >
+                  <span>CRC INTEGRITY GUARANTEE</span>
+                  <span style={{ color: '#CBD5E1' }}>&bull;</span>
+                  <span style={{ color: '#64748B' }}>REAL LOGISTICS</span>
+                </div>
+
+                <h4
+                  style={{
+                    fontSize: '1.2rem',
+                    fontWeight: 700,
+                    color: '#0A0A09',
+                    margin: '0 0 0.35rem 0',
+                    fontFamily: 'var(--font-heading)',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
                   Truth-in-Equipment Commitment
-                </strong>
-                <span style={{ fontSize: '0.88rem', color: '#64748B' }}>
-                  No fabricated live inventory counts or synthetic urgency timers. Every quote is grounded in verified rail availability.
-                </span>
+                </h4>
+
+                <p
+                  style={{
+                    fontSize: '0.92rem',
+                    color: '#475569',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    maxWidth: '620px',
+                  }}
+                >
+                  No fabricated live inventory counts or synthetic urgency timers. Every quote is grounded in verified rail availability, authentic interchange routes, and mechanical inspection sign-off.
+                </p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <Link to="/quote" className="btn btn-primary btn-sm">
+            {/* Equal-Sized Action Buttons */}
+            <div className="commitment-card-actions">
+              <Link to="/quote" className="btn btn-primary commitment-btn">
+                <FileText size={16} />
                 Initiate Quote Inquiry
               </Link>
-              <Link to="/book-a-call" className="btn btn-secondary btn-sm">
+              <Link to="/book-a-call" className="btn btn-secondary commitment-btn">
+                <PhoneCall size={16} />
                 Schedule a Call
               </Link>
             </div>
@@ -1084,6 +1019,7 @@ export const Home: React.FC = () => {
       <section className="section section-white" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
           <div
+            className="roots-preview-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -1092,7 +1028,7 @@ export const Home: React.FC = () => {
             }}
           >
             {/* Left: Historic Photograph */}
-            <div>
+            <div className="roots-preview-card">
               <div
                 className="card"
                 style={{
@@ -1116,24 +1052,30 @@ export const Home: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    padding: '1.25rem 0.75rem 0.5rem',
+                    padding: '1.15rem 0.75rem 0.4rem',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    fontSize: '0.82rem',
-                    color: '#64748B',
+                    gap: '0.75rem',
                   }}
                 >
-                  <span style={{ fontWeight: 600, color: '#0A0A09' }}>
-                    Milwaukee Road #967 &bull; Heritage Lineage
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                    <span style={{ fontWeight: 700, color: '#0A0A09', fontSize: '0.92rem', lineHeight: 1.3 }}>
+                      Milwaukee Road #967
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                      Heritage Lineage &bull; Cab Window Herald
+                    </span>
+                  </div>
+                  <span className="badge badge-amber" style={{ flexShrink: 0 }}>
+                    CRC Identity
                   </span>
-                  <span className="badge badge-amber">CRC Identity</span>
                 </div>
               </div>
             </div>
 
             {/* Right: Text Preview */}
-            <div>
+            <div className="roots-preview-text">
               <span className="eyebrow">Railroad Roots</span>
               <h2 style={{ color: '#0A0A09', marginBottom: '1.5rem', lineHeight: 1.25 }}>
                 Founded on Railroad Craft &amp; Practical Industrial Service
@@ -1167,7 +1109,34 @@ export const Home: React.FC = () => {
       >
         <div className="container" style={{ textAlign: 'center' }}>
           <div style={{ maxWidth: '820px', margin: '0 auto' }}>
-            <span className="badge badge-red" style={{ marginBottom: '1.25rem' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.55rem',
+                backgroundColor: 'rgba(170, 46, 31, 0.22)',
+                border: '1px solid rgba(239, 68, 68, 0.45)',
+                color: '#FFFFFF',
+                padding: '0.45rem 1.15rem',
+                borderRadius: '30px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                marginBottom: '1.25rem',
+                boxShadow: '0 2px 10px rgba(170, 46, 31, 0.15)',
+              }}
+            >
+              <span
+                style={{
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  backgroundColor: '#EF4444',
+                  boxShadow: '0 0 8px #EF4444',
+                  display: 'inline-block',
+                }}
+              />
               Connect With Coast Road Capital
             </span>
             <h2
@@ -1222,9 +1191,67 @@ export const Home: React.FC = () => {
         .category-spec-link:hover {
           color: #AA2E1F !important;
         }
-        @media (max-width: 900px) {
+        .commitment-card {
+          position: relative;
+          background-color: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 16px;
+          padding: 2.25rem 2.5rem;
+          box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.05);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 2.5rem;
+          overflow: hidden;
+        }
+        .commitment-card-actions {
+          display: flex;
+          gap: 0.85rem;
+          align-items: center;
+          flex-shrink: 0;
+        }
+        .commitment-btn {
+          width: 210px !important;
+          height: 46px !important;
+          padding: 0 1rem !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          font-size: 0.92rem !important;
+          font-weight: 600 !important;
+          gap: 0.55rem !important;
+          border-radius: 8px !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+          white-space: nowrap !important;
+        }
+        @media (max-width: 960px) {
           .desktop-only {
             display: none !important;
+          }
+          .commitment-card {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 1.75rem !important;
+            padding: 1.75rem 1.5rem !important;
+          }
+          .commitment-card-actions {
+            width: 100% !important;
+            flex-direction: column !important;
+          }
+          .commitment-btn {
+            width: 100% !important;
+          }
+          .roots-preview-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2.25rem !important;
+          }
+          .roots-preview-text {
+            order: 1 !important;
+          }
+          .roots-preview-card {
+            order: 2 !important;
           }
         }
       `}</style>

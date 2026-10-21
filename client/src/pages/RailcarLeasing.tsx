@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, X, Send, Layers } from 'lucide-react';
+import { ArrowRight, CheckCircle2, X, Send } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
 import type { EquipmentCategory } from '../types';
 import { submitInquiry } from '../services/api';
@@ -106,10 +106,7 @@ export const RailcarLeasing: React.FC = () => {
       >
         <div className="container">
           <div style={{ maxWidth: '860px' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1.25rem' }}>
-              <Layers size={14} style={{ color: '#D97706' }} />
-              Equipment Catalog &bull; Phase 1 Sourcing Discovery
-            </span>
+            
             <h1
               style={{
                 fontSize: 'clamp(2.4rem, 4.8vw, 3.85rem)',
@@ -149,7 +146,8 @@ export const RailcarLeasing: React.FC = () => {
       <div
         style={{
           position: 'sticky',
-          top: 'var(--header-height)',
+          top: 'var(--header-offset, var(--header-height))',
+          transition: 'top 320ms cubic-bezier(0.16, 1, 0.3, 1)',
           zIndex: 90,
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Target, Compass, FileText, PhoneCall, History } from 'lucide-react';
+import { Shield, Target, Compass, FileText, PhoneCall } from 'lucide-react';
 import { TrackMotif } from '../components/common/TrackMotif';
 
 export const About: React.FC = () => {
@@ -28,10 +28,7 @@ export const About: React.FC = () => {
         />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '820px' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1.25rem' }}>
-              <History size={14} style={{ color: '#D97706' }} />
-              About Coast Road Capital
-            </span>
+           
             <h1
               style={{
                 fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -148,13 +145,13 @@ export const About: React.FC = () => {
               gap: '2.25rem',
             }}
           >
-            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #0A0A09', borderRadius: '16px' }}>
+            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #AA2E1F', borderRadius: '16px' }}>
               <div
                 style={{
                   width: '50px',
                   height: '50px',
-                  backgroundColor: 'var(--color-cream-light)',
-                  color: '#0A0A09',
+                  backgroundColor: '#FDF3F2',
+                  color: '#AA2E1F',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -164,9 +161,22 @@ export const About: React.FC = () => {
               >
                 <Target size={24} />
               </div>
-              <span className="badge badge-dark" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                INFRASTRUCTURE MATCH
-              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#AA2E1F',
+                  marginBottom: '0.65rem',
+                }}
+              >
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                <span>Infrastructure Match</span>
+              </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
                 Operational Trackage Compatibility
               </h3>
@@ -194,9 +204,22 @@ export const About: React.FC = () => {
               >
                 <Shield size={24} />
               </div>
-              <span className="badge badge-red" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                CAPITAL FLEXIBILITY
-              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#AA2E1F',
+                  marginBottom: '0.65rem',
+                }}
+              >
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                <span>Capital Flexibility</span>
+              </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
                 Adaptive Commercial Terms
               </h3>
@@ -208,13 +231,13 @@ export const About: React.FC = () => {
               </div>
             </div>
 
-            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #059669', borderRadius: '16px' }}>
+            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #AA2E1F', borderRadius: '16px' }}>
               <div
                 style={{
                   width: '50px',
                   height: '50px',
-                  backgroundColor: '#ECFDF5',
-                  color: '#059669',
+                  backgroundColor: '#FDF3F2',
+                  color: '#AA2E1F',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -224,16 +247,29 @@ export const About: React.FC = () => {
               >
                 <Compass size={24} />
               </div>
-              <span className="badge badge-emerald" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                SAFETY & COMPLIANCE
-              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#AA2E1F',
+                  marginBottom: '0.65rem',
+                }}
+              >
+                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                <span>Safety &amp; Compliance</span>
+              </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
                 AAR &amp; DOT Mechanical Standards
               </h3>
               <p style={{ color: '#64748B', fontSize: '0.94rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                 Our sourcing evaluations adhere strictly to Association of American Railroads (AAR) and Department of Transportation (DOT) safety and maintenance guidelines.
               </p>
-              <div style={{ fontSize: '0.82rem', color: '#059669', fontWeight: 600 }}>
+              <div style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
                 &bull; FRA Part 215 &bull; Wheel Profile &bull; Tank Vetting
               </div>
             </div>
@@ -245,9 +281,28 @@ export const About: React.FC = () => {
       <section className="section section-white" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
           <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1rem' }}>
-              Site &amp; Siding Operations
-            </span>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                marginBottom: '1rem',
+              }}
+            >
+              <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+              <span
+                style={{
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#AA2E1F',
+                }}
+              >
+                Site &amp; Siding Operations
+              </span>
+              <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+            </div>
             <h2 style={{ color: '#0A0A09', marginBottom: '1rem' }}>
               Transloading Facilities &amp; Track Infrastructure
             </h2>
@@ -273,35 +328,49 @@ export const About: React.FC = () => {
                   className="about-loco-img"
                 />
                 <div
-                  className="scl-speed-lettering"
                   style={{
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    backgroundColor: 'rgba(10, 10, 9, 0.88)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
                     backdropFilter: 'blur(4px)',
-                    color: '#EDE6D4',
-                    fontSize: '0.76rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(237, 230, 212, 0.25)',
-                    letterSpacing: '0.06em',
+                    color: '#F8FAFC',
+                    fontSize: '0.74rem',
+                    fontWeight: 600,
+                    padding: '0.3rem 0.65rem',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                   }}
                 >
-                  FIELD OPERATIONS
+                  Bulk Yard Operations
                 </div>
               </div>
               <div style={{ padding: '1.75rem' }}>
-                <span className="badge badge-dark" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                  TRANSLOAD LOGISTICS
-                </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                  <span>Transload Logistics</span>
+                </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
                   Site Selection &amp; Transload Evaluation
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65 }}>
+                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
                   Assisting shippers in evaluating transload points, truck-to-rail transfer yards, and track layouts designed for bulk and manifest freight throughput.
                 </p>
+                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
+                  &bull; Bulk Manifest Transfer &bull; Spur Yard Siding &bull; Truck-to-Rail Flow
+                </div>
               </div>
             </div>
 
@@ -315,35 +384,49 @@ export const About: React.FC = () => {
                   className="about-loco-img"
                 />
                 <div
-                  className="scl-speed-lettering"
                   style={{
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    backgroundColor: 'rgba(10, 10, 9, 0.88)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
                     backdropFilter: 'blur(4px)',
-                    color: '#EDE6D4',
-                    fontSize: '0.76rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(237, 230, 212, 0.25)',
-                    letterSpacing: '0.06em',
+                    color: '#F8FAFC',
+                    fontSize: '0.74rem',
+                    fontWeight: 600,
+                    padding: '0.3rem 0.65rem',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                   }}
                 >
-                  TRACKAGE & SIDING
+                  Infrastructure Engineering
                 </div>
               </div>
               <div style={{ padding: '1.75rem' }}>
-                <span className="badge badge-dark" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                  TRACK ENGINEERING
-                </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                  <span>Track Engineering</span>
+                </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
                   Siding Layout &amp; Track Assessment
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65 }}>
+                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
                   Verifying track curvature, weight capacity (263k vs 286k GRL), and switch turnout compatibility before dispatching railcar sets to your facility.
                 </p>
+                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
+                  &bull; 286,000 lbs GRL Rating &bull; Turnout Curvature &bull; Dock Clearances
+                </div>
               </div>
             </div>
 
@@ -357,35 +440,49 @@ export const About: React.FC = () => {
                   className="about-loco-img"
                 />
                 <div
-                  className="scl-speed-lettering"
                   style={{
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    backgroundColor: 'rgba(10, 10, 9, 0.88)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
                     backdropFilter: 'blur(4px)',
-                    color: '#EDE6D4',
-                    fontSize: '0.76rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(237, 230, 212, 0.25)',
-                    letterSpacing: '0.06em',
+                    color: '#F8FAFC',
+                    fontSize: '0.74rem',
+                    fontWeight: 600,
+                    padding: '0.3rem 0.65rem',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                   }}
                 >
-                  TRACKAGE MAINTENANCE
+                  Corridor Maintenance
                 </div>
               </div>
               <div style={{ padding: '1.75rem' }}>
-                <span className="badge badge-amber" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                  CORRIDOR RELIABILITY
-                </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                  <span>Corridor Reliability</span>
+                </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
                   Track Maintenance &amp; Turnout Clearance
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65 }}>
+                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
                   Continuous evaluation of switch points, rail joint integrity, and industrial spur ballasting to guarantee safe car movement and zero siding derailment risks.
                 </p>
+                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
+                  &bull; Switch Integrity &bull; Joint Bar Testing &bull; Spur Ballast Inspection
+                </div>
               </div>
             </div>
 
@@ -399,35 +496,49 @@ export const About: React.FC = () => {
                   className="about-loco-img"
                 />
                 <div
-                  className="scl-speed-lettering"
                   style={{
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    backgroundColor: 'rgba(10, 10, 9, 0.88)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
                     backdropFilter: 'blur(4px)',
-                    color: '#EDE6D4',
-                    fontSize: '0.76rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(237, 230, 212, 0.25)',
-                    letterSpacing: '0.06em',
+                    color: '#F8FAFC',
+                    fontSize: '0.74rem',
+                    fontWeight: 600,
+                    padding: '0.3rem 0.65rem',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                   }}
                 >
-                  FLEET SOURCING
+                  Active Fleet Sourcing
                 </div>
               </div>
               <div style={{ padding: '1.75rem' }}>
-                <span className="badge badge-red" style={{ marginBottom: '0.65rem', fontSize: '0.72rem' }}>
-                  LEASING ALLOCATION
-                </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                  <span>Fleet Allocation</span>
+                </div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
                   Active Railcar Deployment
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65 }}>
+                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
                   Coordinating dedicated equipment groups, seasonal surge sets, and long-term lease allocations across North America’s rail interchange network.
                 </p>
+                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
+                  &bull; Dedicated Car Sets &bull; Seasonal Peak Reserves &bull; Class I Interchange
+                </div>
               </div>
             </div>
           </div>
@@ -435,96 +546,149 @@ export const About: React.FC = () => {
       </section>
 
       {/* Railroad Heritage & Brand Identity Section */}
-      <section className="section section-dark">
+      <section className="section section-subtle" style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
           <div
+            className="heritage-preview-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '4.5rem',
+              gap: '4rem',
               alignItems: 'center',
             }}
           >
-            <div>
+            {/* Left: Historic Photograph Card */}
+            <div className="heritage-preview-card">
               <div
+                className="card"
                 style={{
-                  backgroundColor: '#1E293B',
                   padding: '0.85rem',
                   borderRadius: '16px',
-                  border: '1px solid #334155',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  boxShadow: 'var(--shadow-lg)',
                 }}
               >
-                <div style={{ overflow: 'hidden', borderRadius: '10px' }}>
+                <div style={{ overflow: 'hidden', borderRadius: '10px', position: 'relative' }}>
                   <img
                     src="/images/historic-milwaukee-967.png"
                     alt="Historic Milwaukee Road Locomotive 967"
                     style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease' }}
                     className="about-loco-img"
                   />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '10px',
+                      left: '10px',
+                      backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                      backdropFilter: 'blur(4px)',
+                      color: '#F8FAFC',
+                      fontSize: '0.74rem',
+                      fontWeight: 600,
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                    }}
+                  >
+                    Milwaukee Road #967
+                  </div>
                 </div>
                 <div
+                  className="heritage-card-meta"
                   style={{
-                    padding: '1.1rem 0.75rem 0.4rem',
-                    fontSize: '0.82rem',
-                    color: '#94A3B8',
+                    padding: '1.15rem 0.75rem 0.4rem',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    gap: '0.75rem',
                   }}
                 >
-                  <span style={{ fontWeight: 600, color: '#E2E8F0' }}>Milwaukee Road Cab Herald Inspiration</span>
-                  <span className="badge badge-amber">CRC Logo Roots</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                    <span style={{ fontWeight: 700, color: '#0A0A09', fontSize: '0.92rem', lineHeight: 1.3 }}>
+                      Heritage Lineage
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                      Cab Window Herald Inspiration
+                    </span>
+                  </div>
+                  <span className="badge badge-amber" style={{ flexShrink: 0 }}>
+                    CRC Logo Roots
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div>
-              <span className="badge badge-red" style={{ marginBottom: '1.25rem' }}>
-                Design Origins &amp; Heritage
-              </span>
-              <h2 style={{ color: '#FFFFFF', marginBottom: '1.5rem', lineHeight: 1.25 }}>
+            {/* Right: Design Origins & Heritage Details */}
+            <div className="heritage-preview-text">
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  marginBottom: '1rem',
+                }}
+              >
+                <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    color: '#AA2E1F',
+                  }}
+                >
+                  Design Origins &amp; Heritage
+                </span>
+              </div>
+              <h2 style={{ color: '#0A0A09', marginBottom: '1.25rem', lineHeight: 1.25 }}>
                 Inspired by Two Great American Railroads
               </h2>
-              <p style={{ color: '#94A3B8', fontSize: '1.05rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
+              <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '1.75rem' }}>
                 The Coast Road Capital brand identity and visual language pay homage to the rich visual history of North American railroading. Our branding draws distinct lineage from two legendary namesake carriers:
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.25rem' }}>
                 <div
                   style={{
-                    padding: '1.25rem',
-                    backgroundColor: '#1E293B',
-                    borderRadius: '10px',
+                    padding: '1.25rem 1.5rem',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '12px',
+                    border: '1px solid #E2E8F0',
                     borderLeft: '4px solid #AA2E1F',
+                    boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
                   }}
                 >
-                  <strong style={{ color: '#FFFFFF', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
+                  <strong style={{ color: '#0A0A09', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
                     Seaboard Coast Line (SCL) "Speed Lettering"
                   </strong>
-                  <span style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                  <span style={{ color: '#475569', fontSize: '0.92rem', lineHeight: 1.6 }}>
                     Influencing our bold typography, reflecting forward momentum, dependability, and industrial precision.
                   </span>
                 </div>
 
                 <div
                   style={{
-                    padding: '1.25rem',
-                    backgroundColor: '#1E293B',
-                    borderRadius: '10px',
+                    padding: '1.25rem 1.5rem',
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '12px',
+                    border: '1px solid #E2E8F0',
                     borderLeft: '4px solid #D97706',
+                    boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
                   }}
                 >
-                  <strong style={{ color: '#FFFFFF', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
+                  <strong style={{ color: '#0A0A09', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
                     The Milwaukee Road Herald
                   </strong>
-                  <span style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6 }}>
+                  <span style={{ color: '#475569', fontSize: '0.92rem', lineHeight: 1.6 }}>
                     The angular red and black diamond badge geometry of the original CRC logo draws inspiration from the cab herald of the Chicago, Milwaukee, St. Paul and Pacific.
                   </span>
                 </div>
               </div>
 
               <div style={{ maxWidth: '320px' }}>
-                <TrackMotif dark />
+                <TrackMotif />
               </div>
             </div>
           </div>
@@ -557,6 +721,27 @@ export const About: React.FC = () => {
       <style>{`
         .about-loco-img:hover {
           transform: scale(1.03);
+        }
+        @media (max-width: 960px) {
+          .heritage-preview-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 2.25rem !important;
+          }
+          .heritage-preview-text {
+            order: 1 !important;
+          }
+          .heritage-preview-card {
+            order: 2 !important;
+            width: 100% !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .heritage-card-meta {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.65rem !important;
+          }
         }
       `}</style>
     </div>

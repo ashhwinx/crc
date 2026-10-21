@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { TrackMotif } from './TrackMotif';
-import { ShieldCheck, Mail, Calendar, ArrowRight } from 'lucide-react';
+import { Mail, Calendar, ArrowRight } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipmentData';
 
 export const Footer: React.FC = () => {
@@ -23,18 +23,14 @@ export const Footer: React.FC = () => {
           <div>
             <Link to="/" style={{ display: 'inline-block', marginBottom: '1.25rem' }}>
               <img
-                src="/images/crc-logo-white.png"
+                src="/images/crc-logo-color.png"
                 alt="Coast Road Capital"
                 style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
               />
             </Link>
-            <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, marginBottom: '1.5rem' }}>
+            <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
               Coast Road Capital is an equipment sourcing and railcar leasing provider serving industrial shippers, manufacturing operations, agricultural processors, and energy facilities across North America.
             </p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.85rem', backgroundColor: '#1E293B', borderRadius: '6px', color: '#E2E8F0', fontSize: '0.82rem' }}>
-              <ShieldCheck size={16} style={{ color: '#F87171' }} />
-              <span style={{ fontWeight: 600 }}>American Railroad Logistics &amp; Leasing</span>
-            </div>
           </div>
 
           {/* Column 2: Equipment Catalog Categories */}
@@ -132,9 +128,7 @@ export const Footer: React.FC = () => {
               border: '1px solid #334155',
             }}
           >
-            <span className="badge badge-amber" style={{ marginBottom: '0.85rem' }}>
-              Leasing Inquiries Open
-            </span>
+          
             <h4
               style={{
                 fontFamily: 'var(--font-heading)',

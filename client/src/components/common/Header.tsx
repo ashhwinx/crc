@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X, PhoneCall, ChevronRight, FileText } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const location = useLocation();
 
   // Close mobile menu on route change
@@ -12,14 +14,51 @@ export const Header: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Handle scroll effect
+  // Handle scroll effect: hide on scroll down, slide down on scroll up
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+
+      // Scrolled styling (shadow, backdrop blur)
+      setScrolled(currentScrollY > 20);
+
+      // If mobile menu is open, always keep header visible
+      if (mobileMenuOpen) {
+        setVisible(true);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      // Always visible near top of page
+      if (currentScrollY <= 80) {
+        setVisible(true);
+      } else {
+        const diff = currentScrollY - lastScrollY.current;
+
+        // User scrolling DOWN -> hide navbar
+        if (diff > 6 && currentScrollY > 120) {
+          setVisible(false);
+        }
+        // User scrolling UP -> slide navbar down
+        else if (diff < -6) {
+          setVisible(true);
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mobileMenuOpen]);
+
+  // Update dynamic CSS variable for sticky sub-bars (e.g. RailcarLeasing catalog filter)
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      '--header-offset',
+      visible ? 'var(--header-height)' : '0px'
+    );
+  }, [visible]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -43,54 +82,6 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* Top Utility Bar */}
-      <div
-        style={{
-          backgroundColor: '#0A0A09',
-          color: '#EDE6D4',
-          fontSize: '0.8rem',
-          borderBottom: '1px solid #1C1C1A',
-          padding: '0.45rem 0',
-        }}
-      >
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <span
-              style={{
-                display: 'inline-block',
-                width: '7px',
-                height: '7px',
-                backgroundColor: '#10B981',
-                borderRadius: '50%',
-                boxShadow: '0 0 8px rgba(16, 185, 129, 0.6)',
-              }}
-            />
-            <span style={{ fontWeight: 500, letterSpacing: '0.01em', color: '#94A3B8' }}>
-              Coast Road Capital <span style={{ color: '#475569' }}>|</span> North American Railcar Leasing &amp; Equipment Solutions
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <Link
-              to="/book-a-call"
-              style={{
-                color: '#F8FAFC',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.8rem',
-                fontWeight: 500,
-                transition: 'color 150ms ease',
-              }}
-              className="top-utility-link"
-            >
-              <PhoneCall size={13} style={{ color: '#F87171' }} />
-              Schedule Sourcing Consultation
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Navigation Header */}
       <header
         style={{
@@ -101,7 +92,9 @@ export const Header: React.FC = () => {
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
           borderBottom: '1px solid #E2E8F0',
           boxShadow: scrolled ? '0 4px 20px -2px rgba(15, 23, 42, 0.08)' : 'none',
-          transition: 'all 240ms ease',
+          transform: visible ? 'translateY(0)' : 'translateY(-100%)',
+          transition: 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, box-shadow 200ms ease',
+          willChange: 'transform',
         }}
       >
         <div

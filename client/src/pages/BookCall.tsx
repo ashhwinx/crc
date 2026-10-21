@@ -108,9 +108,7 @@ export const BookCall: React.FC = () => {
       >
         <div className="container">
           <div style={{ maxWidth: '840px' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1.25rem' }}>
-              Direct Consultation &bull; Equipment Advisory
-            </span>
+           
             <h1
               style={{
                 fontSize: 'clamp(2.4rem, 4.8vw, 3.85rem)',
