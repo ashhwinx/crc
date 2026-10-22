@@ -304,12 +304,16 @@ export const Contact: React.FC = () => {
 
             {/* Right Column: Tabbed Forms */}
             <div
-              className="card"
+              className="contact-form-panel"
               style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E2E8F0',
                 borderRadius: '14px',
                 padding: 0,
                 boxShadow: '0 4px 16px -2px rgba(15,23,42,0.08)',
                 overflow: 'hidden',
+                transform: 'none',
+                transition: 'none',
               }}
             >
               {/* Tab switcher */}
@@ -328,7 +332,7 @@ export const Contact: React.FC = () => {
                     border: 'none',
                     cursor: 'pointer',
                     borderBottom: activeTab === 'inquiry' ? '2px solid #AA2E1F' : '2px solid transparent',
-                    transition: 'all 150ms ease',
+                    transition: 'background-color 150ms ease, color 150ms ease, border-color 150ms ease',
                   }}
                 >
                   <Mail size={16} style={{ marginRight: '0.4rem', verticalAlign: '-3px' }} />
@@ -348,7 +352,7 @@ export const Contact: React.FC = () => {
                     border: 'none',
                     cursor: 'pointer',
                     borderBottom: activeTab === 'booking' ? '2px solid #AA2E1F' : '2px solid transparent',
-                    transition: 'all 150ms ease',
+                    transition: 'background-color 150ms ease, color 150ms ease, border-color 150ms ease',
                   }}
                 >
                   <CalendarIcon size={16} style={{ marginRight: '0.4rem', verticalAlign: '-3px' }} />
@@ -604,6 +608,15 @@ export const Contact: React.FC = () => {
       </section>
 
       <style>{`
+        .contact-form-panel {
+          transform: none !important;
+          transition: none !important;
+        }
+        .contact-form-panel:hover {
+          transform: none !important;
+          box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08) !important;
+        }
+
         @media (max-width: 768px) {
           .contact-grid {
             grid-template-columns: 1fr !important;

@@ -58,7 +58,7 @@ export const About: React.FC = () => {
             }}
           >
             <div>
-              <span className="eyebrow">Our Company</span>
+        
               <h2 style={{ color: '#0A0A09', marginBottom: '1.5rem', lineHeight: 1.25 }}>
                 Bridging Equipment Demand With Operational Reality
               </h2>
@@ -68,18 +68,13 @@ export const About: React.FC = () => {
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '2rem' }}>
                 Coast Road Capital was established to deliver straightforward railcar equipment leasing. We focus on providing accurate car specifications, flexible leasing frameworks, and attentive customer service so your operations stay fluid.
               </p>
-              <div
-                style={{
-                  backgroundColor: '#FAF9F7',
-                  borderLeft: '4px solid #AA2E1F',
-                  padding: '1.25rem 1.5rem',
-                  borderRadius: '0 10px 10px 0',
-                }}
-              >
-                <h4 style={{ fontSize: '1.05rem', color: '#0A0A09', fontWeight: 700, marginBottom: '0.35rem' }}>
+
+              {/* Simple & Basic Operating Principle */}
+              <div style={{ marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1px solid #E2E8F0' }}>
+                <h3 style={{ fontSize: '1.05rem', color: '#0A0A09', fontWeight: 700, marginBottom: '0.4rem' }}>
                   Our Operating Principle
-                </h4>
-                <p style={{ color: '#475569', fontSize: '0.94rem', lineHeight: 1.65, margin: 0 }}>
+                </h3>
+                <p style={{ color: '#475569', fontSize: '0.98rem', lineHeight: 1.7, margin: 0 }}>
                   We believe industrial customers deserve honest equipment data, clear terms, and direct consultation without bloated promises or unverified availability.
                 </p>
               </div>
@@ -97,7 +92,7 @@ export const About: React.FC = () => {
                 <img
                   src="/images/railcar-operations.webp"
                   alt="Railcar fleet operations and yard logistics"
-                  style={{ width: '100%', height: '320px', objectFit: 'cover', display: 'block' }}
+                  style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
                 />
               </div>
             </div>

@@ -178,21 +178,22 @@ export const Home: React.FC = () => {
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '1.5rem',
+                gap: '1.75rem',
                 paddingTop: '1.5rem',
                 borderTop: '1px solid rgba(255, 255, 255, 0.14)',
+                alignItems: 'center',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>7 Equipment Categories</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#60A5FA' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Standard &amp; Custom Sizes</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#FBBF24' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Flexible Lease Terms</span>
               </div>
             </div>
@@ -412,7 +413,7 @@ export const Home: React.FC = () => {
             }}
           >
             <div>
-              <span className="eyebrow">Equipment</span>
+            
               <h2 style={{ color: '#0A0A09', marginBottom: '0.5rem' }}>
                 Railcar Categories
               </h2>
@@ -679,9 +680,24 @@ export const Home: React.FC = () => {
         .hero-text-link:hover {
           color: #FFFFFF !important;
         }
+        .preview-card {
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
         .preview-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 24px -4px rgba(15,23,42,0.1);
+          transform: translateY(-4px) translateZ(0) !important;
+          box-shadow: 0 14px 28px -4px rgba(15,23,42,0.12) !important;
+        }
+        .preview-card img {
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .preview-card:hover img {
+          transform: scale(1.04) translateZ(0);
         }
         @media (max-width: 768px) {
           .pillars-grid,

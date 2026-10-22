@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -54,17 +54,65 @@ export const RailcarLeasing: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [cardTabs, setCardTabs] = useState<Record<string, 'specs' | 'overview' | 'commodities'>>({});
   const location = useLocation();
+  const isFirstRender = useRef(true);
+
+  // Smooth scroll helper accounting for sticky navbar & category filter bar
+  const scrollToTarget = (targetId: string) => {
+    const el = document.getElementById(targetId) || document.getElementById('catalog-presentation');
+    if (!el) return;
+
+    const stickyBar = document.querySelector('.category-sticky-bar');
+    const header = document.querySelector('.site-header');
+    const headerH = header ? header.getBoundingClientRect().height : 72;
+    const barH = stickyBar ? stickyBar.getBoundingClientRect().height : 56;
+    const totalOffset = -(headerH + barH + 16);
+
+    const lenis = (window as any).__lenis;
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.scrollTo(el, { offset: totalOffset, duration: 0.8 });
+    } else {
+      const y = el.getBoundingClientRect().top + window.scrollY + totalOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
+  };
+
+  // Handle category filter clicks with auto-scroll and horizontal pill center
+  const handleCategorySelect = (slug: string, buttonEl?: HTMLElement) => {
+    if (buttonEl) {
+      buttonEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    if (activeCategory === slug) {
+      // Re-scroll directly if already active
+      scrollToTarget(slug === 'all' ? 'catalog-presentation' : slug);
+    } else {
+      setActiveCategory(slug);
+    }
+  };
+
+  // Scroll to selected category or catalog top whenever category changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const targetId = activeCategory === 'all' ? 'catalog-presentation' : activeCategory;
+      scrollToTarget(targetId);
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [activeCategory]);
 
   // Handle hash scrolling on page load or anchor click
   useEffect(() => {
     if (location.hash) {
       const targetId = location.hash.replace('#', '');
-      const el = document.getElementById(targetId);
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
+      const timer = setTimeout(() => {
+        scrollToTarget(targetId);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [location.hash]);
 
@@ -94,10 +142,13 @@ export const RailcarLeasing: React.FC = () => {
               Explore standard dimensions, capacities, commodity applications, and discharge profiles across our seven primary freight equipment classes.
             </p>
 
-            {/* Factual Notice Banner */}
-            <div className="catalog-notice-banner">
-              <strong style={{ color: '#F8FAFC' }}>EQUIPMENT NOTE:</strong> Specifications reflect typical industry standards. Car availability, mechanical series, and lease structures are confirmed upon direct review with our leasing team.
-            </div>
+            {/* Terms & Equipment Disclaimer Footnote */}
+            <p className="catalog-disclaimer-note">
+              <span className="disclaimer-star">*</span>
+              <span>
+                <strong>Equipment &amp; Terms Notice:</strong> Specifications reflect typical industry standards. Car availability, mechanical series, and lease structures are confirmed upon direct consultation with our leasing team.
+              </span>
+            </p>
           </div>
         </div>
       </section>
@@ -107,7 +158,7 @@ export const RailcarLeasing: React.FC = () => {
         <div className="container category-nav-container">
           <button
             type="button"
-            onClick={() => setActiveCategory('all')}
+            onClick={(e) => handleCategorySelect('all', e.currentTarget)}
             className={`category-pill-btn ${activeCategory === 'all' ? 'active' : ''}`}
           >
             All Categories (7)
@@ -117,11 +168,7 @@ export const RailcarLeasing: React.FC = () => {
             <button
               key={cat.id}
               type="button"
-              onClick={() => {
-                setActiveCategory(cat.slug);
-                const el = document.getElementById(cat.slug);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
+              onClick={(e) => handleCategorySelect(cat.slug, e.currentTarget)}
               className={`category-pill-btn ${activeCategory === cat.slug ? 'active' : ''}`}
             >
               {cat.name}
@@ -131,7 +178,7 @@ export const RailcarLeasing: React.FC = () => {
       </div>
 
       {/* Catalog Items Presentation */}
-      <section className="catalog-presentation-section">
+      <section id="catalog-presentation" className="catalog-presentation-section">
         <div className="container">
           <div className="catalog-cards-stack">
             {filteredCategories.map((cat, idx) => {
@@ -407,27 +454,39 @@ export const RailcarLeasing: React.FC = () => {
           font-size: 1.15rem;
           color: #CBD5E1;
           line-height: 1.7;
-          margin-bottom: 1.75rem;
+          margin-bottom: 1.25rem;
         }
-        .catalog-notice-banner {
-          background-color: #141413;
-          border: 1px solid #2B2B28;
-          border-left: 4px solid #AA2E1F;
-          padding: 1rem 1.35rem;
-          border-radius: 8px;
-          font-size: 0.88rem;
-          color: #A8A29E;
+        .catalog-disclaimer-note {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          margin-top: 1.5rem;
+          font-size: 0.84rem;
+          color: #94A3B8;
           line-height: 1.6;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          padding-top: 1.1rem;
+        }
+        .disclaimer-star {
+          color: #EF4444;
+          font-size: 1.05rem;
+          font-weight: 700;
+          line-height: 1.2;
+          flex-shrink: 0;
+        }
+        .catalog-disclaimer-note strong {
+          color: #CBD5E1;
+          font-weight: 600;
         }
 
-        /* Sticky Navigation Bar */
+        /* Sticky Navigation Bar: Firmly locked below header without layout reflows */
         .category-sticky-bar {
           position: sticky;
-          top: var(--header-offset, var(--header-height));
-          transition: top 320ms cubic-bezier(0.16, 1, 0.3, 1);
+          top: var(--header-height);
           z-index: 90;
           background-color: rgba(255, 255, 255, 0.96);
-          backdrop-filter: blur(10px);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           border-bottom: 1px solid #E2E8F0;
           box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
           overflow-x: auto;
@@ -453,8 +512,11 @@ export const RailcarLeasing: React.FC = () => {
           background-color: #FFFFFF;
           color: #334155;
           cursor: pointer;
-          transition: all 160ms ease;
+          transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
           flex-shrink: 0;
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
         .category-pill-btn:hover {
           border-color: #AA2E1F;
@@ -479,7 +541,7 @@ export const RailcarLeasing: React.FC = () => {
           width: 100%;
         }
 
-        /* Card Root */
+        /* Card Root: Hardware-accelerated and stable */
         .catalog-card {
           background-color: #FFFFFF;
           border: 1px solid #E2E8F0;
@@ -489,10 +551,13 @@ export const RailcarLeasing: React.FC = () => {
           overflow: hidden;
           width: 100%;
           box-sizing: border-box;
-          transition: transform 200ms ease, box-shadow 200ms ease;
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          transition: box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms cubic-bezier(0.16, 1, 0.3, 1);
         }
         .catalog-card:hover {
-          box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.1);
+          box-shadow: 0 10px 32px -4px rgba(15, 23, 42, 0.1);
         }
 
         /* Card Header */
@@ -630,8 +695,11 @@ export const RailcarLeasing: React.FC = () => {
           font-size: 0.9rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 160ms ease;
+          transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
           white-space: nowrap;
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
         .catalog-tab-btn:hover {
           color: #0A0A09;
@@ -741,7 +809,8 @@ export const RailcarLeasing: React.FC = () => {
           background-color: #FDF3F2;
           white-space: nowrap;
           flex-shrink: 0;
-          transition: all 150ms ease;
+          transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+          transform: translateZ(0);
         }
         .catalog-spec-inquire-link:hover {
           background-color: #AA2E1F;
@@ -764,8 +833,8 @@ export const RailcarLeasing: React.FC = () => {
           width: 100%;
         }
         .catalog-sourcing-text {
-          flex: 1 1 240px;
-          min-width: 0;
+          flex: 1;
+          min-width: 240px;
         }
         .catalog-sourcing-heading {
           display: block;
@@ -886,9 +955,11 @@ export const RailcarLeasing: React.FC = () => {
             line-height: 1.6 !important;
             margin-bottom: 1.25rem !important;
           }
-          .catalog-notice-banner {
-            padding: 0.85rem 1rem !important;
-            font-size: 0.82rem !important;
+          .catalog-disclaimer-note {
+            font-size: 0.78rem !important;
+            margin-top: 1.15rem !important;
+            padding-top: 0.85rem !important;
+            line-height: 1.55 !important;
           }
           .catalog-presentation-section {
             padding-top: 1.75rem !important;
@@ -1023,21 +1094,30 @@ export const RailcarLeasing: React.FC = () => {
 
           /* Sourcing Box on Mobile */
           .catalog-sourcing-bar {
-            padding: 0.95rem 1rem !important;
+            padding: 0.85rem 1rem !important;
             flex-direction: column !important;
             align-items: stretch !important;
-            gap: 0.75rem !important;
+            gap: 0.65rem !important;
             border-radius: 8px !important;
+          }
+          .catalog-sourcing-text {
+            flex: none !important;
+            min-width: 0 !important;
+            width: 100% !important;
           }
           .catalog-sourcing-heading {
             font-size: 0.88rem !important;
+            margin-bottom: 0.2rem !important;
           }
           .catalog-sourcing-desc {
-            font-size: 0.8rem !important;
+            font-size: 0.82rem !important;
+            line-height: 1.45 !important;
+            display: block !important;
           }
           .catalog-sourcing-btn {
             width: 100% !important;
             justify-content: center !important;
+            margin-top: 0.2rem !important;
           }
 
           /* Overview & Commodities on Mobile */

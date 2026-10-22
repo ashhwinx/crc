@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X, PhoneCall, ChevronRight, FileText } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
   const location = useLocation();
 
   // Close mobile menu on route change
@@ -14,51 +12,22 @@ export const Header: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Handle scroll effect: hide on scroll down, slide down on scroll up
+  // Handle scroll effect: update scrolled style without unnecessary re-renders or hide/show jitter
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // Scrolled styling (shadow, backdrop blur)
-      setScrolled(currentScrollY > 20);
-
-      // If mobile menu is open, always keep header visible
-      if (mobileMenuOpen) {
-        setVisible(true);
-        lastScrollY.current = currentScrollY;
-        return;
-      }
-
-      // Always visible near top of page
-      if (currentScrollY <= 100) {
-        setVisible(true);
-      } else {
-        const diff = currentScrollY - lastScrollY.current;
-
-        // User scrolling DOWN with deliberate movement -> slide navbar up
-        if (diff > 25 && currentScrollY > 180) {
-          setVisible(false);
-        }
-        // User scrolling UP -> slide navbar down
-        else if (diff < -15) {
-          setVisible(true);
-        }
-      }
-
-      lastScrollY.current = currentScrollY;
+      const isScrolled = window.scrollY > 20;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [mobileMenuOpen]);
+  }, []);
 
   // Update dynamic CSS variable for sticky sub-bars (e.g. RailcarLeasing catalog filter)
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--header-offset',
-      visible ? 'var(--header-height)' : '0px'
-    );
-  }, [visible]);
+    document.documentElement.style.setProperty('--header-offset', 'var(--header-height)');
+  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -81,19 +50,22 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* Main Navigation Header */}
+      {/* Main Navigation Header: Rock-solid, flicker-free sticky navigation */}
       <header
+        className="site-header"
         style={{
           position: 'sticky',
           top: 0,
           zIndex: 999,
           backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.96)' : '#FFFFFF',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
           borderBottom: '1px solid #E2E8F0',
-          boxShadow: scrolled ? '0 4px 20px -2px rgba(15, 23, 42, 0.08)' : 'none',
-          transform: visible ? 'translateY(0)' : 'translateY(-100%)',
-          transition: 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease, box-shadow 200ms ease',
-          willChange: 'transform',
+          boxShadow: scrolled ? '0 4px 20px -2px rgba(15, 23, 42, 0.08)' : '0 1px 2px 0 rgba(0, 0, 0, 0.02)',
+          transform: 'translateZ(0)',
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+          transition: 'background-color 220ms ease, box-shadow 220ms ease',
         }}
       >
         <div
@@ -204,18 +176,21 @@ export const Header: React.FC = () => {
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
         <div
+          className="mobile-drawer-backdrop"
           style={{
             position: 'fixed',
             inset: 0,
             zIndex: 1000,
             backgroundColor: 'rgba(15, 23, 42, 0.65)',
             backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
             display: 'flex',
             flexDirection: 'column',
           }}
           onClick={() => setMobileMenuOpen(false)}
         >
           <div
+            className="mobile-drawer-panel"
             style={{
               backgroundColor: '#FFFFFF',
               width: '100%',
@@ -307,6 +282,21 @@ export const Header: React.FC = () => {
         .nav-item {
           position: relative;
         }
+        @keyframes drawerFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes drawerSlideIn {
+          from { transform: translate3d(-100%, 0, 0); }
+          to { transform: translate3d(0, 0, 0); }
+        }
+        .mobile-drawer-backdrop {
+          animation: drawerFadeIn 200ms ease forwards;
+        }
+        .mobile-drawer-panel {
+          animation: drawerSlideIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          will-change: transform;
+        }
         .nav-item::after {
           content: '';
           position: absolute;
@@ -315,8 +305,9 @@ export const Header: React.FC = () => {
           width: 0%;
           height: 2px;
           background-color: #AA2E1F;
-          transition: width 200ms ease;
+          transition: width 200ms cubic-bezier(0.16, 1, 0.3, 1);
           border-radius: 2px;
+          transform: translateZ(0);
         }
         .nav-item:hover {
           color: #AA2E1F !important;
@@ -336,6 +327,7 @@ export const Header: React.FC = () => {
           height: 2px;
           background-color: #AA2E1F;
           border-radius: 2px;
+          transform: translateZ(0);
         }
         @media (min-width: 900px) {
           .desktop-nav {
