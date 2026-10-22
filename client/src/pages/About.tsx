@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Target, Compass, FileText, PhoneCall } from 'lucide-react';
-import { TrackMotif } from '../components/common/TrackMotif';
 
 export const About: React.FC = () => {
   return (
@@ -12,7 +11,7 @@ export const About: React.FC = () => {
           position: 'relative',
           backgroundColor: '#0A0A09',
           color: '#FFFFFF',
-          padding: '5.5rem 0 4.5rem',
+          padding: '4.5rem 0 3.5rem',
           overflow: 'hidden',
         }}
       >
@@ -27,23 +26,21 @@ export const About: React.FC = () => {
           }}
         />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ maxWidth: '820px' }}>
-           
+          <div style={{ maxWidth: '720px' }}>
             <h1
               style={{
-                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                fontSize: 'clamp(2.2rem, 4.5vw, 3.25rem)',
                 color: '#FFFFFF',
                 fontWeight: 800,
-                lineHeight: 1.15,
-                letterSpacing: '-0.03em',
-                marginBottom: '1.5rem',
+                lineHeight: 1.18,
+                letterSpacing: '-0.02em',
+                marginBottom: '1.25rem',
               }}
             >
-              Railroad Grounding. <br />
-              <span style={{ color: '#F87171' }}>Industrial Focus.</span>
+              About Coast Road Capital
             </h1>
-            <p style={{ fontSize: '1.2rem', color: '#CBD5E1', lineHeight: 1.7, maxWidth: '720px' }}>
-              Coast Road Capital is dedicated to simplifying freight railcar leasing and equipment sourcing for industrial shippers, manufacturers, and logistics operators across North America.
+            <p style={{ fontSize: '1.12rem', color: '#CBD5E1', lineHeight: 1.7, maxWidth: '640px' }}>
+              Simplifying freight railcar leasing and equipment sourcing for industrial shippers, manufacturers, and logistics operators across North America.
             </p>
           </div>
         </div>
@@ -56,14 +53,14 @@ export const About: React.FC = () => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '4.5rem',
-              alignItems: 'center',
+              gap: '4rem',
+              alignItems: 'start',
             }}
           >
             <div>
-              <span className="eyebrow">Company Overview</span>
+              <span className="eyebrow">Our Company</span>
               <h2 style={{ color: '#0A0A09', marginBottom: '1.5rem', lineHeight: 1.25 }}>
-                Bridging Equipment Demand With Operational Rail Reality
+                Bridging Equipment Demand With Operational Reality
               </h2>
               <p style={{ color: '#334155', fontSize: '1.05rem', lineHeight: 1.75, marginBottom: '1.25rem' }}>
                 Rail transportation remains the most fuel-efficient, dependable method for transporting heavy industrial, agricultural, and manufactured bulk freight across the continent. Yet acquiring the proper rail equipment can often feel opaque and rigid.
@@ -73,17 +70,16 @@ export const About: React.FC = () => {
               </p>
               <div
                 style={{
-                  backgroundColor: '#F8FAFC',
+                  backgroundColor: '#FAF9F7',
                   borderLeft: '4px solid #AA2E1F',
-                  padding: '1.35rem 1.65rem',
+                  padding: '1.25rem 1.5rem',
                   borderRadius: '0 10px 10px 0',
-                  boxShadow: 'var(--shadow-xs)',
                 }}
               >
-                <h4 style={{ fontSize: '1.1rem', color: '#0A0A09', fontWeight: 700, marginBottom: '0.45rem' }}>
+                <h4 style={{ fontSize: '1.05rem', color: '#0A0A09', fontWeight: 700, marginBottom: '0.35rem' }}>
                   Our Operating Principle
                 </h4>
-                <p style={{ color: '#475569', fontSize: '0.96rem', lineHeight: 1.65, margin: 0 }}>
+                <p style={{ color: '#475569', fontSize: '0.94rem', lineHeight: 1.65, margin: 0 }}>
                   We believe industrial customers deserve honest equipment data, clear terms, and direct consultation without bloated promises or unverified availability.
                 </p>
               </div>
@@ -91,34 +87,18 @@ export const About: React.FC = () => {
 
             <div>
               <div
-                className="card"
                 style={{
-                  padding: '0.85rem',
-                  borderRadius: '16px',
-                  boxShadow: 'var(--shadow-lg)',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  border: '1px solid #E2E8F0',
+                  boxShadow: '0 4px 16px -2px rgba(15,23,42,0.08)',
                 }}
               >
-                <div style={{ overflow: 'hidden', borderRadius: '10px' }}>
-                  <img
-                    src="/images/historic-scl-1637.png"
-                    alt="Seaboard Coast Line GP40-2 1637 Locomotive"
-                    style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease' }}
-                    className="about-loco-img"
-                  />
-                </div>
-                <div
-                  style={{
-                    padding: '1.1rem 0.75rem 0.4rem',
-                    fontSize: '0.82rem',
-                    color: '#64748B',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span style={{ fontWeight: 600, color: '#0A0A09' }}>SCL Speed Lettering Heritage</span>
-                  <span className="badge badge-red">CRC Identity</span>
-                </div>
+                <img
+                  src="/images/railcar-operations.webp"
+                  alt="Railcar fleet operations and yard logistics"
+                  style={{ width: '100%', height: '320px', objectFit: 'cover', display: 'block' }}
+                />
               </div>
             </div>
           </div>
@@ -128,567 +108,193 @@ export const About: React.FC = () => {
       {/* Business Focus & Leasing Approach */}
       <section className="section section-subtle" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
-          <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span className="eyebrow" style={{ justifyContent: 'center' }}>Equipment Strategy</span>
-            <h2 style={{ color: '#0A0A09', marginBottom: '1rem' }}>
-              Our Approach to Railcar Leasing
+          <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '3rem' }}>
+            <span className="eyebrow" style={{ justifyContent: 'center' }}>Our Approach</span>
+            <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
+              How We Structure Railcar Leasing
             </h2>
-            <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7 }}>
-              We structure railcar agreements around the commercial, physical, and financial needs of our industrial clients.
+            <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
+              We build leasing agreements around the commercial, physical, and financial needs of each industrial client.
             </p>
           </div>
 
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '2.25rem',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '2rem',
             }}
+            className="approach-grid"
           >
-            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #AA2E1F', borderRadius: '16px' }}>
+            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #AA2E1F', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#AA2E1F', borderTopWidth: '3px' }}>
               <div
                 style={{
-                  width: '50px',
-                  height: '50px',
+                  width: '44px',
+                  height: '44px',
                   backgroundColor: '#FDF3F2',
                   color: '#AA2E1F',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   marginBottom: '1.25rem',
                 }}
               >
-                <Target size={24} />
+                <Target size={22} />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#AA2E1F',
-                  marginBottom: '0.65rem',
-                }}
-              >
-                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                <span>Infrastructure Match</span>
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
-                Operational Trackage Compatibility
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
+                Track & Facility Compatibility
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.94rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-                Every terminal facility has unique clearance envelopes, dock heights, crane setups, and discharge hoppers. We evaluate your trackage to ensure equipment compatibility.
+              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
+                We evaluate your terminal clearances, dock heights, and discharge systems to ensure every car we source physically fits your operation.
               </p>
-              <div style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                &bull; Clearance &bull; Weight Rating &bull; Turn Radius
-              </div>
             </div>
 
-            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #AA2E1F', borderRadius: '16px' }}>
+            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #0A0A09', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#0A0A09', borderTopWidth: '3px' }}>
               <div
                 style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: '#FDF3F2',
-                  color: '#AA2E1F',
+                  width: '44px',
+                  height: '44px',
+                  backgroundColor: '#F1F5F9',
+                  color: '#0A0A09',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   marginBottom: '1.25rem',
                 }}
               >
-                <Shield size={24} />
+                <Shield size={22} />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#AA2E1F',
-                  marginBottom: '0.65rem',
-                }}
-              >
-                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                <span>Capital Flexibility</span>
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
-                Adaptive Commercial Terms
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
+                Flexible Lease Structures
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.94rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-                From short-term project leases and seasonal surges to multi-year capital commitments, we assist in establishing agreements that balance capital outlay and operational risk.
+              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
+                From short-term project leases and seasonal surges to multi-year commitments — full-service or net lease, we tailor terms to balance your cost and risk.
               </p>
-              <div style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                &bull; Full-Service &bull; Net Lease &bull; Surge Reserves
-              </div>
             </div>
 
-            <div className="card hover-lift" style={{ padding: '2.5rem 2rem', borderTop: '4px solid #AA2E1F', borderRadius: '16px' }}>
+            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #D97706', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#D97706', borderTopWidth: '3px' }}>
               <div
                 style={{
-                  width: '50px',
-                  height: '50px',
-                  backgroundColor: '#FDF3F2',
-                  color: '#AA2E1F',
+                  width: '44px',
+                  height: '44px',
+                  backgroundColor: '#FEF3C7',
+                  color: '#D97706',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   marginBottom: '1.25rem',
                 }}
               >
-                <Compass size={24} />
+                <Compass size={22} />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#AA2E1F',
-                  marginBottom: '0.65rem',
-                }}
-              >
-                <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                <span>Safety &amp; Compliance</span>
-              </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.75rem' }}>
-                AAR &amp; DOT Mechanical Standards
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
+                AAR & DOT Compliance
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.94rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-                Our sourcing evaluations adhere strictly to Association of American Railroads (AAR) and Department of Transportation (DOT) safety and maintenance guidelines.
+              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
+                Our sourcing adheres strictly to Association of American Railroads and DOT safety and maintenance guidelines for every car type.
               </p>
-              <div style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                &bull; FRA Part 215 &bull; Wheel Profile &bull; Tank Vetting
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Real Infrastructure & Transloading Showcase (Client Photos) */}
+      {/* Real Infrastructure & Transloading — 2-column grid (no orphans) */}
       <section className="section section-white" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
-          <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                marginBottom: '1rem',
-              }}
-            >
-              <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-              <span
-                style={{
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#AA2E1F',
-                }}
-              >
-                Site &amp; Siding Operations
-              </span>
-              <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-            </div>
-            <h2 style={{ color: '#0A0A09', marginBottom: '1rem' }}>
-              Transloading Facilities &amp; Track Infrastructure
+          <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '3rem' }}>
+            <span className="eyebrow" style={{ justifyContent: 'center' }}>Operations</span>
+            <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
+              Site & Siding Infrastructure
             </h2>
-            <p style={{ color: '#475569', fontSize: '1.08rem', lineHeight: 1.7 }}>
-              Bridging mainline rail carriers and private industrial sidings requires direct expertise in track clearance, transloading yards, and physical car placement.
+            <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
+              Bridging mainline carriers and private industrial sidings with direct expertise in track clearance, transloading, and car placement.
             </p>
           </div>
 
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '2.5rem',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '2rem',
             }}
+            className="infra-grid"
           >
-            {/* Real Client Photo 1: Site Selection & Transloading */}
-            <div className="card hover-lift" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+            {/* Card 1 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
                   src="/images/transloading-site.jpg"
-                  alt="Railcar transloading facility and bulk cargo siding"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                  className="about-loco-img"
+                  alt="Railcar transloading facility"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(4px)',
-                    color: '#F8FAFC',
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    padding: '0.3rem 0.65rem',
-                    borderRadius: '6px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                  }}
-                >
-                  Bulk Yard Operations
-                </div>
               </div>
-              <div style={{ padding: '1.75rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#AA2E1F',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                  <span>Transload Logistics</span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
-                  Site Selection &amp; Transload Evaluation
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
+                  Transload Site Evaluation
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Assisting shippers in evaluating transload points, truck-to-rail transfer yards, and track layouts designed for bulk and manifest freight throughput.
+                <p style={{ color: '#64748B', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                  Evaluating transfer yards, truck-to-rail points, and track layouts for bulk and manifest freight operations.
                 </p>
-                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                  &bull; Bulk Manifest Transfer &bull; Spur Yard Siding &bull; Truck-to-Rail Flow
-                </div>
               </div>
             </div>
 
-            {/* Real Client Photo 2: Track Construction & Infrastructure */}
-            <div className="card hover-lift" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+            {/* Card 2 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
                   src="/images/track-construction-1.jpg"
-                  alt="Railroad track construction and maintenance engineering"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                  className="about-loco-img"
+                  alt="Railroad track construction"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(4px)',
-                    color: '#F8FAFC',
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    padding: '0.3rem 0.65rem',
-                    borderRadius: '6px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                  }}
-                >
-                  Infrastructure Engineering
-                </div>
               </div>
-              <div style={{ padding: '1.75rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#AA2E1F',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                  <span>Track Engineering</span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
-                  Siding Layout &amp; Track Assessment
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
+                  Siding & Track Assessment
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Verifying track curvature, weight capacity (263k vs 286k GRL), and switch turnout compatibility before dispatching railcar sets to your facility.
+                <p style={{ color: '#64748B', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                  Verifying track curvature, weight capacity (263k vs 286k GRL), and switch turnout compatibility before dispatching cars.
                 </p>
-                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                  &bull; 286,000 lbs GRL Rating &bull; Turnout Curvature &bull; Dock Clearances
-                </div>
               </div>
             </div>
 
-            {/* Real Client Photo 3: Track Maintenance & Infrastructure */}
-            <div className="card hover-lift" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+            {/* Card 3 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
                   src="/images/track-maintenance.jpg"
-                  alt="Railroad track maintenance, ties, and turnout engineering"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                  className="about-loco-img"
+                  alt="Railroad track maintenance"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(4px)',
-                    color: '#F8FAFC',
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    padding: '0.3rem 0.65rem',
-                    borderRadius: '6px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                  }}
-                >
-                  Corridor Maintenance
-                </div>
               </div>
-              <div style={{ padding: '1.75rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#AA2E1F',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                  <span>Corridor Reliability</span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
-                  Track Maintenance &amp; Turnout Clearance
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
+                  Track Maintenance & Safety
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Continuous evaluation of switch points, rail joint integrity, and industrial spur ballasting to guarantee safe car movement and zero siding derailment risks.
+                <p style={{ color: '#64748B', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                  Evaluating switch points, rail joint integrity, and ballasting to ensure safe car movement on your siding.
                 </p>
-                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                  &bull; Switch Integrity &bull; Joint Bar Testing &bull; Spur Ballast Inspection
-                </div>
               </div>
             </div>
 
-            {/* Real Client Photo 4: Railcar Operations & Fleet Overview */}
-            <div className="card hover-lift" style={{ borderRadius: '16px', overflow: 'hidden' }}>
-              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
+            {/* Card 4 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
                   src="/images/railcar-leasing-overview.webp"
-                  alt="Industrial railcar leasing yard and fleet operations"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                  className="about-loco-img"
+                  alt="Industrial railcar fleet"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(4px)',
-                    color: '#F8FAFC',
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    padding: '0.3rem 0.65rem',
-                    borderRadius: '6px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                  }}
-                >
-                  Active Fleet Sourcing
-                </div>
               </div>
-              <div style={{ padding: '1.75rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.76rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#AA2E1F',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  <span style={{ width: '16px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                  <span>Fleet Allocation</span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
-                  Active Railcar Deployment
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.5rem' }}>
+                  Fleet Deployment
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Coordinating dedicated equipment groups, seasonal surge sets, and long-term lease allocations across North America’s rail interchange network.
+                <p style={{ color: '#64748B', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                  Coordinating dedicated car sets, seasonal reserves, and long-term allocations across North America's rail network.
                 </p>
-                <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #F1F5F9', fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600 }}>
-                  &bull; Dedicated Car Sets &bull; Seasonal Peak Reserves &bull; Class I Interchange
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Railroad Heritage & Brand Identity Section */}
-      <section className="section section-subtle" style={{ borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
-        <div className="container">
-          <div
-            className="heritage-preview-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '4rem',
-              alignItems: 'center',
-            }}
-          >
-            {/* Left: Historic Photograph Card */}
-            <div className="heritage-preview-card">
-              <div
-                className="card"
-                style={{
-                  padding: '0.85rem',
-                  borderRadius: '16px',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  boxShadow: 'var(--shadow-lg)',
-                }}
-              >
-                <div style={{ overflow: 'hidden', borderRadius: '10px', position: 'relative' }}>
-                  <img
-                    src="/images/historic-milwaukee-967.png"
-                    alt="Historic Milwaukee Road Locomotive 967"
-                    style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease' }}
-                    className="about-loco-img"
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '10px',
-                      left: '10px',
-                      backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                      backdropFilter: 'blur(4px)',
-                      color: '#F8FAFC',
-                      fontSize: '0.74rem',
-                      fontWeight: 600,
-                      padding: '0.3rem 0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                    }}
-                  >
-                    Milwaukee Road #967
-                  </div>
-                </div>
-                <div
-                  className="heritage-card-meta"
-                  style={{
-                    padding: '1.15rem 0.75rem 0.4rem',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                    <span style={{ fontWeight: 700, color: '#0A0A09', fontSize: '0.92rem', lineHeight: 1.3 }}>
-                      Heritage Lineage
-                    </span>
-                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
-                      Cab Window Herald Inspiration
-                    </span>
-                  </div>
-                  <span className="badge badge-amber" style={{ flexShrink: 0 }}>
-                    CRC Logo Roots
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Design Origins & Heritage Details */}
-            <div className="heritage-preview-text">
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                  marginBottom: '1rem',
-                }}
-              >
-                <span style={{ width: '20px', height: '2px', backgroundColor: '#AA2E1F', display: 'inline-block', borderRadius: '1px' }} />
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: '#AA2E1F',
-                  }}
-                >
-                  Design Origins &amp; Heritage
-                </span>
-              </div>
-              <h2 style={{ color: '#0A0A09', marginBottom: '1.25rem', lineHeight: 1.25 }}>
-                Inspired by Two Great American Railroads
-              </h2>
-              <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '1.75rem' }}>
-                The Coast Road Capital brand identity and visual language pay homage to the rich visual history of North American railroading. Our branding draws distinct lineage from two legendary namesake carriers:
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.25rem' }}>
-                <div
-                  style={{
-                    padding: '1.25rem 1.5rem',
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
-                    borderLeft: '4px solid #AA2E1F',
-                    boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
-                  }}
-                >
-                  <strong style={{ color: '#0A0A09', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
-                    Seaboard Coast Line (SCL) "Speed Lettering"
-                  </strong>
-                  <span style={{ color: '#475569', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                    Influencing our bold typography, reflecting forward momentum, dependability, and industrial precision.
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    padding: '1.25rem 1.5rem',
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
-                    borderLeft: '4px solid #D97706',
-                    boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
-                  }}
-                >
-                  <strong style={{ color: '#0A0A09', fontSize: '1.05rem', display: 'block', marginBottom: '0.35rem' }}>
-                    The Milwaukee Road Herald
-                  </strong>
-                  <span style={{ color: '#475569', fontSize: '0.92rem', lineHeight: 1.6 }}>
-                    The angular red and black diamond badge geometry of the original CRC logo draws inspiration from the cab herald of the Chicago, Milwaukee, St. Paul and Pacific.
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ maxWidth: '320px' }}>
-                <TrackMotif />
               </div>
             </div>
           </div>
@@ -696,51 +302,34 @@ export const About: React.FC = () => {
       </section>
 
       {/* Closing CTA */}
-      <section className="section section-white" style={{ textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '780px' }}>
-          <span className="eyebrow" style={{ justifyContent: 'center' }}>Start the Conversation</span>
-          <h2 style={{ color: '#0A0A09', marginBottom: '1.25rem' }}>
-            Work With Coast Road Capital
+      <section className="section" style={{ textAlign: 'center', backgroundColor: '#0A0A09', padding: '4.5rem 0' }}>
+        <div className="container" style={{ maxWidth: '680px' }}>
+          <h2 style={{ color: '#FFFFFF', marginBottom: '1rem', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+            Ready to Work With Us?
           </h2>
-          <p style={{ color: '#475569', fontSize: '1.08rem', lineHeight: 1.7, marginBottom: '2.25rem' }}>
-            Let us know your car requirements, delivery timeframe, and route details. Our leasing specialists will review current market options.
+          <p style={{ color: '#94A3B8', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+            Tell us your car requirements, delivery timeframe, and route details. Our leasing team will review current market options.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
-            <Link to="/quote" className="btn btn-primary btn-lg">
-              <FileText size={18} />
-              Submit Quote Inquiry
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.85rem' }}>
+            <Link to="/quote" className="btn btn-primary">
+              <FileText size={17} />
+              Request a Quote
             </Link>
-            <Link to="/book-a-call" className="btn btn-secondary btn-lg">
-              <PhoneCall size={18} />
-              Schedule a Consultation
+            <Link to="/contact?tab=booking" className="btn btn-outline-white">
+              <PhoneCall size={17} />
+              Book a Call
             </Link>
           </div>
         </div>
       </section>
 
       <style>{`
-        .about-loco-img:hover {
-          transform: scale(1.03);
-        }
-        @media (max-width: 960px) {
-          .heritage-preview-grid {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 2.25rem !important;
+        @media (max-width: 768px) {
+          .approach-grid {
+            grid-template-columns: 1fr !important;
           }
-          .heritage-preview-text {
-            order: 1 !important;
-          }
-          .heritage-preview-card {
-            order: 2 !important;
-            width: 100% !important;
-          }
-        }
-        @media (max-width: 480px) {
-          .heritage-card-meta {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 0.65rem !important;
+          .infra-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>

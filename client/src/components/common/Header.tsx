@@ -30,17 +30,17 @@ export const Header: React.FC = () => {
       }
 
       // Always visible near top of page
-      if (currentScrollY <= 80) {
+      if (currentScrollY <= 100) {
         setVisible(true);
       } else {
         const diff = currentScrollY - lastScrollY.current;
 
-        // User scrolling DOWN -> hide navbar
-        if (diff > 6 && currentScrollY > 120) {
+        // User scrolling DOWN with deliberate movement -> slide navbar up
+        if (diff > 25 && currentScrollY > 180) {
           setVisible(false);
         }
         // User scrolling UP -> slide navbar down
-        else if (diff < -6) {
+        else if (diff < -15) {
           setVisible(true);
         }
       }
@@ -74,9 +74,8 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About Us' },
     { path: '/railcar-leasing', label: 'Railcar Leasing' },
-    { path: '/book-a-call', label: 'Book a Call' },
+    { path: '/about', label: 'About Us' },
     { path: '/contact', label: 'Contact' },
   ];
 
@@ -122,7 +121,7 @@ export const Header: React.FC = () => {
               src="/images/crc-logo-color.png"
               alt="Coast Road Capital"
               style={{
-                height: '48px',
+                height: '64px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
@@ -292,12 +291,12 @@ export const Header: React.FC = () => {
                 Request a Quote
               </Link>
               <Link
-                to="/book-a-call"
+                to="/contact"
                 className="btn btn-secondary"
                 style={{ width: '100%' }}
               >
                 <PhoneCall size={16} />
-                Schedule Consultation
+                Contact &amp; Sourcing
               </Link>
             </div>
           </div>

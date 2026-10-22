@@ -110,12 +110,29 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   background-color: var(--color-bg-base);
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
@@ -223,7 +240,7 @@ img {
 }
 
 .section-subtle {
-  background-color: var(--color-bg-subtle);
+  background-color: #FAF9F7;
   color: var(--color-text-body);
 }
 
@@ -256,21 +273,12 @@ img {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-red);
+  color: var(--color-text-muted);
   margin-bottom: 0.85rem;
 }
 
 .eyebrow-dark {
-  color: #F87171;
-}
-
-.eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 18px;
-  height: 2px;
-  background-color: currentColor;
-  border-radius: 2px;
+  color: #CBD5E1;
 }
 
 .badge {

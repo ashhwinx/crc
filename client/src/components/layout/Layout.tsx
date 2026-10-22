@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import { Header } from '../common/Header';
 import { Footer } from '../common/Footer';
 
@@ -8,11 +10,52 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      touchMultiplier: 1.8,
+      infinite: false,
+    });
+    lenisRef.current = lenis;
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  // Handle route change and hash scrolling with Lenis
+  useEffect(() => {
+    if (lenisRef.current) {
+      if (hash) {
+        setTimeout(() => {
+          const target = document.querySelector(hash);
+          if (target && lenisRef.current) {
+            lenisRef.current.scrollTo(target as HTMLElement, { offset: -90, duration: 1 });
+          }
+        }, 50);
+        return;
+      }
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

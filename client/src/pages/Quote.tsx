@@ -118,8 +118,8 @@ export const Quote: React.FC = () => {
       >
         <div className="container">
           <div style={{ maxWidth: '840px' }}>
-            <span className="badge badge-amber" style={{ marginBottom: '1.25rem' }}>
-              Leasing Inquiry &bull; Sourcing Request
+            <span className="eyebrow eyebrow-dark">
+              Equipment Sourcing &bull; Quote Request
             </span>
             <h1
               style={{
@@ -137,24 +137,25 @@ export const Quote: React.FC = () => {
               Submit your equipment specifications, intended lading, volume requirements, and timeline. Our commercial leasing specialists will review current market sourcing options and prepare a tailored proposal.
             </p>
 
-            {/* Phase 2 Cost Estimator Preview */}
+            {/* Direct Consultation Notice */}
             <div
               style={{
-                backgroundColor: '#1E293B',
-                border: '1px solid #334155',
-                padding: '1.1rem 1.4rem',
+                backgroundColor: '#141413',
+                border: '1px solid #2B2B28',
+                borderLeft: '4px solid #AA2E1F',
+                padding: '1rem 1.35rem',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '0.85rem',
                 fontSize: '0.88rem',
-                color: '#94A3B8',
+                color: '#A8A29E',
                 lineHeight: 1.6,
               }}
             >
-              <Info size={19} style={{ color: '#F87171', flexShrink: 0, marginTop: '2px' }} />
+              <Info size={18} style={{ color: '#AA2E1F', flexShrink: 0, marginTop: '2px' }} />
               <div>
-                <strong style={{ color: '#FFFFFF' }}>Phase 2 Cost Estimator Preview:</strong> A dynamic, self-service online Cost Estimator with automated rate models is slated for Phase 2. In Phase 1, all inquiries receive personalized, manual analysis from CRC leasing professionals to ensure accurate rate and car matching.
+                <strong style={{ color: '#F8FAFC' }}>Direct Review:</strong> All inquiries receive personalized analysis from CRC leasing professionals to ensure accurate car matching, facility clearance verification, and competitive lease terms.
               </div>
             </div>
           </div>
@@ -576,7 +577,7 @@ export const Quote: React.FC = () => {
                   }}
                 >
                   <div style={{ fontSize: '0.88rem', color: '#64748B' }}>
-                    Submissions are safely processed and stored in Coast Road Capital records.
+                    Inquiries are reviewed by our equipment leasing team within one business day.
                   </div>
 
                   <button
@@ -587,7 +588,7 @@ export const Quote: React.FC = () => {
                     {isSubmitting ? (
                       <>
                         <RefreshCw size={18} className="animate-spin" />
-                        Transmitting Inquiry...
+                        Submitting Inquiry...
                       </>
                     ) : (
                       <>

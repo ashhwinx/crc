@@ -38,7 +38,7 @@ export const NotFound: React.FC = () => {
             <Home size={18} />
             Return to Homepage
           </Link>
-          <Link to="/railcar-leasing" className="btn btn-secondary-dark">
+          <Link to="/railcar-leasing" className="btn btn-outline-white">
             <Search size={18} />
             Explore Railcar Catalog
           </Link>
