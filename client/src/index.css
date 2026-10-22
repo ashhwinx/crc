@@ -842,6 +842,11 @@ textarea.form-control {
   :root {
     --header-height: 72px;
   }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
   
   .btn {
     width: 100%;
