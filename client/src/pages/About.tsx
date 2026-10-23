@@ -92,6 +92,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/railcar-operations.webp"
                   alt="Railcar fleet operations and yard logistics"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
                 />
               </div>
@@ -223,6 +225,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/transloading-site.jpg"
                   alt="Railcar transloading facility"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
@@ -242,6 +246,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/track-construction-1.jpg"
                   alt="Railroad track construction"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
@@ -261,6 +267,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/track-maintenance.jpg"
                   alt="Railroad track maintenance"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
@@ -280,6 +288,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/railcar-leasing-overview.webp"
                   alt="Industrial railcar fleet"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>

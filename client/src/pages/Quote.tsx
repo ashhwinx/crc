@@ -9,6 +9,9 @@ export const Quote: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'Boxcars';
   const initialConfig = searchParams.get('config') || '';
+  const initialQty = searchParams.get('quantity') || '';
+  const initialTiming = searchParams.get('timing') || '';
+  const initialNotes = searchParams.get('notes') || '';
 
   const [formData, setFormData] = useState({
     name: '',
@@ -17,10 +20,10 @@ export const Quote: React.FC = () => {
     phone: '',
     category: initialCategory,
     configuration: initialConfig,
-    quantity: '',
+    quantity: initialQty,
     commodity: '',
-    timing: '',
-    message: '',
+    timing: initialTiming,
+    message: initialNotes,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -28,14 +31,17 @@ export const Quote: React.FC = () => {
   const [submitResult, setSubmitResult] = useState<InquiryResponse | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Synchronize category from URL if changed
+  // Synchronize category and estimator params from URL if changed
   useEffect(() => {
     const cat = searchParams.get('category');
     if (cat) {
       setFormData((prev) => ({
         ...prev,
         category: cat,
-        configuration: searchParams.get('config') || '',
+        configuration: searchParams.get('config') || prev.configuration,
+        quantity: searchParams.get('quantity') || prev.quantity,
+        timing: searchParams.get('timing') || prev.timing,
+        message: searchParams.get('notes') || prev.message,
       }));
     }
   }, [searchParams]);

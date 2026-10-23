@@ -217,6 +217,8 @@ export const RailcarLeasing: React.FC = () => {
                       <img
                         src={cat.image}
                         alt={cat.imageAlt}
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
 

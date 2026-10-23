@@ -25,6 +25,8 @@ export const Footer: React.FC = () => {
                 src="/images/crc-logo-color.png"
                 alt="Coast Road Capital"
                 className="footer-logo"
+                loading="lazy"
+                decoding="async"
               />
             </Link>
             <p className="footer-brand-desc">
@@ -82,6 +84,11 @@ export const Footer: React.FC = () => {
                 <li>
                   <Link to="/railcar-leasing" className="footer-nav-link">
                     Equipment Catalog
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/cost-estimator" className="footer-nav-link">
+                    Cost Estimator
                   </Link>
                 </li>
                 <li>

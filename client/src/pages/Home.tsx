@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -6,8 +6,55 @@ import {
   CheckCircle2,
   FileText,
   Check,
+  Calculator,
+  Truck,
+  SlidersHorizontal,
+  ShieldCheck,
 } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
+
+// Interactive Sample Estimates for Homepage Benchmark Card
+const HOME_SAMPLE_ESTIMATES = {
+  'covered-hoppers': {
+    category: 'Covered Hoppers',
+    size: '5,161–5,400 cu ft Grain / Fertilizer',
+    quantity: 10,
+    term: 'Medium-Term (1–3 Years)',
+    rateMin: '$780',
+    rateMax: '$1,150',
+    totalMin: '$7,800',
+    totalMax: '$11,500',
+    structure: 'Full-Service (Maint. Included)',
+    trucks: '40 highway semi-truckloads',
+    cargo: 'Grain, Fertilizer & Dry Bulk',
+  },
+  'boxcars': {
+    category: 'Boxcars',
+    size: '50-ft Standard (5,200 cu ft)',
+    quantity: 5,
+    term: 'Medium-Term (1–3 Years)',
+    rateMin: '$637',
+    rateMax: '$960',
+    totalMin: '$3,185',
+    totalMax: '$4,800',
+    structure: 'Full-Service (Maint. Included)',
+    trucks: '15–20 highway semi-truckloads',
+    cargo: 'Palletized Goods & Paper Rolls',
+  },
+  'tank-cars': {
+    category: 'Tank Cars',
+    size: '25,000–28,000 Gal General Purpose',
+    quantity: 8,
+    term: 'Long-Term (3–5 Years)',
+    rateMin: '$880',
+    rateMax: '$1,420',
+    totalMin: '$7,040',
+    totalMax: '$11,360',
+    structure: 'Full-Service (Maint. Included)',
+    trucks: '30–35 liquid tanker trucks',
+    cargo: 'Biofuels, Chemicals & Food Oils',
+  },
+};
 
 // Show only first 4 categories on home (preview, not duplicate of leasing page)
 const PREVIEW_CATEGORIES = EQUIPMENT_CATEGORIES.slice(0, 4);
@@ -69,6 +116,9 @@ const CATEGORY_TECH_SPECS: Record<
 };
 
 export const Home: React.FC = () => {
+  const [sampleCategory, setSampleCategory] = useState<'covered-hoppers' | 'boxcars' | 'tank-cars'>('covered-hoppers');
+  const activeSample = HOME_SAMPLE_ESTIMATES[sampleCategory];
+
   return (
     <div className="home-page">
       {/* =========================================================================
@@ -147,11 +197,19 @@ export const Home: React.FC = () => {
               Coast Road Capital helps North American shippers, manufacturers, and bulk processors find the right railcar equipment and lease terms for their supply chain.
             </p>
 
-            {/* Primary CTA only + secondary text link */}
+            {/* Primary CTAs */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', alignItems: 'center', marginBottom: '3rem' }}>
               <Link to="/quote" className="btn btn-primary btn-lg">
                 <FileText size={18} />
                 Request a Quote
+              </Link>
+              <Link
+                to="/cost-estimator"
+                className="btn btn-outline-white btn-lg"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}
+              >
+                <Calculator size={18} />
+                Cost Estimator
               </Link>
               <Link
                 to="/railcar-leasing"
@@ -273,6 +331,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/images/railcar-leasing-overview.webp"
                   alt="Industrial railcar fleet and yard operations"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: 'auto',
@@ -323,6 +383,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/images/railcar-operations.webp"
                   alt="Railcar yard inspection"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
@@ -352,6 +414,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/images/railcar-leasing-overview.webp"
                   alt="Commercial railcar leasing"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
@@ -381,6 +445,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/images/track-construction-1.jpg"
                   alt="Railway routing and siding"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
@@ -458,6 +524,8 @@ export const Home: React.FC = () => {
                     <img
                       src={cat.image}
                       alt={cat.imageAlt}
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
                   </div>
@@ -510,6 +578,309 @@ export const Home: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          COST ESTIMATOR FEATURE CALLOUT SECTION (Executive Interactive Benchmark)
+          ========================================================================= */}
+      <section
+        style={{
+          backgroundColor: '#FAF8F5',
+          borderTop: '1px solid #EADBCC',
+          borderBottom: '1px solid #EADBCC',
+          padding: '4.5rem 0',
+        }}
+      >
+        <div className="container">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '3.5rem',
+              alignItems: 'center',
+            }}
+          >
+            {/* Left Column: Clear Value Proposition with Domain Icons */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: '#AA2E1F',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                Capital Planning &amp; Fleet Budgeting
+              </span>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)',
+                  color: '#0A0A09',
+                  marginBottom: '1rem',
+                  lineHeight: 1.22,
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                Model Real-Time Equipment Lease Rates Before You Commit Capital
+              </h2>
+              <p
+                style={{
+                  color: '#475569',
+                  fontSize: '1.02rem',
+                  lineHeight: 1.7,
+                  marginBottom: '2rem',
+                }}
+              >
+                Eliminate the guesswork of freight logistics budgeting. Model realistic per-car and fleet monthly lease costs across North America's seven primary equipment classes in seconds — with instant maintenance scope comparisons.
+              </p>
+
+              {/* 3 Domain-Specific Specialized Feature Points */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '8px',
+                      backgroundColor: '#FDF2F0',
+                      border: '1px solid #FCDAD7',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px',
+                    }}
+                  >
+                    <SlidersHorizontal size={18} style={{ color: '#AA2E1F' }} />
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
+                      7 Railcar Categories &amp; Sizing Specs
+                    </strong>
+                    <span style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5, display: 'block' }}>
+                      Detailed cubic volume, GRL weight limits, and commodity matching across Boxcars, Hoppers, Gondolas, Flatcars, and Tank Cars.
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '8px',
+                      backgroundColor: '#ECFDF5',
+                      border: '1px solid #A7F3D0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px',
+                    }}
+                  >
+                    <ShieldCheck size={18} style={{ color: '#059669' }} />
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
+                      Full-Service vs. Net Lease Modeling
+                    </strong>
+                    <span style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5, display: 'block' }}>
+                      Compare lessor-managed AAR Rule 88 mechanical maintenance and wheelset renewals against shipper-managed net leases.
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+                <Link to="/cost-estimator" className="btn btn-primary btn-lg">
+                  <Calculator size={18} />
+                  Launch Cost Estimator
+                </Link>
+                <Link to="/railcar-leasing" className="btn btn-secondary btn-lg">
+                  View Full Catalog
+                  <ArrowRight size={17} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Column: Executive Interactive Benchmark Card */}
+            <div>
+              <div
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #DCE3EB',
+                  borderRadius: '14px',
+                  boxShadow: '0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
+                  overflow: 'hidden',
+                  padding: '1.5rem',
+                }}
+              >
+                <div>
+                  {/* Interactive Quick-Switcher Pills */}
+                  <div style={{ marginBottom: '1.15rem' }}>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gap: '0.35rem',
+                        backgroundColor: '#F1F5F9',
+                        padding: '0.25rem',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      {(
+                        [
+                          { id: 'covered-hoppers', label: 'Hoppers' },
+                          { id: 'boxcars', label: 'Boxcars' },
+                          { id: 'tank-cars', label: 'Tank Cars' },
+                        ] as const
+                      ).map((tab) => {
+                        const isActive = sampleCategory === tab.id;
+                        return (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setSampleCategory(tab.id)}
+                            style={{
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.45rem 0.35rem',
+                              fontSize: '0.78rem',
+                              fontWeight: isActive ? 700 : 500,
+                              cursor: 'pointer',
+                              backgroundColor: isActive ? '#FFFFFF' : 'transparent',
+                              color: isActive ? '#0A0A09' : '#64748B',
+                              boxShadow: isActive ? '0 1px 4px rgba(15, 23, 42, 0.08)' : 'none',
+                              transition: 'all 150ms ease',
+                            }}
+                          >
+                            {tab.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Sample Title & Spec */}
+                  <div style={{ marginBottom: '0.85rem' }}>
+                    <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#0A0A09', margin: '0 0 0.15rem 0', lineHeight: 1.25 }}>
+                      {activeSample.category}
+                    </h3>
+                    <p style={{ fontSize: '0.82rem', color: '#64748B', margin: 0, lineHeight: 1.35 }}>
+                      {activeSample.size} &bull; <strong>{activeSample.quantity} Railcars</strong>
+                    </p>
+                  </div>
+
+                  {/* Primary Rate Box with Green Number */}
+                  <div
+                    style={{
+                      background: 'linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%)',
+                      border: '1px solid #EADBCC',
+                      borderLeft: '3px solid #059669',
+                      borderRadius: '8px',
+                      padding: '0.85rem 1rem',
+                      marginBottom: '0.95rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: 'block',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        color: '#8C7B68',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        marginBottom: '0.15rem',
+                      }}
+                    >
+                      Estimated Monthly Rate
+                    </span>
+                    <div
+                      style={{
+                        fontSize: '1.65rem',
+                        fontWeight: 800,
+                        color: '#047857',
+                        fontFamily: 'var(--font-heading)',
+                        letterSpacing: '-0.02em',
+                        lineHeight: 1.1,
+                        marginBottom: '0.15rem',
+                      }}
+                    >
+                      {activeSample.rateMin} – {activeSample.rateMax}
+                    </div>
+                    <div style={{ fontSize: '0.76rem', color: '#64748B' }}>
+                      per car / month &bull; {activeSample.structure}
+                    </div>
+                  </div>
+
+                  {/* Ledger Breakdown Rows */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.15rem' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#F0FDF4',
+                        border: '1px solid #DCFCE7',
+                        borderRadius: '6px',
+                        padding: '0.45rem 0.65rem',
+                        fontSize: '0.82rem',
+                      }}
+                    >
+                      <span style={{ color: '#475569' }}>Monthly Fleet Total</span>
+                      <strong style={{ color: '#047857', fontWeight: 800, fontSize: '0.92rem' }}>
+                        {activeSample.totalMin} – {activeSample.totalMax}/mo
+                      </strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', borderBottom: '1px solid #F1F5F9', fontSize: '0.82rem' }}>
+                      <span style={{ color: '#475569' }}>Term Commitment</span>
+                      <strong style={{ color: '#0A0A09', fontWeight: 600 }}>{activeSample.term}</strong>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', borderBottom: '1px solid #F1F5F9', fontSize: '0.82rem' }}>
+                      <span style={{ color: '#475569' }}>Typical Cargo</span>
+                      <span style={{ color: '#0A0A09', fontWeight: 500 }}>{activeSample.cargo}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingTop: '0.35rem', fontSize: '0.80rem', color: '#334155' }}>
+                      <Truck size={14} style={{ color: '#2563EB', flexShrink: 0 }} />
+                      <span>{activeSample.trucks} displaced per turn</span>
+                    </div>
+                  </div>
+
+                  {/* Direct Action Link */}
+                  <Link
+                    to={`/cost-estimator?category=${sampleCategory}`}
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%',
+                      justifyContent: 'center',
+                      padding: '0.8rem 1.25rem',
+                      borderRadius: '8px',
+                      fontSize: '0.92rem',
+                      fontWeight: 700,
+                      marginBottom: '0.65rem',
+                    }}
+                  >
+                    <span>Customize This Fleet in Full Estimator</span>
+                    <ArrowRight size={16} />
+                  </Link>
+
+                  <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: 0, textAlign: 'center', lineHeight: 1.35 }}>
+                    *Indicative market rate for capital budgeting. Formal quote confirmed upon siding inspection and credit review.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

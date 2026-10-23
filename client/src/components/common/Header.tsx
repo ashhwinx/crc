@@ -1,33 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { Menu, X, PhoneCall, ChevronRight, FileText } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
   const location = useLocation();
 
-  // Close mobile menu on route change
+  // Close mobile menu on route change & ensure header is visible
   useEffect(() => {
     setMobileMenuOpen(false);
+    setIsVisible(true);
   }, [location.pathname]);
 
-  // Handle scroll effect: update scrolled style without unnecessary re-renders or hide/show jitter
+  // Smooth scroll up/down detection: slide up on scroll down, slide down on scroll up
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 20;
-      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+      const currentScrollY = window.scrollY;
+
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const delta = currentScrollY - lastScrollY.current;
+          const isScrolled = currentScrollY > 20;
+          setScrolled(isScrolled);
+
+          // If mobile menu is open, keep navbar fully visible
+          if (mobileMenuOpen) {
+            setIsVisible(true);
+            lastScrollY.current = Math.max(0, currentScrollY);
+            ticking.current = false;
+            return;
+          }
+
+          // At top of page (within top 60px), always stay visible
+          if (currentScrollY <= 60) {
+            setIsVisible(true);
+          } else if (delta > 8 && currentScrollY > 100) {
+            // Scrolling down past threshold -> slide up / hide
+            setIsVisible(false);
+          } else if (delta < -8) {
+            // Scrolling up past threshold -> slide down / show
+            setIsVisible(true);
+          }
+
+          lastScrollY.current = Math.max(0, currentScrollY);
+          ticking.current = false;
+        });
+
+        ticking.current = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mobileMenuOpen]);
 
-  // Update dynamic CSS variable for sticky sub-bars (e.g. RailcarLeasing catalog filter)
+  // Update dynamic CSS variable for sticky sub-bars (e.g. RailcarLeasing catalog filter or CostEstimator card)
   useEffect(() => {
-    document.documentElement.style.setProperty('--header-offset', 'var(--header-height)');
-  }, []);
+    const offset = isVisible ? 'var(--header-height)' : '0px';
+    document.documentElement.style.setProperty('--header-offset', offset);
+  }, [isVisible]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -44,15 +79,16 @@ export const Header: React.FC = () => {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/railcar-leasing', label: 'Railcar Leasing' },
+    { path: '/cost-estimator', label: 'Cost Estimator' },
     { path: '/about', label: 'About Us' },
     { path: '/contact', label: 'Contact' },
   ];
 
   return (
     <>
-      {/* Main Navigation Header: Rock-solid, flicker-free sticky navigation */}
+      {/* Main Navigation Header: Smooth slide-up on scroll down, slide-down on scroll up */}
       <header
-        className="site-header"
+        className={`site-header ${isVisible ? 'header-visible' : 'header-hidden'}`}
         style={{
           position: 'sticky',
           top: 0,
@@ -62,10 +98,11 @@ export const Header: React.FC = () => {
           WebkitBackdropFilter: 'blur(12px)',
           borderBottom: '1px solid #E2E8F0',
           boxShadow: scrolled ? '0 4px 20px -2px rgba(15, 23, 42, 0.08)' : '0 1px 2px 0 rgba(0, 0, 0, 0.02)',
-          transform: 'translateZ(0)',
+          transform: isVisible || mobileMenuOpen ? 'translateY(0)' : 'translateY(-100%)',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',
-          transition: 'background-color 220ms ease, box-shadow 220ms ease',
+          willChange: 'transform',
+          transition: 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 220ms ease, box-shadow 220ms ease',
         }}
       >
         <div
@@ -92,6 +129,8 @@ export const Header: React.FC = () => {
             <img
               src="/images/crc-logo-color.png"
               alt="Coast Road Capital"
+              fetchPriority="high"
+              decoding="async"
               style={{
                 height: '64px',
                 width: 'auto',
@@ -208,6 +247,8 @@ export const Header: React.FC = () => {
               <img
                 src="/images/crc-logo-color.png"
                 alt="Coast Road Capital"
+                loading="lazy"
+                decoding="async"
                 style={{ height: '40px', width: 'auto' }}
               />
               <button

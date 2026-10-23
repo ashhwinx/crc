@@ -7,6 +7,7 @@ import { RailcarLeasing } from './pages/RailcarLeasing';
 import { Quote } from './pages/Quote';
 import { Contact } from './pages/Contact';
 import { BookCall } from './pages/BookCall';
+import { CostEstimator } from './pages/CostEstimator';
 import { NotFound } from './pages/NotFound';
 
 export const App: React.FC = () => {
@@ -18,6 +19,8 @@ export const App: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/railcar-leasing" element={<RailcarLeasing />} />
           <Route path="/catalog" element={<Navigate to="/railcar-leasing" replace />} />
+          <Route path="/cost-estimator" element={<CostEstimator />} />
+          <Route path="/estimator" element={<Navigate to="/cost-estimator" replace />} />
           <Route path="/quote" element={<Quote />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/book-a-call" element={<BookCall />} />
