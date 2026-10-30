@@ -12,6 +12,7 @@ import healthRoutes from './routes/healthRoutes.js';
 import equipmentRoutes from './routes/equipmentRoutes.js';
 import inquiryRoutes from './routes/inquiryRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
+import estimatorRoutes from './routes/estimatorRoutes.js';
 import { notFoundHandler, globalErrorHandler } from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -69,6 +70,7 @@ const submissionLimiter = rateLimit({
 // Mount API routes
 app.use('/api', healthRoutes);
 app.use('/api', equipmentRoutes);
+app.use('/api', estimatorRoutes);
 app.use('/api', submissionLimiter, inquiryRoutes);
 app.use('/api', submissionLimiter, bookingRoutes);
 

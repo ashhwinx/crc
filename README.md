@@ -1,5 +1,5 @@
 # Coast Road Capital (CRC) Corporate Platform
-## Phase 1 | Production-Ready MERN Railroad Logistics & Railcar Leasing Website
+## Phase 1 & Phase 2 | Production-Ready MERN Railroad Logistics, Cost Estimator & 3D Track Layout Platform
 
 An enterprise-grade, high-performance web platform built for **Coast Road Capital (CRC)**, an American railroad logistics and railcar leasing business. Designed with authentic railroad heritage, industrial information architecture, and production-quality full-stack engineering.
 
@@ -110,8 +110,21 @@ The visual identity is derived directly from the supplied Coast Road Capital log
 6. **Contact (`/contact`):**
    - Corporate communications channel, inquiry form, and location disclosure indicating that the map will embed verified corporate headquarters upon client confirmation.
 
-### Explicitly Excluded Features (Reserved for Future Phases)
-- **Phase 2:** Dynamic Cost Estimator with backend calculation engine; Interactive 3D railroad track layout visualization.
+### Phase 2 Implementation (Completed & Active)
+7. **Cost Estimator (`/cost-estimator`):**
+   - 5-step commercial equipment budgeting tool with real-time calculations across all 7 equipment categories.
+   - Full-Service vs. Net lease structures, volume discount tiers (up to -10%), regional gateway interchange factors.
+   - **Backend Calculation Engine & Persistence API:** Verified server calculation endpoint (`POST /api/estimator/calculate`) and formal estimate persistence (`POST /api/estimator/save`) generating unique reference codes (`CRC-EST-XXXXXX`).
+   - Direct integration bridging estimates into the RFP Quote request form.
+8. **3D Railway Track Layout Visualizer (`/track-layout`):**
+   - Interactive Three.js/WebGL 3D engine modeling industrial sidings, passing runarounds, transload yards, and warehouse loading docks.
+   - 7 procedural 3D railcar models with authentic liveries and dimensional physics.
+   - Real-time AREMA/FRA Part 213 clearance & switch fouling point safety calculations (13-ft centerline buffer).
+   - Dynamic track footage slider (200 ft to 2,500 ft) with live car spotting capacity, payload tonnage, and highway truckload displacement metrics.
+   - Camera modes (3D Orbit, 2D CAD Blueprint, Trackside Cab) and environmental day/dusk/night floodlight controls.
+   - One-click workflow transfer to the Cost Estimator and Quote RFP.
+
+### Explicitly Excluded Features (Reserved for Phase 3)
 - **Phase 3:** Content Management System (CMS); Administrative dashboard for users, inventory, and quotes.
 
 ---

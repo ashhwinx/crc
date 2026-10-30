@@ -1,0 +1,9 @@
+# Coast Road Capital - robots.txt
+# Ensure search engines can properly crawl all public pages
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap location for Google Search Console and Bing Webmaster
+Sitemap: https://coastroadcapital.com/sitemap.xml

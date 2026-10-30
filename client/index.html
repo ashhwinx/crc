@@ -9,19 +9,40 @@
       name="description"
       content="Coast Road Capital provides specialized railcar leasing, freight equipment sourcing, and industrial railroad logistics solutions for shippers across North America."
     />
+    <link rel="canonical" href="https://coastroadcapital.com/" />
+    <link rel="icon" type="image/png" href="/images/crc-badge.png" />
+
+    <!-- Open Graph / Facebook / LinkedIn Social Sharing Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://coastroadcapital.com/" />
+    <meta property="og:site_name" content="Coast Road Capital" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Coast Road Capital | Railcar Leasing &amp; Equipment Solutions" />
     <meta
       property="og:description"
       content="Industrial railcar leasing and equipment sourcing across North America. Explore Boxcars, Covered Hoppers, Gondolas, Flatcars, and Tank Cars."
     />
-    <meta property="og:image" content="/images/crc-badge.png" />
-    <meta property="og:type" content="website" />
-    <link rel="icon" type="image/png" href="/images/crc-badge.png" />
-    
+    <meta property="og:image" content="https://coastroadcapital.com/images/railroad-hero-yard.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Coast Road Capital Railcar Fleet and Railroad Yard Operations" />
+
+    <!-- Twitter / X Card Social Sharing Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@coastroadcap" />
+    <meta name="twitter:creator" content="@coastroadcap" />
+    <meta name="twitter:title" content="Coast Road Capital | Railcar Leasing &amp; Equipment Solutions" />
+    <meta
+      name="twitter:description"
+      content="Specialized railcar leasing, freight equipment sourcing, and industrial logistics solutions for North American shippers."
+    />
+    <meta name="twitter:image" content="https://coastroadcapital.com/images/railroad-hero-yard.jpg" />
+    <meta name="twitter:image:alt" content="Coast Road Capital Railcar Fleet" />
+
     <!-- Preload key above-the-fold assets for instant visual rendering -->
     <link rel="preload" as="image" href="/images/crc-logo-color.png" fetchpriority="high" />
     <link rel="preload" as="image" href="/images/railroad-hero-yard.jpg" fetchpriority="high" />
-    
+
     <!-- Google Fonts: Plus Jakarta Sans (Executive), Inter (Clean Body), Barlow Condensed Italic (SCL Speed Lettering) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,9 +50,48 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Organization Schema Markup (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Coast Road Capital",
+        "url": "https://coastroadcapital.com",
+        "logo": "https://coastroadcapital.com/images/crc-logo-color.png",
+        "image": "https://coastroadcapital.com/images/crc-badge.png",
+        "description": "Specialized freight railcar leasing, equipment sourcing, and industrial railroad logistics solutions for shippers across North America.",
+        "telephone": "+1-832-555-1200",
+        "email": "leasing@coastroadcapital.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Houston",
+          "addressRegion": "TX",
+          "addressCountry": "US"
+        },
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "telephone": "+1-832-555-1200",
+            "contactType": "customer service",
+            "email": "leasing@coastroadcapital.com",
+            "areaServed": ["US", "CA", "MX"],
+            "availableLanguage": "English"
+          }
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/company/coast-road-capital"
+        ]
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Fallback semantic heading for static SEO audits before JS hydration -->
+    <div id="root">
+      <header style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+        <h1>Coast Road Capital — Railcar Leasing &amp; Equipment Solutions</h1>
+      </header>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

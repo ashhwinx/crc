@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Calculator,
   FileText,
@@ -10,6 +10,7 @@ import {
   Check,
   PhoneCall,
   ArrowRight,
+  Bookmark,
 } from 'lucide-react';
 import {
   ESTIMATOR_EQUIPMENT_DATA,
@@ -18,20 +19,55 @@ import {
   type EquipmentEstimatorItem,
   type CarSizeOption,
 } from '../data/estimatorData';
+import { saveEstimateAPI, type SaveEstimatePayload } from '../services/api';
 
 export const CostEstimator: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Initial params if directed from 3D Track Layout Visualizer
+  const paramCategory = searchParams.get('category');
+  const paramQuantity = searchParams.get('quantity');
+
+  const initialCategorySlug = useMemo(() => {
+    if (!paramCategory) return 'boxcars';
+    const match = ESTIMATOR_EQUIPMENT_DATA.find(
+      (c) => c.slug.toLowerCase() === paramCategory.toLowerCase() || c.name.toLowerCase().includes(paramCategory.toLowerCase())
+    );
+    return match ? match.slug : 'boxcars';
+  }, [paramCategory]);
+
+  const initialQty = useMemo(() => {
+    const q = parseInt(paramQuantity || '5', 10);
+    return isNaN(q) ? 5 : Math.max(1, Math.min(60, q));
+  }, [paramQuantity]);
 
   // State: Interactive selections
-  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>('boxcars');
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>(initialCategorySlug);
   const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(0);
   const [leaseType, setLeaseType] = useState<'full' | 'net'>('full');
   const [termId, setTermId] = useState<string>('medium');
-  const [quantity, setQuantity] = useState<number>(5);
+  const [quantity, setQuantity] = useState<number>(initialQty);
   const [regionId, setRegionId] = useState<string>('gulf-coast');
   const [copied, setCopied] = useState<boolean>(false);
+  const [savedEstimateRef, setSavedEstimateRef] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [activeGuideTab, setActiveGuideTab] = useState<string>('boxcars');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Sync if URL search params change
+  useEffect(() => {
+    if (paramCategory) {
+      const match = ESTIMATOR_EQUIPMENT_DATA.find(
+        (c) => c.slug.toLowerCase() === paramCategory.toLowerCase() || c.name.toLowerCase().includes(paramCategory.toLowerCase())
+      );
+      if (match) setSelectedCategorySlug(match.slug);
+    }
+    if (paramQuantity) {
+      const q = parseInt(paramQuantity, 10);
+      if (!isNaN(q)) setQuantity(Math.max(1, Math.min(60, q)));
+    }
+  }, [paramCategory, paramQuantity]);
 
   // Active equipment object
   const currentCategory: EquipmentEstimatorItem = useMemo(() => {
@@ -141,6 +177,47 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
     setTimeout(() => setCopied(false), 2500);
   };
 
+  // Save formal estimate via backend calculation & storage API
+  const handleSaveEstimate = async () => {
+    setIsSaving(true);
+    const payload: SaveEstimatePayload = {
+      category: currentCategory.name,
+      categorySlug: currentCategory.slug,
+      configuration: currentSize.name,
+      leaseType,
+      termId,
+      termName: termOption.name,
+      quantity,
+      regionId,
+      regionName: regionOption.name,
+      rates: {
+        minMonthlyPerCar: calculation.minRate,
+        maxMonthlyPerCar: calculation.maxRate,
+        totalMinMonthly: calculation.totalMinMonthly,
+        totalMaxMonthly: calculation.totalMaxMonthly,
+        totalMinAnnual: calculation.totalMinAnnual,
+        totalMaxAnnual: calculation.totalMaxAnnual,
+        volumeDiscountPct: Math.round((1 - volumeDiscount) * 100),
+      },
+      metrics: {
+        trucksReplacedMin: calculation.trucksReplacedMin,
+        trucksReplacedMax: calculation.trucksReplacedMax,
+        totalPayloadTons: calculation.totalPayloadTons,
+      },
+    };
+
+    try {
+      const res = await saveEstimateAPI(payload);
+      if (res.success && res.estimateReference) {
+        setSavedEstimateRef(res.estimateReference);
+      }
+    } catch (e) {
+      console.warn('Estimate save exception', e);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Direct transfer to quote page
   const handleTransferToQuote = () => {
     const params = new URLSearchParams({
@@ -149,8 +226,11 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
       quantity: quantity.toString(),
       timing: termOption.name,
       leaseType: leaseType === 'full' ? 'Full-Service Lease' : 'Net Lease',
-      notes: `Generated via CRC Cost Estimator. Estimated range: ${formatCur(calculation.minRate)} - ${formatCur(calculation.maxRate)}/car/mo. Interchange: ${regionOption.name}.`,
+      notes: `Generated via CRC Cost Estimator${savedEstimateRef ? ` [Ref: ${savedEstimateRef}]` : ''}. Estimated range: ${formatCur(calculation.minRate)} - ${formatCur(calculation.maxRate)}/car/mo. Interchange: ${regionOption.name}.`,
     });
+    if (savedEstimateRef) {
+      params.append('estimateRef', savedEstimateRef);
+    }
     navigate(`/quote?${params.toString()}`);
   };
 
@@ -570,6 +650,75 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                       <span>Request Official Quote with Estimate</span>
                       <ArrowRight size={17} style={{ flexShrink: 0 }} />
                     </button>
+
+                    {/* Backend Formal Estimate Persistence */}
+                    {savedEstimateRef ? (
+                      <div
+                        style={{
+                          backgroundColor: '#F0FDF4',
+                          border: '1px solid #BBF7D0',
+                          borderRadius: '6px',
+                          padding: '0.65rem 0.85rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          fontSize: '0.82rem',
+                          color: '#166534',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <Check size={14} style={{ color: '#16A34A', flexShrink: 0 }} />
+                          <span>Estimate Saved: <strong>{savedEstimateRef}</strong></span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(savedEstimateRef);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#15803D',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '2px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          <Copy size={12} />
+                          <span>Copy ID</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleSaveEstimate}
+                        disabled={isSaving}
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.45rem',
+                          padding: '0.65rem 1rem',
+                          borderRadius: '6px',
+                          border: '1px solid #CBD5E1',
+                          backgroundColor: '#F8FAFC',
+                          color: '#0F172A',
+                          fontSize: '0.85rem',
+                          fontWeight: 700,
+                          cursor: isSaving ? 'wait' : 'pointer',
+                          transition: 'all 150ms ease',
+                        }}
+                      >
+                        <Bookmark size={14} style={{ color: '#AA2E1F' }} />
+                        <span>{isSaving ? 'Generating Formal CRC Ref...' : 'Save & Generate Estimate Ref'}</span>
+                      </button>
+                    )}
 
                     <div className="summary-secondary-actions">
                       <button

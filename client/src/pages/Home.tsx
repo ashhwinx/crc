@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -10,8 +10,24 @@ import {
   Truck,
   SlidersHorizontal,
   ShieldCheck,
+  PhoneCall,
+  Clock,
+  Layers,
+  TrendingUp,
+  HelpCircle,
+  Building2,
+  BadgeCheck,
+  Fuel,
+  Scale,
+  ChevronDown,
+  User,
+  Mail,
+  Phone,
+  MapPin,
 } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
+import { submitInquiry } from '../services/api';
+import type { InquiryResponse, InquiryPayload } from '../types';
 
 // Interactive Sample Estimates for Homepage Benchmark Card
 const HOME_SAMPLE_ESTIMATES = {
@@ -56,7 +72,7 @@ const HOME_SAMPLE_ESTIMATES = {
   },
 };
 
-// Show only first 4 categories on home (preview, not duplicate of leasing page)
+// Show only first 4 categories on home preview
 const PREVIEW_CATEGORIES = EQUIPMENT_CATEGORIES.slice(0, 4);
 
 // Specs for preview cards
@@ -115,47 +131,333 @@ const CATEGORY_TECH_SPECS: Record<
   },
 };
 
+// Hero Form Dropdown Options with Rich Metadata
+const RAILCAR_TYPE_OPTIONS = [
+  {
+    value: 'Covered Hoppers',
+    label: 'Covered Hoppers',
+    detail: 'Grain, plastics & dry bulk',
+    badge: 'Hoppers',
+  },
+  {
+    value: 'Tank Cars',
+    label: 'Tank Cars',
+    detail: 'DOT-117, chemicals & biofuels',
+    badge: 'DOT-117',
+  },
+  {
+    value: 'Boxcars',
+    label: 'Boxcars',
+    detail: 'Paper rolls, food & cargo',
+    badge: '50/60ft',
+  },
+  {
+    value: 'Mill Gondolas',
+    label: 'Mill Gondolas',
+    detail: 'Steel coils & scrap metal',
+    badge: 'Gondolas',
+  },
+  {
+    value: 'Flatcars & Centerbeam',
+    label: 'Flatcars & Centerbeam',
+    detail: 'Lumber, steel & deck cargo',
+    badge: 'Flatcars',
+  },
+  {
+    value: 'Open-Top Hoppers',
+    label: 'Open-Top Hoppers',
+    detail: 'Aggregates, ballast & coal',
+    badge: 'Aggregates',
+  },
+  {
+    value: 'Other / Multiple Types',
+    label: 'Other / Mixed Fleet',
+    detail: 'Specialized equipment scope',
+    badge: 'Custom',
+  },
+];
+
+const QUANTITY_OPTIONS = [
+  {
+    value: '1–5 Cars',
+    label: '1 – 5 Cars',
+    detail: 'Spot & short-term surge',
+    badge: 'Spot',
+  },
+  {
+    value: '5–10 Cars',
+    label: '5 – 10 Cars',
+    detail: 'Standard facility car set',
+    badge: 'Popular',
+  },
+  {
+    value: '10–25 Cars',
+    label: '10 – 25 Cars',
+    detail: 'Commercial fleet batch',
+    badge: 'Batch',
+  },
+  {
+    value: '25–50 Cars',
+    label: '25 – 50 Cars',
+    detail: 'Dedicated program lease',
+    badge: 'Program',
+  },
+  {
+    value: '50+ Cars / Unit Train',
+    label: '50+ Cars / Unit Train',
+    detail: 'High-volume unit train',
+    badge: 'Unit Train',
+  },
+];
+
+// Comprehensive Services Data with Structured Points & Metadata
+const SERVICES_DATA = [
+  {
+    id: 'full-service',
+    title: 'Full-Service Operating Leases',
+    subtitle: 'Turnkey fleet maintenance & capital budgeting',
+    icon: Layers,
+    iconBg: '#FDF2F0',
+    iconColor: '#AA2E1F',
+    points: [
+      'AAR Rule 88 maintenance, repairs & wheelset renewals covered',
+      'Periodic tank qualification & FRA safety inspections included',
+      'Predictable fixed monthly budgeting with zero surprise repair bills',
+    ],
+    linkTo: '/cost-estimator',
+    linkText: 'Model Full-Service Rates',
+  },
+  {
+    id: 'net-leases',
+    title: 'Net Leases & Capital Leases',
+    subtitle: 'Lower base lease expense for captive loops',
+    icon: Scale,
+    iconBg: '#ECFDF5',
+    iconColor: '#059669',
+    points: [
+      'Substantially lower monthly base rental expense',
+      'Shipper manages routine maintenance & authorized shop network',
+      'Engineered for high-volume dedicated private carrier loops',
+    ],
+    linkTo: '/cost-estimator',
+    linkText: 'Compare Net vs Full-Service',
+  },
+  {
+    id: 'fleet-sourcing',
+    title: 'Specialized Fleet Sourcing & Brokerage',
+    subtitle: 'Immediate secondary market placement across North America',
+    icon: SlidersHorizontal,
+    iconBg: '#EFF6FF',
+    iconColor: '#2563EB',
+    points: [
+      'Bypass 12–18 month OEM new car manufacturing lead times',
+      'Verified secondary market car sets & off-lease private pools',
+      'Immediate delivery cadence across 7 core freight railcar classes',
+    ],
+    linkTo: '/railcar-leasing',
+    linkText: 'Explore Equipment Classes',
+  },
+  {
+    id: 'sale-leaseback',
+    title: 'Sale-Leaseback Fleet Financing',
+    subtitle: 'Unlock balance sheet capital from private car fleets',
+    icon: Building2,
+    iconBg: '#FEF3C7',
+    iconColor: '#D97706',
+    points: [
+      'Monetize company-owned railcars at fair market value (FMV)',
+      'Immediate liquidity unlocked for plant or manufacturing expansion',
+      'Cars leased right back with zero operational downtime or track shifting',
+    ],
+    linkTo: '/quote',
+    linkText: 'Request Sourcing Proposal',
+  },
+  {
+    id: 'aar-compliance',
+    title: 'AAR Mechanical Compliance & Inspections',
+    subtitle: 'Rigorous pre-trip qualification & safety appliances',
+    icon: ShieldCheck,
+    iconBg: '#F5F3FF',
+    iconColor: '#7C3AED',
+    points: [
+      'Full Umler equipment registration & OT-5 loading authority',
+      'Pre-trip Rule 88 certified mechanical inspection before interchange',
+      'FRA Title 49 CFR safety appliance compliance across all lines',
+    ],
+    linkTo: '/company-values',
+    linkText: 'Read Mechanical Standards',
+  },
+  {
+    id: 'logistics-advisory',
+    title: 'Siding & Interchange Logistics Advisory',
+    subtitle: 'Facility track geometry & Class I carrier clearance',
+    icon: Clock,
+    iconBg: '#FFFBEB',
+    iconColor: '#B45309',
+    points: [
+      'Track curvature radius & AAR Plate B/C/F clearance verification',
+      '263,000 lbs vs 286,000 lbs Gross Rail Load (GRL) siding match',
+      'Continental interchange coordination across all 6 Class I carriers',
+    ],
+    linkTo: '/faq',
+    linkText: 'Review Siding & Delivery FAQs',
+  },
+];
+
 export const Home: React.FC = () => {
   const [sampleCategory, setSampleCategory] = useState<'covered-hoppers' | 'boxcars' | 'tank-cars'>('covered-hoppers');
   const activeSample = HOME_SAMPLE_ESTIMATES[sampleCategory];
 
+  // Hero Equipment Sourcing Form State
+  const [heroForm, setHeroForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    carType: 'Covered Hoppers',
+    quantity: '5–10 Cars',
+    notes: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitResult, setSubmitResult] = useState<InquiryResponse | null>(null);
+
+  // Custom Dropdown Open States
+  const [carTypeOpen, setCarTypeOpen] = useState(false);
+  const [quantityOpen, setQuantityOpen] = useState(false);
+  const carTypeRef = useRef<HTMLDivElement>(null);
+  const quantityRef = useRef<HTMLDivElement>(null);
+
+  // Mobile Services Carousel Scroll State
+  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
+  const servicesTrackRef = useRef<HTMLDivElement>(null);
+
+  const handleServicesScroll = () => {
+    if (servicesTrackRef.current) {
+      const scrollLeft = servicesTrackRef.current.scrollLeft;
+      const cardWidth = servicesTrackRef.current.offsetWidth * 0.84;
+      const index = Math.round(scrollLeft / (cardWidth + 14));
+      setActiveServiceIdx(Math.min(Math.max(index, 0), SERVICES_DATA.length - 1));
+    }
+  };
+
+  const scrollServiceTo = (index: number) => {
+    if (servicesTrackRef.current) {
+      const cardWidth = servicesTrackRef.current.offsetWidth * 0.84 + 14;
+      servicesTrackRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth',
+      });
+      setActiveServiceIdx(index);
+    }
+  };
+
+  // Close dropdowns on outside click or Escape key
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (carTypeRef.current && !carTypeRef.current.contains(e.target as Node)) {
+        setCarTypeOpen(false);
+      }
+      if (quantityRef.current && !quantityRef.current.contains(e.target as Node)) {
+        setQuantityOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setCarTypeOpen(false);
+        setQuantityOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleHeroSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!heroForm.name.trim() || !heroForm.email.trim()) {
+      alert('Please provide your full name and work email.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitResult(null);
+
+    const payload: InquiryPayload = {
+      name: heroForm.name.trim(),
+      company: heroForm.company.trim() || 'Not Specified',
+      email: heroForm.email.trim(),
+      phone: heroForm.phone.trim(),
+      category: heroForm.carType,
+      quantity: heroForm.quantity,
+      message: `Hero Equipment Request: ${heroForm.carType} (${heroForm.quantity}). Company: ${heroForm.company || 'N/A'}. Phone: ${heroForm.phone || 'N/A'}. Notes: ${heroForm.notes || 'None'}`,
+      type: 'quote',
+      sourceUrl: typeof window !== 'undefined' ? window.location.href : '',
+    };
+
+    const result = await submitInquiry(payload);
+    setIsSubmitting(false);
+    setSubmitResult(result);
+  };
+
+  const handleResetForm = () => {
+    setSubmitResult(null);
+    setCarTypeOpen(false);
+    setQuantityOpen(false);
+    setHeroForm({
+      name: '',
+      email: '',
+      company: '',
+      phone: '',
+      carType: 'Covered Hoppers',
+      quantity: '5–10 Cars',
+      notes: '',
+    });
+  };
+
   return (
     <div className="home-page">
       {/* =========================================================================
-          HERO SECTION
+          HERO SECTION WITH RESPONSIVE 2-COLUMN GRID & DIRECT LEAD FORM
           ========================================================================= */}
       <section
         style={{
           position: 'relative',
           backgroundColor: '#0A0A09',
           color: '#FFFFFF',
-          minHeight: '80vh',
+          minHeight: '84vh',
           display: 'flex',
           alignItems: 'center',
-          overflow: 'hidden',
-          padding: '5rem 0 4.5rem',
+          padding: '4.5rem 0 4rem',
+          zIndex: 5,
         }}
+        className="home-hero-section"
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 1,
-            backgroundImage: `url('/images/railroad-hero-yard.jpg')`,
-            backgroundPosition: 'center 35%',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            transform: 'scale(1.02)',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 2,
-            background: 'linear-gradient(90deg, rgba(10,10,9,0.96) 0%, rgba(10,10,9,0.88) 45%, rgba(10,10,9,0.55) 100%)',
-          }}
-        />
+        {/* Background Image Container with overflow hidden to clip scaled image */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 1, pointerEvents: 'none' }}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url('/images/railroad-hero-yard.jpg')`,
+              backgroundPosition: 'center 35%',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              transform: 'scale(1.02)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(90deg, rgba(10,10,9,0.97) 0%, rgba(10,10,9,0.92) 50%, rgba(10,10,9,0.72) 100%)',
+            }}
+          />
+        </div>
         <div
           style={{
             position: 'absolute',
@@ -169,90 +471,382 @@ export const Home: React.FC = () => {
         />
 
         <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
-          <div style={{ maxWidth: '780px' }}>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(2.5rem, 5.2vw, 4rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-                color: '#FFFFFF',
-                letterSpacing: '-0.03em',
-                marginBottom: '1.5rem',
-              }}
-            >
-              Railcar Leasing &amp; Sourcing <br />
-              <span style={{ color: '#F87171' }}>Built Around</span> Your Operation.
-            </h1>
+          <div className="hero-grid">
+            {/* Left Column: Heading, Proposition & Primary Links */}
+            <div className="hero-text-col">
+            
 
-            <p
-              style={{
-                fontSize: 'clamp(1.05rem, 1.8vw, 1.2rem)',
-                lineHeight: 1.7,
-                color: '#CBD5E1',
-                marginBottom: '2.5rem',
-                maxWidth: '660px',
-              }}
-            >
-              Coast Road Capital helps North American shippers, manufacturers, and bulk processors find the right railcar equipment and lease terms for their supply chain.
-            </p>
-
-            {/* Primary CTAs */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', alignItems: 'center', marginBottom: '3rem' }}>
-              <Link to="/quote" className="btn btn-primary btn-lg">
-                <FileText size={18} />
-                Request a Quote
-              </Link>
-              <Link
-                to="/cost-estimator"
-                className="btn btn-outline-white btn-lg"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}
-              >
-                <Calculator size={18} />
-                Cost Estimator
-              </Link>
-              <Link
-                to="/railcar-leasing"
+              {/* Semantic H1 with balanced, executive typography */}
+              <h1
+                className="hero-main-title"
                 style={{
-                  color: '#CBD5E1',
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.8rem 0.25rem',
-                  transition: 'color 180ms ease',
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(1.75rem, 3.2vw, 2.5rem)',
+                  fontWeight: 800,
+                  lineHeight: 1.2,
+                  color: '#FFFFFF',
+                  letterSpacing: '-0.02em',
+                  marginBottom: '0.85rem',
                 }}
-                className="hero-text-link"
               >
-                Browse Equipment Catalog
-                <ArrowRight size={17} />
-              </Link>
+                Railcar Leasing &amp; Fleet Sourcing <br />
+                <span style={{ color: '#F87171' }}>Built Around</span> Your Operation.
+              </h1>
+
+              <p
+                className="hero-main-desc"
+                style={{
+                  fontSize: 'clamp(0.92rem, 1.35vw, 1.05rem)',
+                  lineHeight: 1.6,
+                  color: '#CBD5E1',
+                  marginBottom: '1.75rem',
+                  maxWidth: '520px',
+                }}
+              >
+                Coast Road Capital connects industrial shippers with verified railcar equipment and flexible lease frameworks across North America.
+              </p>
+
+              {/* Primary Action Buttons & Internal Links */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.85rem',
+                  alignItems: 'center',
+                  marginBottom: '2.5rem',
+                }}
+              >
+                <Link to="/cost-estimator" className="btn btn-primary btn-lg">
+                  <Calculator size={18} />
+                  Cost Estimator
+                </Link>
+                <Link to="/railcar-leasing" className="btn btn-outline-white btn-lg">
+                  Browse Equipment Catalog
+                  <ArrowRight size={17} />
+                </Link>
+              </div>
+
+              {/* Trust & Spec Highlights */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '1.5rem',
+                  paddingTop: '1.5rem',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.14)',
+                  alignItems: 'center',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
+                    7 Core Car Categories
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#059669', flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
+                    AAR &amp; FRA Mechanical Compliance
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#2563EB', flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
+                    Full-Service &amp; Net Lease Terms
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Trust Highlights */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '1.75rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.14)',
-                alignItems: 'center',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>7 Equipment Categories</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Standard &amp; Custom Sizes</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Flexible Lease Terms</span>
+            {/* Right Column: Direct Railcar Equipment Lead Form */}
+            <div className="hero-form-col">
+              <div className="hero-lead-card">
+                {/* Status Badge & Heading */}
+                <div className="hero-card-header">
+                  <h2 className="hero-card-title">
+                    Request Railcar Availability
+                  </h2>
+                  <p className="hero-card-desc">
+                    Direct lease pricing &amp; equipment placement across North America.
+                  </p>
+                </div>
+
+                {submitResult?.success ? (
+                  <div className="hero-success-state">
+                    <CheckCircle2 size={32} style={{ color: '#10B981', margin: '0 auto 0.6rem' }} />
+                    <h3 style={{ color: '#FFFFFF', fontSize: '1.05rem', marginBottom: '0.35rem', fontWeight: 700 }}>
+                      Availability Request Received
+                    </h3>
+                    <p style={{ color: '#CBD5E1', fontSize: '0.84rem', lineHeight: 1.5, marginBottom: '0.75rem' }}>
+                      Our commercial fleet team will verify equipment availability and respond within one business day.
+                    </p>
+                    <div className="hero-ref-badge">
+                      Tracking Ref: <strong>{submitResult.referenceId}</strong>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={handleResetForm}
+                        className="btn btn-outline-white btn-sm"
+                        style={{ fontSize: '0.78rem', padding: '0.45rem 1rem' }}
+                      >
+                        Submit Another Inquiry
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleHeroSubmit} className="hero-lead-form">
+                    <div className="hero-fields-grid">
+                      {/* Full Name */}
+                      <div className="hero-input-group">
+                        <label htmlFor="hero-name" className="hero-input-label">
+                          Full Name <span className="req-star">*</span>
+                        </label>
+                        <div className="hero-field-wrapper">
+                          <User size={15} className="hero-field-icon" />
+                          <input
+                            id="hero-name"
+                            type="text"
+                            required
+                            value={heroForm.name}
+                            onChange={(e) => setHeroForm({ ...heroForm, name: e.target.value })}
+                            placeholder="e.g. John Henderson"
+                            className="hero-field-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Work Email */}
+                      <div className="hero-input-group">
+                        <label htmlFor="hero-email" className="hero-input-label">
+                          Work Email <span className="req-star">*</span>
+                        </label>
+                        <div className="hero-field-wrapper">
+                          <Mail size={15} className="hero-field-icon" />
+                          <input
+                            id="hero-email"
+                            type="email"
+                            required
+                            value={heroForm.email}
+                            onChange={(e) => setHeroForm({ ...heroForm, email: e.target.value })}
+                            placeholder="e.g. jhenderson@shipper.com"
+                            className="hero-field-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Company Name */}
+                      <div className="hero-input-group">
+                        <label htmlFor="hero-company" className="hero-input-label">
+                          Company / Facility
+                        </label>
+                        <div className="hero-field-wrapper">
+                          <Building2 size={15} className="hero-field-icon" />
+                          <input
+                            id="hero-company"
+                            type="text"
+                            value={heroForm.company}
+                            onChange={(e) => setHeroForm({ ...heroForm, company: e.target.value })}
+                            placeholder="e.g. Midwest Grain Logistics"
+                            className="hero-field-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Direct Phone */}
+                      <div className="hero-input-group">
+                        <label htmlFor="hero-phone" className="hero-input-label">
+                          Phone Number
+                        </label>
+                        <div className="hero-field-wrapper">
+                          <Phone size={15} className="hero-field-icon" />
+                          <input
+                            id="hero-phone"
+                            type="tel"
+                            value={heroForm.phone}
+                            onChange={(e) => setHeroForm({ ...heroForm, phone: e.target.value })}
+                            placeholder="e.g. (832) 555-0199"
+                            className="hero-field-input"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Railcar Category - Custom Dropdown */}
+                      <div
+                        className="hero-input-group"
+                        ref={carTypeRef}
+                        style={{ position: 'relative', zIndex: carTypeOpen ? 60 : 2 }}
+                      >
+                        <label className="hero-input-label" id="hero-cartype-label">
+                          Railcar Type <span className="req-star">*</span>
+                        </label>
+                        <button
+                          type="button"
+                          aria-haspopup="listbox"
+                          aria-expanded={carTypeOpen}
+                          aria-labelledby="hero-cartype-label"
+                          onClick={() => {
+                            setCarTypeOpen(!carTypeOpen);
+                            setQuantityOpen(false);
+                          }}
+                          className={`hero-custom-select-btn ${carTypeOpen ? 'active' : ''}`}
+                        >
+                          <span className="hero-select-value">
+                            {RAILCAR_TYPE_OPTIONS.find((o) => o.value === heroForm.carType)?.label || heroForm.carType}
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`hero-select-arrow ${carTypeOpen ? 'open' : ''}`}
+                          />
+                        </button>
+
+                        {carTypeOpen && (
+                          <div
+                            role="listbox"
+                            aria-labelledby="hero-cartype-label"
+                            className="hero-custom-dropdown"
+                          >
+                            <div className="hero-dropdown-header">Select Equipment Class</div>
+                            {RAILCAR_TYPE_OPTIONS.map((opt) => {
+                              const isSelected = heroForm.carType === opt.value;
+                              return (
+                                <div
+                                  key={opt.value}
+                                  role="option"
+                                  aria-selected={isSelected}
+                                  onClick={() => {
+                                    setHeroForm({ ...heroForm, carType: opt.value });
+                                    setCarTypeOpen(false);
+                                  }}
+                                  className={`hero-dropdown-option ${isSelected ? 'selected' : ''}`}
+                                >
+                                  <div className="hero-option-content">
+                                    <div className="hero-option-main">
+                                      <span className="hero-option-label">{opt.label}</span>
+                                      {opt.badge && <span className="hero-option-badge">{opt.badge}</span>}
+                                    </div>
+                                    <span className="hero-option-detail">{opt.detail}</span>
+                                  </div>
+                                  {isSelected && <Check size={14} className="hero-option-check" />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Quantity Required - Custom Dropdown */}
+                      <div
+                        className="hero-input-group"
+                        ref={quantityRef}
+                        style={{ position: 'relative', zIndex: quantityOpen ? 60 : 2 }}
+                      >
+                        <label className="hero-input-label" id="hero-quantity-label">
+                          Quantity Required <span className="req-star">*</span>
+                        </label>
+                        <button
+                          type="button"
+                          aria-haspopup="listbox"
+                          aria-expanded={quantityOpen}
+                          aria-labelledby="hero-quantity-label"
+                          onClick={() => {
+                            setQuantityOpen(!quantityOpen);
+                            setCarTypeOpen(false);
+                          }}
+                          className={`hero-custom-select-btn ${quantityOpen ? 'active' : ''}`}
+                        >
+                          <span className="hero-select-value">
+                            {QUANTITY_OPTIONS.find((o) => o.value === heroForm.quantity)?.label || heroForm.quantity}
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`hero-select-arrow ${quantityOpen ? 'open' : ''}`}
+                          />
+                        </button>
+
+                        {quantityOpen && (
+                          <div
+                            role="listbox"
+                            aria-labelledby="hero-quantity-label"
+                            className="hero-custom-dropdown"
+                          >
+                            <div className="hero-dropdown-header">Select Fleet Commitment</div>
+                            {QUANTITY_OPTIONS.map((opt) => {
+                              const isSelected = heroForm.quantity === opt.value;
+                              return (
+                                <div
+                                  key={opt.value}
+                                  role="option"
+                                  aria-selected={isSelected}
+                                  onClick={() => {
+                                    setHeroForm({ ...heroForm, quantity: opt.value });
+                                    setQuantityOpen(false);
+                                  }}
+                                  className={`hero-dropdown-option ${isSelected ? 'selected' : ''}`}
+                                >
+                                  <div className="hero-option-content">
+                                    <div className="hero-option-main">
+                                      <span className="hero-option-label">{opt.label}</span>
+                                      {opt.badge && <span className="hero-option-badge">{opt.badge}</span>}
+                                    </div>
+                                    <span className="hero-option-detail">{opt.detail}</span>
+                                  </div>
+                                  {isSelected && <Check size={14} className="hero-option-check" />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Notes / Siding - Full Width Span */}
+                      <div className="hero-input-group hero-full-width">
+                        <label htmlFor="hero-notes" className="hero-input-label">
+                          Delivery Siding / Cargo Notes <span className="opt-tag">(Optional)</span>
+                        </label>
+                        <div className="hero-field-wrapper">
+                          <MapPin size={15} className="hero-field-icon" />
+                          <input
+                            id="hero-notes"
+                            type="text"
+                            value={heroForm.notes}
+                            onChange={(e) => setHeroForm({ ...heroForm, notes: e.target.value })}
+                            placeholder="e.g. Origin siding, commodity type, or required delivery date"
+                            className="hero-field-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="hero-submit-btn"
+                    >
+                      {isSubmitting ? (
+                        <span>Checking Availability...</span>
+                      ) : (
+                        <>
+                          <span>Request Equipment Availability</span>
+                          <ArrowRight size={16} />
+                        </>
+                      )}
+                    </button>
+
+                    {/* Direct Contact Hotline Footer */}
+                    <div className="hero-card-footer">
+                      <div className="hero-footer-item">
+                        <span>Direct Houston Desk:</span>
+                        <a href="tel:+18325551200" className="hero-phone-link">
+                          <PhoneCall size={12} style={{ color: '#AA2E1F' }} />
+                          (832) 555-1200
+                        </a>
+                      </div>
+                      <span className="hero-footer-spec">AAR &amp; FRA Verified</span>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
@@ -260,7 +854,159 @@ export const Home: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          BUSINESS INTRODUCTION
+          SECTION: COMPREHENSIVE SERVICES BREAKDOWN (Item 8: Expanded Content)
+          ========================================================================= */}
+      <section className="section section-white services-section" style={{ borderBottom: '1px solid #E2E8F0' }}>
+        <div className="container">
+          {/* Section Header */}
+          <div className="services-section-header">
+            <h2 className="services-main-title">
+              Comprehensive Rail Equipment &amp; Sourcing Services
+            </h2>
+            <p className="services-main-desc">
+              From initial fleet sizing to Class I interchange and routine mechanical maintenance, Coast Road Capital provides end-to-end support for industrial shippers across North America.
+            </p>
+          </div>
+
+          {/* Services Grid (Desktop 3x2 Grid, Mobile Natural Swipe Track) */}
+          <div
+            ref={servicesTrackRef}
+            onScroll={handleServicesScroll}
+            className="services-grid"
+          >
+            {SERVICES_DATA.map((srv) => {
+              const IconComp = srv.icon;
+              return (
+                <div key={srv.id} className="service-card">
+                  {/* Card Top: Category Icon Box */}
+                  <div className="service-card-top">
+                    <div
+                      className="service-icon-box"
+                      style={{
+                        backgroundColor: srv.iconBg,
+                        color: srv.iconColor,
+                        border: `1px solid ${srv.iconBg}`,
+                      }}
+                    >
+                      <IconComp size={19} strokeWidth={1.85} />
+                    </div>
+                  </div>
+
+                  {/* Title & Short Descriptor */}
+                  <div className="service-heading-wrap">
+                    <h3 className="service-title">{srv.title}</h3>
+                    <p className="service-subtitle">{srv.subtitle}</p>
+                  </div>
+
+                  {/* Clean Structured Points with Minimal Muted Dots */}
+                  <ul className="service-bullets-list">
+                    {srv.points.map((pt, pIdx) => (
+                      <li key={pIdx} className="service-bullet-item">
+                        <span className="service-bullet-dot" />
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Action Link Footer */}
+                  <div className="service-link-wrap">
+                    <Link to={srv.linkTo} className="service-action-link">
+                      <span>{srv.linkText}</span>
+                      <ArrowRight size={13} strokeWidth={2} />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile Swipe Pagination Dots */}
+          <div className="mobile-services-dots-wrap">
+            {SERVICES_DATA.map((_, dotIdx) => (
+              <button
+                key={dotIdx}
+                type="button"
+                onClick={() => scrollServiceTo(dotIdx)}
+                className={`mobile-service-dot ${activeServiceIdx === dotIdx ? 'active' : ''}`}
+                aria-label={`Jump to service ${dotIdx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION: QUANTIFIABLE BENEFITS OF RAIL (Item 8: Expanded Content)
+          ========================================================================= */}
+      {/* =========================================================================
+          SECTION: QUANTIFIABLE BENEFITS OF RAIL (Item 8: Expanded Content)
+          ========================================================================= */}
+      <section className="benefits-section">
+        <div className="container">
+          <div className="benefits-header">
+          
+            <h2 className="benefits-main-title">
+              Why Leading Shippers Scale on Rail Freight
+            </h2>
+            <p className="benefits-main-desc">
+              Transitioning bulk commodities from highway drayage to dedicated railcars delivers proven cost savings, massive volume throughput, and drastic carbon reductions.
+            </p>
+          </div>
+
+          <div className="benefits-grid">
+            {/* Metric 1 */}
+            <div className="benefit-stat-card card-emerald">
+              <div className="benefit-icon-badge badge-emerald">
+                <Fuel size={22} />
+              </div>
+              <div className="benefit-stat-num">4:1</div>
+              <h3 className="benefit-stat-title">Fuel &amp; Carbon Efficiency</h3>
+              <p className="benefit-stat-desc">
+                Railroads move 1 ton of freight nearly 500 miles on a single gallon of diesel, cutting greenhouse gas emissions by up to 75% versus commercial semi-trucks.
+              </p>
+            </div>
+
+            {/* Metric 2 */}
+            <div className="benefit-stat-card card-blue">
+              <div className="benefit-icon-badge badge-blue">
+                <Truck size={22} />
+              </div>
+              <div className="benefit-stat-num">3.5–4x</div>
+              <h3 className="benefit-stat-title">Cargo Capacity per Railcar</h3>
+              <p className="benefit-stat-desc">
+                One 100-ton covered hopper or tank car replaces 3 to 4 commercial highway semi-trucks, drastically reducing dock congestion, gate labor, and driver turnaround friction.
+              </p>
+            </div>
+
+            {/* Metric 3 */}
+            <div className="benefit-stat-card card-amber">
+              <div className="benefit-icon-badge badge-amber">
+                <TrendingUp size={22} />
+              </div>
+              <div className="benefit-stat-num">100%</div>
+              <h3 className="benefit-stat-title">Rate Predictability</h3>
+              <p className="benefit-stat-desc">
+                Shield your annual supply chain budgeting from volatile spot-market trucking rates and emergency drayage surcharges with fixed multi-year lease frameworks.
+              </p>
+            </div>
+
+            {/* Metric 4 */}
+            <div className="benefit-stat-card card-crimson">
+              <div className="benefit-icon-badge badge-crimson">
+                <BadgeCheck size={22} />
+              </div>
+              <div className="benefit-stat-num">6 Lines</div>
+              <h3 className="benefit-stat-title">Continental Class I Interchange</h3>
+              <p className="benefit-stat-desc">
+                Direct route coordination across all 6 North American Class I railroads (BNSF, UP, CSX, NS, CN, CPKC) with end-to-end car tracking from origin to siding switch.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION: ABOUT COAST ROAD CAPITAL & COMPANY COMMITMENT (Item 8)
           ========================================================================= */}
       <section className="section section-white" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
@@ -278,47 +1024,59 @@ export const Home: React.FC = () => {
                 style={{
                   fontSize: 'clamp(1.8rem, 3.2vw, 2.5rem)',
                   color: '#0A0A09',
-                  marginBottom: '1.5rem',
+                  marginBottom: '1.25rem',
                   lineHeight: 1.25,
                 }}
               >
-                Equipment Sourcing For North American Rail Freight
+                Built For Shippers. Anchored in Houston, Serving North America.
               </h2>
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '1.25rem' }}>
-                Coast Road Capital connects industrial enterprises with railcar equipment solutions. Whether expanding a private fleet, managing seasonal volume, or transitioning freight from highway to rail, we help companies find the right railcar types and lease terms.
+                Coast Road Capital connects industrial enterprises with verified freight rail equipment solutions. Whether expanding an active private fleet, managing seasonal harvest surges, or transitioning high-volume freight from highway to rail, we provide transparent car matching and dependable lease terms.
               </p>
-              <p style={{ color: '#334155', fontSize: '1rem', lineHeight: 1.75, marginBottom: '2rem' }}>
-                We work across seven foundational equipment classes — including boxcars, covered hoppers, open-top hoppers, gondolas, centerbeam flatcars, bulkhead flatcars, and tank cars.
+              <p style={{ color: '#334155', fontSize: '0.98rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
+                Our commercial desk operates in Houston, Texas — the epicenter of North American energy, chemical processing, and agricultural export corridors. Shippers deal directly with experienced equipment specialists who understand track curvature, draft gear, and interchange logistics.
               </p>
 
+              {/* 2 Callout Badges with internal links */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
                 <div style={{ padding: '1.15rem', backgroundColor: '#FAF9F7', borderRadius: '10px', border: '1px solid #E8E5DF' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.3rem' }}>
                     <CheckCircle2 size={16} style={{ color: '#AA2E1F' }} />
-                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Flexible Leasing</strong>
+                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Operating Values</strong>
                   </div>
-                  <span style={{ fontSize: '0.84rem', color: '#64748B' }}>
-                    Full-service, net lease, short to multi-year terms.
+                  <span style={{ fontSize: '0.84rem', color: '#64748B', display: 'block', marginBottom: '0.4rem' }}>
+                    Mechanical safety first, transparent deal-making, and long-term shipper partnership.
                   </span>
+                  <Link to="/company-values" style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600, textDecoration: 'none' }}>
+                    Read Our Values &rarr;
+                  </Link>
                 </div>
+
                 <div style={{ padding: '1.15rem', backgroundColor: '#FAF9F7', borderRadius: '10px', border: '1px solid #E8E5DF' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.3rem' }}>
-                    <CheckCircle2 size={16} style={{ color: '#AA2E1F' }} />
-                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Multi-Industry</strong>
+                    <HelpCircle size={16} style={{ color: '#AA2E1F' }} />
+                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Leasing FAQs</strong>
                   </div>
-                  <span style={{ fontSize: '0.84rem', color: '#64748B' }}>
-                    Agriculture, forest products, minerals, steel, chemicals.
+                  <span style={{ fontSize: '0.84rem', color: '#64748B', display: 'block', marginBottom: '0.4rem' }}>
+                    Answers on net vs full-service leases, delivery timelines, and wheelset maintenance.
                   </span>
+                  <Link to="/faq" style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600, textDecoration: 'none' }}>
+                    Browse FAQs &rarr;
+                  </Link>
                 </div>
               </div>
 
-              <Link to="/about" className="btn btn-secondary">
-                About Coast Road Capital
-                <ChevronRight size={17} />
-              </Link>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
+                <Link to="/about" className="btn btn-secondary">
+                  About Coast Road Capital
+                  <ChevronRight size={17} />
+                </Link>
+                <Link to="/contact" className="btn btn-outline-dark">
+                  Contact Houston HQ
+                </Link>
+              </div>
             </div>
 
-            {/* Right side: relevant industry image instead of SCL locomotive */}
             <div>
               <div
                 style={{
@@ -346,125 +1104,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          WHY PARTNER WITH US (Clean, no buzzword badges)
-          ========================================================================= */}
-      <section className="section section-subtle" style={{ borderBottom: '1px solid #E2E8F0' }}>
-        <div className="container">
-          <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
-              Why Shippers Choose Coast Road Capital
-            </h2>
-            <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
-              Acquiring rail equipment requires precision matching, commercial flexibility, and dependable route interchange. Here's how we support your supply chain.
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '2rem',
-            }}
-            className="pillars-grid"
-          >
-            {/* Pillar 1 */}
-            <div
-              style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                border: '1px solid #E2E8F0',
-                borderTop: '3px solid #0A0A09',
-                backgroundColor: '#FFFFFF',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div style={{ height: '180px', overflow: 'hidden' }}>
-                <img
-                  src="/images/railcar-operations.webp"
-                  alt="Railcar yard inspection"
-                  loading="lazy"
-                  decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-              <div style={{ padding: '1.75rem', flex: 1 }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                  AAR &amp; FRA Mechanical Vetting
-                </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Every car is verified against AAR structural standards, safety appliance rules, and FRA field service guidelines.
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 2 */}
-            <div
-              style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                border: '1px solid #E2E8F0',
-                borderTop: '3px solid #AA2E1F',
-                backgroundColor: '#FFFFFF',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div style={{ height: '180px', overflow: 'hidden' }}>
-                <img
-                  src="/images/railcar-leasing-overview.webp"
-                  alt="Commercial railcar leasing"
-                  loading="lazy"
-                  decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-              <div style={{ padding: '1.75rem', flex: 1 }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                  Tailored Lease Terms
-                </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Full-service or net lease, from seasonal surges to multi-year allocations — structured around your operation.
-                </p>
-              </div>
-            </div>
-
-            {/* Pillar 3 */}
-            <div
-              style={{
-                borderRadius: '12px',
-                overflow: 'hidden',
-                border: '1px solid #E2E8F0',
-                borderTop: '3px solid #D97706',
-                backgroundColor: '#FFFFFF',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div style={{ height: '180px', overflow: 'hidden' }}>
-                <img
-                  src="/images/track-construction-1.jpg"
-                  alt="Railway routing and siding"
-                  loading="lazy"
-                  decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-              <div style={{ padding: '1.75rem', flex: 1 }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                  Continental Routing
-                </h3>
-                <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                  Connecting plants across Class I trunk lines and regional shortlines with verified track interchange to your siding.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          EQUIPMENT PREVIEW (4 categories only — not 7 duplicate)
+          EQUIPMENT PREVIEW (4 Categories Preview with Deep Internal Links)
           ========================================================================= */}
       <section className="section section-white">
         <div className="container">
@@ -479,22 +1119,21 @@ export const Home: React.FC = () => {
             }}
           >
             <div>
-            
+              <span className="eyebrow">Fleet Portfolio</span>
               <h2 style={{ color: '#0A0A09', marginBottom: '0.5rem' }}>
-                Railcar Categories
+                Primary Railcar Categories
               </h2>
               <p style={{ color: '#64748B', maxWidth: '560px', fontSize: '1rem' }}>
-                Explore dimensions, capacities, and applications across our seven freight car types.
+                Explore dimensions, capacities, and commodity matching across our seven freight car types.
               </p>
             </div>
 
             <Link to="/railcar-leasing" className="btn btn-secondary">
-              View All 7 Categories
+              View All 7 Equipment Classes
               <ArrowRight size={16} />
             </Link>
           </div>
 
-          {/* 4 categories in 2x2 grid — no orphans */}
           <div
             style={{
               display: 'grid',
@@ -538,7 +1177,6 @@ export const Home: React.FC = () => {
                       {cat.shortDescription}
                     </p>
 
-                    {/* Spec strip */}
                     {tech && (
                       <div className="spec-metric-strip" style={{ marginBottom: '1.25rem' }}>
                         {tech.specs.map((s, i) => (
@@ -550,7 +1188,15 @@ export const Home: React.FC = () => {
                       </div>
                     )}
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #F1F5F9' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingTop: '1rem',
+                        borderTop: '1px solid #F1F5F9',
+                      }}
+                    >
                       <Link
                         to={`/railcar-leasing#${cat.slug}`}
                         style={{
@@ -563,7 +1209,7 @@ export const Home: React.FC = () => {
                           textDecoration: 'none',
                         }}
                       >
-                        View Details
+                        Technical Specs
                         <ChevronRight size={15} style={{ color: '#AA2E1F' }} />
                       </Link>
 
@@ -583,7 +1229,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          COST ESTIMATOR FEATURE CALLOUT SECTION (Executive Interactive Benchmark)
+          SECTION: INTERACTIVE COST ESTIMATOR CALLOUT
           ========================================================================= */}
       <section
         style={{
@@ -602,7 +1248,6 @@ export const Home: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            {/* Left Column: Clear Value Proposition with Domain Icons */}
             <div>
               <span
                 style={{
@@ -628,7 +1273,7 @@ export const Home: React.FC = () => {
                   letterSpacing: '-0.02em',
                 }}
               >
-                Model Real-Time Equipment Lease Rates Before You Commit Capital
+                Model Real-Time Equipment Lease Rates Before Committing Capital
               </h2>
               <p
                 style={{
@@ -641,7 +1286,6 @@ export const Home: React.FC = () => {
                 Eliminate the guesswork of freight logistics budgeting. Model realistic per-car and fleet monthly lease costs across North America's seven primary equipment classes in seconds — with instant maintenance scope comparisons.
               </p>
 
-              {/* 3 Domain-Specific Specialized Feature Points */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
                   <div
@@ -696,7 +1340,6 @@ export const Home: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
@@ -711,7 +1354,7 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Executive Interactive Benchmark Card */}
+            {/* Benchmark Card */}
             <div>
               <div
                 style={{
@@ -724,7 +1367,6 @@ export const Home: React.FC = () => {
                 }}
               >
                 <div>
-                  {/* Interactive Quick-Switcher Pills */}
                   <div style={{ marginBottom: '1.15rem' }}>
                     <div
                       style={{
@@ -769,7 +1411,6 @@ export const Home: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Sample Title & Spec */}
                   <div style={{ marginBottom: '0.85rem' }}>
                     <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#0A0A09', margin: '0 0 0.15rem 0', lineHeight: 1.25 }}>
                       {activeSample.category}
@@ -779,7 +1420,6 @@ export const Home: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Primary Rate Box with Green Number */}
                   <div
                     style={{
                       background: 'linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%)',
@@ -821,7 +1461,6 @@ export const Home: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Ledger Breakdown Rows */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.15rem' }}>
                     <div
                       style={{
@@ -857,16 +1496,15 @@ export const Home: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Direct Action Link */}
                   <Link
                     to={`/cost-estimator?category=${sampleCategory}`}
-                    className="btn btn-primary"
+                    className="btn btn-success"
                     style={{
                       width: '100%',
                       justifyContent: 'center',
-                      padding: '0.8rem 1.25rem',
+                      padding: '0.85rem 1.25rem',
                       borderRadius: '8px',
-                      fontSize: '0.92rem',
+                      fontSize: '0.94rem',
                       fontWeight: 700,
                       marginBottom: '0.65rem',
                     }}
@@ -886,16 +1524,17 @@ export const Home: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          SOURCING PROCESS (Clean 3-step, no buzzwords)
+          SECTION: SOURCING PROCESS (3-Step Milestone Workflow)
           ========================================================================= */}
       <section className="section section-subtle" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
           <div style={{ maxWidth: '680px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
+            <span className="eyebrow" style={{ justifyContent: 'center' }}>Step-by-Step Delivery</span>
             <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
-              How It Works
+              How Railcar Equipment Reaches Your Siding
             </h2>
             <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
-              A straightforward, three-step process from initial inquiry to railcar delivery at your siding.
+              A straightforward, transparent three-step process from initial specification matching to on-track delivery.
             </p>
           </div>
 
@@ -907,19 +1546,15 @@ export const Home: React.FC = () => {
             }}
             className="steps-grid"
           >
-            {/* Step 1 */}
             <div className="timeline-card">
-              <div
-                className="timeline-node"
-                style={{ borderColor: '#0A0A09', color: '#0A0A09' }}
-              >
+              <div className="timeline-node" style={{ borderColor: '#0A0A09', color: '#0A0A09' }}>
                 01
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 Match &amp; Verify Equipment
               </h3>
               <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                We match your cargo type and facility specs against the right car configurations — clearance, volume, and discharge.
+                We analyze your commodity, loading rack clearances, and siding curvature against AAR dimensions and weight limits.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
@@ -937,19 +1572,15 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 2 */}
             <div className="timeline-card">
-              <div
-                className="timeline-node"
-                style={{ borderColor: '#AA2E1F', color: '#AA2E1F' }}
-              >
+              <div className="timeline-node" style={{ borderColor: '#AA2E1F', color: '#AA2E1F' }}>
                 02
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 Sourcing &amp; Terms
               </h3>
               <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                Submit your fleet requirements. Our team reviews market pools, interchange routing, and custom lease structures.
+                We secure the car set from verified regional pools and prepare flexible full-service or net lease structures.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
@@ -967,19 +1598,15 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 3 */}
             <div className="timeline-card">
-              <div
-                className="timeline-node"
-                style={{ borderColor: '#059669', color: '#059669' }}
-              >
+              <div className="timeline-node" style={{ borderColor: '#059669', color: '#059669' }}>
                 03
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 Inspection &amp; Delivery
               </h3>
               <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                We finalize mechanical inspection, coordinate interchange handover, and deliver cars to your siding.
+                Pre-trip mechanical certification is completed and Class I interchange routing delivers the cars directly to your facility siding.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
@@ -992,7 +1619,7 @@ export const Home: React.FC = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
                   <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Dedicated contact throughout lease
+                  Dedicated Houston contact throughout
                 </div>
               </div>
             </div>
@@ -1001,7 +1628,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          CLOSING CTA (Simple, one primary CTA)
+          CLOSING CTA
           ========================================================================= */}
       <section
         style={{
@@ -1031,16 +1658,20 @@ export const Home: React.FC = () => {
                 marginBottom: '2rem',
               }}
             >
-              Submit a quote request or contact us directly to review equipment availability, specifications, and lease structures.
+              Submit a quote request, model your lease budget, or contact our commercial desk directly at (832) 555-1200.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.85rem' }}>
               <Link to="/quote" className="btn btn-primary btn-lg">
                 <FileText size={18} />
-                Request a Quote
+                Request a Formal Quote
               </Link>
-              <Link to="/contact" className="btn btn-outline-white btn-lg">
-                Contact Us
+              <Link to="/cost-estimator" className="btn btn-outline-white btn-lg">
+                <Calculator size={18} />
+                Launch Cost Estimator
+              </Link>
+              <Link to="/company-values" className="btn btn-secondary btn-lg">
+                Company Values
               </Link>
             </div>
           </div>
@@ -1048,38 +1679,1005 @@ export const Home: React.FC = () => {
       </section>
 
       <style>{`
-        .hero-text-link:hover {
-          color: #FFFFFF !important;
+        /* Hero 2-Column Responsive Grid */
+        .hero-grid {
+          display: grid;
+          grid-template-columns: 1.08fr 0.96fr;
+          gap: 2.75rem;
+          align-items: center;
         }
+
+        /* Lead Card Styling */
+        .hero-lead-card {
+          background-color: rgba(14, 16, 20, 0.92);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-top: 3px solid #AA2E1F;
+          border-radius: 12px;
+          padding: 1.4rem 1.5rem;
+          box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+          width: 100%;
+          max-width: 490px;
+          margin-left: auto;
+          box-sizing: border-box;
+        }
+
+        .hero-card-header {
+          margin-bottom: 0.95rem;
+        }
+
+        .hero-status-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.2rem 0.6rem;
+          background-color: rgba(16, 185, 129, 0.12);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+          border-radius: 999px;
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: #A7F3D0;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          margin-bottom: 0.45rem;
+        }
+
+        .status-live-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #10B981;
+          box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+        }
+
+        .hero-card-title {
+          font-family: var(--font-heading);
+          font-size: 1.18rem;
+          font-weight: 700;
+          color: #FFFFFF;
+          margin: 0 0 0.2rem;
+          letter-spacing: -0.015em;
+          line-height: 1.25;
+        }
+
+        .hero-card-desc {
+          font-size: 0.8rem;
+          color: #94A3B8;
+          margin: 0;
+          line-height: 1.45;
+        }
+
+        .hero-lead-form {
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+
+        .hero-fields-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.55rem 0.65rem;
+        }
+
+        .hero-full-width {
+          grid-column: 1 / -1;
+        }
+
+        .hero-input-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .hero-input-label {
+          display: block;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: #CBD5E1;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+        }
+
+        .req-star {
+          color: #F87171;
+          font-weight: 700;
+        }
+
+        .opt-tag {
+          color: #64748B;
+          text-transform: none;
+          font-weight: 400;
+          font-size: 0.68rem;
+        }
+
+        .hero-field-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          width: 100%;
+        }
+
+        .hero-field-icon {
+          position: absolute;
+          left: 0.75rem;
+          color: #94A3B8;
+          pointer-events: none;
+          transition: color 150ms ease, transform 150ms ease;
+          flex-shrink: 0;
+          z-index: 2;
+        }
+
+        .hero-field-wrapper:focus-within .hero-field-icon {
+          color: #F87171;
+          transform: scale(1.08);
+        }
+
+        .hero-field-input {
+          width: 100%;
+          height: 40px;
+          padding: 0 0.75rem 0 2.25rem;
+          border-radius: 7px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+          color: #FFFFFF;
+          font-size: 0.84rem;
+          font-weight: 500;
+          outline: none;
+          transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+          box-sizing: border-box;
+          font-family: inherit;
+        }
+
+        .hero-field-input:hover {
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+          border-color: rgba(255, 255, 255, 0.32);
+        }
+
+        .hero-field-input:focus {
+          border-color: #F87171;
+          background: rgba(255, 255, 255, 0.11);
+          box-shadow: 0 0 0 3px rgba(170, 46, 31, 0.28);
+        }
+
+        .hero-field-input::placeholder {
+          color: #64748B;
+          font-size: 0.8rem;
+          font-weight: 400;
+        }
+
+        /* Custom Interactive Dropdowns */
+        .hero-custom-select-btn {
+          width: 100%;
+          height: 40px;
+          padding: 0 0.75rem;
+          border-radius: 7px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+          color: #FFFFFF;
+          font-size: 0.84rem;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+          transition: all 160ms ease;
+          box-sizing: border-box;
+          text-align: left;
+          outline: none;
+        }
+
+        .hero-custom-select-btn:hover {
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+          border-color: rgba(255, 255, 255, 0.32);
+        }
+
+        .hero-custom-select-btn.active,
+        .hero-custom-select-btn:focus-visible {
+          border-color: #F87171;
+          background: rgba(255, 255, 255, 0.11);
+          box-shadow: 0 0 0 3px rgba(170, 46, 31, 0.28);
+        }
+
+        .hero-select-value {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: #FFFFFF;
+          font-weight: 600;
+        }
+
+        .hero-select-arrow {
+          color: #94A3B8;
+          transition: transform 200ms ease, color 150ms ease;
+          flex-shrink: 0;
+          margin-left: 0.4rem;
+        }
+
+        .hero-custom-select-btn:hover .hero-select-arrow,
+        .hero-custom-select-btn.active .hero-select-arrow {
+          color: #F87171;
+        }
+
+        .hero-select-arrow.open {
+          transform: rotate(180deg);
+        }
+
+        /* Dropdown Popup Menu - Strict 100% Box Width Consistency */
+        .hero-custom-dropdown {
+          position: absolute;
+          top: calc(100% + 5px);
+          left: 0;
+          right: 0;
+          width: 100%;
+          min-width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          z-index: 100;
+          background-color: #12151B;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          border-radius: 8px;
+          box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+          max-height: 220px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding: 0.3rem;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          animation: heroDropdownFade 140ms ease-out;
+        }
+
+        @keyframes heroDropdownFade {
+          from {
+            opacity: 0;
+            transform: translateY(-4px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .hero-custom-dropdown::-webkit-scrollbar {
+          width: 5px;
+        }
+        .hero-custom-dropdown::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 4px;
+        }
+        .hero-custom-dropdown::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.22);
+          border-radius: 4px;
+        }
+        .hero-custom-dropdown::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.36);
+        }
+
+        .hero-dropdown-header {
+          padding: 0.35rem 0.55rem 0.4rem;
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: #94A3B8;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          margin-bottom: 0.25rem;
+        }
+
+        .hero-dropdown-option {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.5rem 0.55rem;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 120ms ease;
+          gap: 0.45rem;
+          box-sizing: border-box;
+          width: 100%;
+        }
+
+        .hero-dropdown-option:hover {
+          background-color: rgba(255, 255, 255, 0.09);
+        }
+
+        .hero-dropdown-option.selected {
+          background: linear-gradient(90deg, rgba(170, 46, 31, 0.3) 0%, rgba(170, 46, 31, 0.12) 100%);
+          border-left: 3px solid #AA2E1F;
+        }
+
+        .hero-option-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+          min-width: 0;
+          flex: 1;
+        }
+
+        .hero-option-main {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.3rem;
+          min-width: 0;
+        }
+
+        .hero-option-label {
+          font-size: 0.81rem;
+          font-weight: 600;
+          color: #F8FAFC;
+          line-height: 1.25;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .hero-dropdown-option.selected .hero-option-label {
+          color: #FFFFFF;
+        }
+
+        .hero-option-badge {
+          display: inline-block;
+          font-size: 0.60rem;
+          font-weight: 600;
+          padding: 0.08rem 0.32rem;
+          border-radius: 4px;
+          background-color: rgba(255, 255, 255, 0.1);
+          color: #E2E8F0;
+          letter-spacing: 0.02em;
+          flex-shrink: 0;
+        }
+
+        .hero-dropdown-option.selected .hero-option-badge {
+          background-color: rgba(170, 46, 31, 0.38);
+          color: #FECACA;
+        }
+
+        .hero-option-detail {
+          font-size: 0.69rem;
+          color: #94A3B8;
+          line-height: 1.25;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .hero-option-check {
+          color: #F87171;
+          flex-shrink: 0;
+        }
+
+        .hero-submit-btn {
+          width: 100%;
+          height: 42px;
+          padding: 0 1rem;
+          font-weight: 700;
+          font-size: 0.88rem;
+          border-radius: 7px;
+          background: linear-gradient(135deg, #AA2E1F 0%, #88190E 100%);
+          color: #FFFFFF;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 16px -2px rgba(170, 46, 31, 0.45);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.45rem;
+          transition: all 160ms ease;
+          margin-top: 0.25rem;
+          letter-spacing: 0.01em;
+        }
+
+        .hero-submit-btn:hover:not(:disabled) {
+          background: linear-gradient(135deg, #C53030 0%, #AA2E1F 100%);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px -2px rgba(170, 46, 31, 0.6);
+        }
+
+        .hero-submit-btn:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+          transform: none !important;
+          box-shadow: none !important;
+        }
+
+        .hero-card-footer {
+          padding-top: 0.6rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 0.74rem;
+          color: #94A3B8;
+        }
+
+        .hero-footer-item {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+
+        .hero-phone-link {
+          color: #FFFFFF;
+          font-weight: 600;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .hero-phone-link:hover {
+          color: #F87171;
+        }
+
+        .hero-footer-spec {
+          color: #64748B;
+          font-size: 0.7rem;
+        }
+
+        .hero-success-state {
+          background-color: rgba(5, 150, 105, 0.12);
+          border: 1px solid rgba(5, 150, 105, 0.4);
+          border-radius: 8px;
+          padding: 1.25rem;
+          text-align: center;
+        }
+
+        .hero-ref-badge {
+          background-color: rgba(0, 0, 0, 0.35);
+          border-radius: 6px;
+          padding: 0.35rem 0.65rem;
+          font-size: 0.76rem;
+          color: #94A3B8;
+          margin-bottom: 0.85rem;
+          display: inline-block;
+        }
+
+        /* =========================================================================
+           Services Section (Calm, Minimal, Executive B2B Style)
+           ========================================================================= */
+        .services-section {
+          padding: 4rem 0;
+          background-color: #FFFFFF;
+        }
+
+        .services-section-header {
+          max-width: 720px;
+          margin: 0 auto 2.5rem;
+          text-align: center;
+        }
+
+        .services-main-title {
+          font-family: var(--font-heading);
+          font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+          font-weight: 700;
+          color: #0F172A;
+          line-height: 1.3;
+          margin-bottom: 0.65rem;
+          letter-spacing: -0.015em;
+        }
+
+        .services-main-desc {
+          font-size: 0.95rem;
+          color: #64748B;
+          line-height: 1.6;
+          margin: 0 auto;
+        }
+
+        /* Services Grid (Desktop 3-Column) */
+        .services-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.35rem;
+        }
+
+        .service-card {
+          background-color: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 10px;
+          padding: 1.45rem 1.45rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+        }
+
+        .service-card:hover {
+          border-color: #CBD5E1;
+          box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.05);
+          transform: translateY(-2px);
+        }
+
+        .service-card-top {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.85rem;
+        }
+
+        .service-icon-box {
+          width: 38px;
+          height: 38px;
+          border-radius: 9px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 150ms ease;
+        }
+
+        .service-card:hover .service-icon-box {
+          transform: scale(1.05);
+        }
+
+        .service-heading-wrap {
+          margin-bottom: 0.85rem;
+        }
+
+        .service-title {
+          font-size: 1.02rem;
+          font-weight: 600;
+          color: #0F172A;
+          margin: 0 0 0.25rem;
+          line-height: 1.35;
+          letter-spacing: -0.01em;
+        }
+
+        .service-subtitle {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #64748B;
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        .service-bullets-list {
+          list-style: none;
+          margin: 0 0 1.15rem;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.45rem;
+          flex: 1;
+        }
+
+        .service-bullet-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          font-size: 0.82rem;
+          color: #475569;
+          line-height: 1.45;
+        }
+
+        .service-bullet-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background-color: #94A3B8;
+          margin-top: 6px;
+          flex-shrink: 0;
+        }
+
+        .service-link-wrap {
+          padding-top: 0.85rem;
+          border-top: 1px solid #F1F5F9;
+          margin-top: auto;
+        }
+
+        .service-action-link {
+          font-size: 0.83rem;
+          font-weight: 700;
+          color: #AA2E1F;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          transition: color 140ms ease, gap 140ms ease;
+        }
+
+        .service-action-link:hover {
+          color: #8F2417;
+          gap: 0.55rem;
+        }
+
+        .mobile-services-dots-wrap {
+          display: none;
+        }
+
+        /* =========================================================================
+           Benefits Section & 2x2 Mobile Grid
+           ========================================================================= */
+        .benefits-section {
+          background-color: #FAF8F5;
+          border-top: 1px solid rgba(234, 219, 204, 0.45);
+          border-bottom: 1px solid #EADBCC;
+          padding: 4.5rem 0;
+        }
+
+        .benefits-header {
+          max-width: 780px;
+          margin: 0 auto 3.25rem;
+          text-align: center;
+        }
+
+        .benefits-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          background: rgba(170, 46, 31, 0.07);
+          color: #AA2E1F;
+          font-family: var(--font-heading);
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          padding: 0.35rem 0.85rem;
+          border-radius: 999px;
+          margin-bottom: 0.85rem;
+          border: 1px solid rgba(170, 46, 31, 0.16);
+        }
+
+        .benefits-eyebrow-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #AA2E1F;
+          display: inline-block;
+        }
+
+        .benefits-main-title {
+          font-family: var(--font-heading);
+          font-size: clamp(1.65rem, 3.2vw, 2.35rem);
+          font-weight: 800;
+          color: #0A0A09;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
+          margin-bottom: 0.85rem;
+        }
+
+        .benefits-main-desc {
+          color: #475569;
+          font-size: 1.05rem;
+          line-height: 1.7;
+          margin: 0 auto;
+        }
+
+        .benefits-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.5rem;
+          align-items: stretch;
+        }
+
+        /* Benefit Stat Cards */
+        .benefit-stat-card {
+          background-color: #FFFFFF;
+          border: 1px solid #E8E5DF;
+          border-radius: 14px;
+          padding: 2rem 1.35rem 1.85rem;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+          transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, border-color 220ms ease;
+        }
+
+        .benefit-stat-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+        }
+
+        .benefit-stat-card.card-emerald::before {
+          background: linear-gradient(90deg, #059669, #34D399);
+        }
+        .benefit-stat-card.card-blue::before {
+          background: linear-gradient(90deg, #2563EB, #60A5FA);
+        }
+        .benefit-stat-card.card-amber::before {
+          background: linear-gradient(90deg, #D97706, #FBBF24);
+        }
+        .benefit-stat-card.card-crimson::before {
+          background: linear-gradient(90deg, #AA2E1F, #EF4444);
+        }
+
+        .benefit-stat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 26px -4px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+          border-color: #CBD5E1;
+        }
+
+        .benefit-icon-badge {
+          width: 48px;
+          height: 48px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 1.15rem;
+          transition: transform 200ms ease;
+          flex-shrink: 0;
+        }
+
+        .benefit-stat-card:hover .benefit-icon-badge {
+          transform: scale(1.08);
+        }
+
+        .benefit-icon-badge.badge-emerald {
+          background-color: #ECFDF5;
+          color: #059669;
+          border: 1px solid rgba(5, 150, 105, 0.22);
+        }
+        .benefit-icon-badge.badge-blue {
+          background-color: #EFF6FF;
+          color: #2563EB;
+          border: 1px solid rgba(37, 99, 235, 0.22);
+        }
+        .benefit-icon-badge.badge-amber {
+          background-color: #FEF3C7;
+          color: #D97706;
+          border: 1px solid rgba(217, 119, 6, 0.25);
+        }
+        .benefit-icon-badge.badge-crimson {
+          background-color: #FDF2F0;
+          color: #AA2E1F;
+          border: 1px solid rgba(170, 46, 31, 0.22);
+        }
+
+        .benefit-stat-num {
+          font-family: var(--font-heading);
+          font-size: 2.25rem;
+          font-weight: 800;
+          color: #0A0A09;
+          line-height: 1.1;
+          margin-bottom: 0.45rem;
+          letter-spacing: -0.02em;
+        }
+
+        .benefit-stat-title {
+          font-family: var(--font-heading);
+          font-size: 1.02rem;
+          font-weight: 700;
+          color: #0A0A09;
+          margin-bottom: 0.55rem;
+          line-height: 1.3;
+        }
+
+        .benefit-stat-desc {
+          font-size: 0.86rem;
+          color: #64748B;
+          line-height: 1.6;
+          margin: 0;
+          flex-grow: 1;
+        }
+
         .preview-card {
           transform: translateZ(0);
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
           transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .preview-card:hover {
           transform: translateY(-4px) translateZ(0) !important;
           box-shadow: 0 14px 28px -4px rgba(15,23,42,0.12) !important;
         }
-        .preview-card img {
-          transform: translateZ(0);
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-          transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .preview-card:hover img {
-          transform: scale(1.04) translateZ(0);
-        }
-        @media (max-width: 768px) {
-          .pillars-grid,
-          .steps-grid {
+
+        @media (max-width: 960px) {
+          .home-hero-section {
+            padding: 3rem 0 3.25rem !important;
+            min-height: auto !important;
+          }
+          .hero-grid {
             grid-template-columns: 1fr !important;
+            gap: 2.25rem !important;
+          }
+          .hero-lead-card {
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            padding: 1.35rem 1.15rem !important;
           }
           .preview-grid {
             grid-template-columns: 1fr !important;
+          }
+          .steps-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1.25rem !important;
+          }
+          .benefits-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1.25rem !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .services-section {
+            padding: 2.75rem 0 2.25rem !important;
+          }
+          .services-section-header {
+            margin-bottom: 1.25rem !important;
+          }
+          .services-main-title {
+            font-size: 1.35rem !important;
+            margin-bottom: 0.4rem !important;
+          }
+          .services-main-desc {
+            font-size: 0.86rem !important;
+            line-height: 1.5 !important;
+          }
+          /* Clean horizontal swipe track on mobile */
+          .services-grid {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 0.75rem !important;
+            padding: 0.25rem 0.25rem 0.5rem !important;
+            margin: 0 -1rem !important;
+            padding-left: 1.25rem !important;
+            padding-right: 1.25rem !important;
+            scrollbar-width: none !important;
+          }
+          .services-grid::-webkit-scrollbar {
+            display: none !important;
+          }
+          .services-grid .service-card {
+            flex: 0 0 84% !important;
+            max-width: 295px !important;
+            min-width: 250px !important;
+            scroll-snap-align: center !important;
+            padding: 1.15rem 1.1rem !important;
+          }
+          /* Subtle pagination dots on mobile */
+          .mobile-services-dots-wrap {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.35rem !important;
+            margin-top: 0.85rem !important;
+          }
+          .mobile-service-dot {
+            width: 6px !important;
+            height: 6px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            background: #CBD5E1 !important;
+            cursor: pointer !important;
+            transition: all 160ms ease !important;
+            padding: 0 !important;
+          }
+          .mobile-service-dot.active {
+            width: 18px !important;
+            border-radius: 999px !important;
+            background: #475569 !important;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .home-hero-section {
+            padding: 2.25rem 0 2.5rem !important;
+          }
+          .hero-lead-card {
+            padding: 1.15rem 0.9rem !important;
+            border-radius: 10px !important;
+          }
+          .hero-fields-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.65rem !important;
+          }
+          .hero-full-width {
+            grid-column: auto !important;
+          }
+          /* 16px input font size prevents iOS Safari from automatically zooming the page */
+          .hero-field-input,
+          .hero-custom-select-btn {
+            font-size: 16px !important;
+            height: 42px !important;
+          }
+          .hero-dropdown-left,
+          .hero-dropdown-right {
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+          .hero-submit-btn {
+            height: 44px !important;
+            font-size: 0.92rem !important;
+          }
+          .hero-card-footer {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.35rem !important;
+          }
+
+          /* Mobile 2x2 Grid for Benefits Section */
+          .benefits-section {
+            padding: 2.5rem 0 2.75rem !important;
+          }
+          .benefits-header {
+            margin-bottom: 1.35rem !important;
+          }
+          .benefits-eyebrow {
+            font-size: 0.7rem !important;
+            padding: 0.25rem 0.65rem !important;
+            margin-bottom: 0.55rem !important;
+          }
+          .benefits-main-title {
+            font-size: 1.4rem !important;
+            margin-bottom: 0.45rem !important;
+            line-height: 1.25 !important;
+          }
+          .benefits-main-desc {
+            font-size: 0.84rem !important;
+            line-height: 1.5 !important;
+          }
+          /* Show exactly 2 cards per row (2 columns, 2 rows) on mobile */
+          .benefits-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.75rem !important;
+          }
+          .benefit-stat-card {
+            padding: 1.15rem 0.75rem 1rem 0.75rem !important;
+            border-radius: 12px !important;
+          }
+          .benefit-icon-badge {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 9px !important;
+            margin-bottom: 0.65rem !important;
+          }
+          .benefit-icon-badge svg {
+            width: 19px !important;
+            height: 19px !important;
+          }
+          .benefit-stat-num {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.25rem !important;
+            white-space: nowrap !important;
+          }
+          .benefit-stat-title {
+            font-size: 0.82rem !important;
+            line-height: 1.25 !important;
+            margin-bottom: 0.4rem !important;
+            min-height: 2.3em !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .benefit-stat-desc {
+            font-size: 0.72rem !important;
+            line-height: 1.42 !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .benefits-grid {
+            gap: 0.55rem !important;
+          }
+          .benefit-stat-card {
+            padding: 0.95rem 0.55rem 0.85rem 0.55rem !important;
+          }
+          .benefit-stat-num {
+            font-size: 1.3rem !important;
+          }
+          .benefit-stat-title {
+            font-size: 0.76rem !important;
+          }
+          .benefit-stat-desc {
+            font-size: 0.68rem !important;
+            line-height: 1.35 !important;
           }
         }
       `}</style>
     </div>
   );
 };
+
+export default Home;

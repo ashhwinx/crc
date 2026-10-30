@@ -69,14 +69,44 @@ export const About: React.FC = () => {
                 Coast Road Capital was established to deliver straightforward railcar equipment leasing. We focus on providing accurate car specifications, flexible leasing frameworks, and attentive customer service so your operations stay fluid.
               </p>
 
-              {/* Simple & Basic Operating Principle */}
+              {/* Operating Principle & Values Link */}
               <div style={{ marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1px solid #E2E8F0' }}>
                 <h3 style={{ fontSize: '1.05rem', color: '#0A0A09', fontWeight: 700, marginBottom: '0.4rem' }}>
                   Our Operating Principle
                 </h3>
-                <p style={{ color: '#475569', fontSize: '0.98rem', lineHeight: 1.7, margin: 0 }}>
+                <p style={{ color: '#475569', fontSize: '0.98rem', lineHeight: 1.7, marginBottom: '1rem' }}>
                   We believe industrial customers deserve honest equipment data, clear terms, and direct consultation without bloated promises or unverified availability.
                 </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
+                  <Link
+                    to="/company-values"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontSize: '0.9rem',
+                      fontWeight: 600,
+                      color: '#AA2E1F',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    View Our Company Values &amp; Standards &rarr;
+                  </Link>
+                  <Link
+                    to="/faq"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontSize: '0.9rem',
+                      fontWeight: 600,
+                      color: '#475569',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Frequently Asked Questions &rarr;
+                  </Link>
+                </div>
               </div>
             </div>
 

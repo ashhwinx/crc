@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Lenis from 'lenis';
-import 'lenis/dist/lenis.css';
 import { Header } from '../common/Header';
 import { Footer } from '../common/Footer';
 
@@ -11,53 +9,39 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { pathname, hash } = useLocation();
-  const lenisRef = useRef<Lenis | null>(null);
 
+  // Restore standard browser scrolling without artificial inertia
   useEffect(() => {
-    const lenis = new Lenis({
-      lerp: 0.08,
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
-      infinite: false,
-    });
-    lenisRef.current = lenis;
-    (window as any).__lenis = lenis;
-
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-      lenisRef.current = null;
-      (window as any).__lenis = null;
-    };
-  }, []);
-
-  // Handle route change and hash scrolling with Lenis
-  useEffect(() => {
-    if (lenisRef.current) {
-      if (hash) {
-        setTimeout(() => {
-          const target = document.querySelector(hash);
-          if (target && lenisRef.current) {
-            lenisRef.current.scrollTo(target as HTMLElement, { offset: -90, duration: 1 });
-          }
-        }, 50);
-        return;
-      }
-      lenisRef.current.scrollTo(0, { immediate: true });
+    if (hash) {
+      const timer = setTimeout(() => {
+        const target = document.querySelector(hash);
+        if (target) {
+          const headerOffset = 110;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }, 60);
+      return () => clearTimeout(timer);
     } else {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   }, [pathname, hash]);
+
+  // Synchronize canonical URL to prevent duplicate URL indexing
+  useEffect(() => {
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    const cleanPath = pathname === '/' ? '' : pathname.replace(/\/$/, '');
+    canonical.setAttribute('href', `https://coastroadcapital.com${cleanPath || '/'}`);
+  }, [pathname]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

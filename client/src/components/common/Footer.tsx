@@ -97,6 +97,16 @@ export const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/company-values" className="footer-nav-link">
+                    Company Values
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/faq" className="footer-nav-link">
+                    FAQs
+                  </Link>
+                </li>
+                <li>
                   <Link to="/contact" className="footer-nav-link">
                     Contact &amp; Siding
                   </Link>
