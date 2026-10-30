@@ -28,7 +28,12 @@ async function processFile(filePath) {
 
   // Read backup original if exists, otherwise read current file
   const backupPath = path.join(BACKUP_DIR, relPath);
-  const sourcePath = fs.existsSync(backupPath) ? backupPath : filePath;
+  const flatBackupPath = path.join(BACKUP_DIR, base);
+  const sourcePath = fs.existsSync(backupPath)
+    ? backupPath
+    : fs.existsSync(flatBackupPath)
+    ? flatBackupPath
+    : filePath;
   const inputBuffer = fs.readFileSync(sourcePath);
   const originalSize = inputBuffer.length;
 

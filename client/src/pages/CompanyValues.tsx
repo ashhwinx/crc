@@ -145,10 +145,10 @@ export const CompanyValues: React.FC = () => {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: `url('/images/railroad-hero-yard.jpg')`,
-            backgroundPosition: 'center 40%',
+            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
+            backgroundPosition: 'center 38%',
             backgroundSize: 'cover',
-            opacity: 0.2,
+            opacity: 0.3,
           }}
         />
         <div

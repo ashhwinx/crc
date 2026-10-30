@@ -442,8 +442,8 @@ export const Home: React.FC = () => {
             style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: `url('/images/railroad-hero-yard.jpg')`,
-              backgroundPosition: 'center 35%',
+              backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
+              backgroundPosition: 'center 38%',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               transform: 'scale(1.02)',
@@ -1087,8 +1087,8 @@ export const Home: React.FC = () => {
                 }}
               >
                 <img
-                  src="/images/railcar-leasing-overview.webp"
-                  alt="Industrial railcar fleet and yard operations"
+                  src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
+                  alt="Trains serving industrial shippers across North American rail corridors"
                   loading="lazy"
                   decoding="async"
                   style={{

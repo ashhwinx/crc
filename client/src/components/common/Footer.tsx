@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
           <div className="footer-brand-col">
             <Link to="/" style={{ display: 'inline-block', marginBottom: '0.85rem' }}>
               <img
-                src="/images/crc-logo-color.png"
+                src="/images/branding/crc-logo-color.png"
                 alt="Coast Road Capital"
                 className="footer-logo"
                 loading="lazy"

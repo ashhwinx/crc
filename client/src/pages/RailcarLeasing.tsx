@@ -129,8 +129,27 @@ export const RailcarLeasing: React.FC = () => {
   return (
     <div className="railcar-leasing-page">
       {/* Header Banner */}
-      <section className="catalog-hero-section">
-        <div className="container">
+      <section className="catalog-hero-section" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
+            backgroundPosition: 'center 38%',
+            backgroundSize: 'cover',
+            opacity: 0.28,
+            pointerEvents: 'none',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, rgba(10,10,9,0.72) 0%, rgba(10,10,9,0.96) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '860px' }}>
             <span className="eyebrow eyebrow-dark">
               Equipment Catalog &bull; Sourcing Guide
@@ -410,6 +429,121 @@ export const RailcarLeasing: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Trains Serving Industries - Field Operations Showcase */}
+      <section className="industry-operations-section" style={{ backgroundColor: '#F8FAFC', padding: '4.5rem 0 4rem', borderTop: '1px solid #E2E8F0' }}>
+        <div className="container">
+          <div style={{ maxWidth: '780px', marginBottom: '2.5rem' }}>
+            <span style={{ color: '#AA2E1F', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: '0.8rem', display: 'inline-block', marginBottom: '0.5rem' }}>
+              Field Operations &bull; Siding Logistics
+            </span>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.35rem)', fontWeight: 800, color: '#0A0A09', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+              Trains Serving Industries Across North America
+            </h2>
+            <p style={{ color: '#64748B', fontSize: '1rem', lineHeight: 1.65, margin: 0 }}>
+              Coast Road Capital coordinates with shortline, regional, and Class I railroads to ensure your leased fleet transitions smoothly from mainline interchange to customer plant siding.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+            {/* Spotlight 1 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', boxShadow: '0 4px 16px -4px rgba(15,23,42,0.06)' }}>
+              <div style={{ height: '210px', overflow: 'hidden' }}>
+                <img
+                  src="/images/Trains serving industries-additional railcar images/DSC09750(1).jpg"
+                  alt="Industrial siding turnout switching"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ padding: '1.25rem 1.4rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#AA2E1F', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Customer Siding
+                </span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0A0A09', margin: '0.35rem 0 0.5rem' }}>
+                  Industrial Spur Switching
+                </h3>
+                <p style={{ color: '#64748B', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+                  Spotting cars on private facility turnouts for clean truck-to-rail loading and hopper discharge.
+                </p>
+              </div>
+            </div>
+
+            {/* Spotlight 2 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', boxShadow: '0 4px 16px -4px rgba(15,23,42,0.06)' }}>
+              <div style={{ height: '210px', overflow: 'hidden' }}>
+                <img
+                  src="/images/Trains serving industries-additional railcar images/16424.jpg"
+                  alt="Rail delivery to industrial processing facility"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ padding: '1.25rem 1.4rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#AA2E1F', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Facility Delivery
+                </span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0A0A09', margin: '0.35rem 0 0.5rem' }}>
+                  Plant Processing Delivery
+                </h3>
+                <p style={{ color: '#64748B', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+                  Delivering cuts of covered and open-top hoppers directly into processing plant sidings.
+                </p>
+              </div>
+            </div>
+
+            {/* Spotlight 3 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', boxShadow: '0 4px 16px -4px rgba(15,23,42,0.06)' }}>
+              <div style={{ height: '210px', overflow: 'hidden' }}>
+                <img
+                  src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
+                  alt="Mainline freight rail delivery"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ padding: '1.25rem 1.4rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#AA2E1F', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Line-Haul Transit
+                </span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0A0A09', margin: '0.35rem 0 0.5rem' }}>
+                  Mainline Freight Haulage
+                </h3>
+                <p style={{ color: '#64748B', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+                  Multi-railroad interchange routing ensuring reliable transit times between production plants and receivers.
+                </p>
+              </div>
+            </div>
+
+            {/* Spotlight 4 */}
+            <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', boxShadow: '0 4px 16px -4px rgba(15,23,42,0.06)' }}>
+              <div style={{ height: '210px', overflow: 'hidden' }}>
+                <img
+                  src="/images/Trains serving industries-additional railcar images/16410.jpg"
+                  alt="Track siding inspection and maintenance"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ padding: '1.25rem 1.4rem' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#AA2E1F', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Track Assessment
+                </span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0A0A09', margin: '0.35rem 0 0.5rem' }}>
+                  Siding Maintenance &amp; Safety
+                </h3>
+                <p style={{ color: '#64748B', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
+                  Verifying track integrity, tie condition, and clearance profiles to protect loaded cars.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

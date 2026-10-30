@@ -19,10 +19,10 @@ export const About: React.FC = () => {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: `url('/images/railroad-hero-yard.jpg')`,
-            backgroundPosition: 'center 30%',
+            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
+            backgroundPosition: 'center 38%',
             backgroundSize: 'cover',
-            opacity: 0.22,
+            opacity: 0.3,
           }}
         />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
@@ -120,8 +120,8 @@ export const About: React.FC = () => {
                 }}
               >
                 <img
-                  src="/images/railcar-operations.webp"
-                  alt="Railcar fleet operations and yard logistics"
+                  src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
+                  alt="Railcar fleet haulage and mainline interchange"
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
@@ -253,8 +253,8 @@ export const About: React.FC = () => {
             <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
               <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
-                  src="/images/transloading-site.jpg"
-                  alt="Railcar transloading facility"
+                  src="/images/Trains serving industries-additional railcar images/DSC09750(1).jpg"
+                  alt="Locomotive switching cars on industrial siding turnout"
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -274,8 +274,8 @@ export const About: React.FC = () => {
             <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
               <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
-                  src="/images/track-construction-1.jpg"
-                  alt="Railroad track construction"
+                  src="/images/Trains serving industries-additional railcar images/16424.jpg"
+                  alt="Rail delivery to industrial processing facility"
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -295,8 +295,8 @@ export const About: React.FC = () => {
             <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
               <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
-                  src="/images/track-maintenance.jpg"
-                  alt="Railroad track maintenance"
+                  src="/images/Trains serving industries-additional railcar images/16410.jpg"
+                  alt="Track maintenance and siding inspection with railcar staging"
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -316,8 +316,8 @@ export const About: React.FC = () => {
             <div style={{ borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0' }}>
               <div style={{ height: '220px', overflow: 'hidden' }}>
                 <img
-                  src="/images/railcar-leasing-overview.webp"
-                  alt="Industrial railcar fleet"
+                  src="/images/Trains serving industries-additional railcar images/16397.jpg"
+                  alt="High-cube boxcar deployed on industrial freight corridor"
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}

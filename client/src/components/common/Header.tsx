@@ -142,7 +142,7 @@ export const Header: React.FC = () => {
             aria-label="Coast Road Capital Homepage"
           >
             <img
-              src="/images/crc-logo-color.png"
+              src="/images/branding/crc-logo-color.png"
               alt="Coast Road Capital"
               fetchPriority="high"
               decoding="async"
@@ -281,7 +281,7 @@ export const Header: React.FC = () => {
             {/* Drawer Top */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <img
-                src="/images/crc-logo-color.png"
+                src="/images/branding/crc-logo-color.png"
                 alt="Coast Road Capital"
                 loading="lazy"
                 decoding="async"

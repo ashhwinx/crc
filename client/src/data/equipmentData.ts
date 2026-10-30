@@ -8,7 +8,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'General Freight & Temperature-Controlled',
     shortDescription: 'Enclosed freight railcars engineered to protect manufactured, palletized, paper, and food products from weather.',
     fullDescription: 'Coast Road Capital works with shippers and receivers to source versatile standard and high-cube boxcar configurations for palletized freight, roll paper, forest products, and temperature-sensitive goods. Specific configurations, interior tie-downs, and door types are tailored to your loading dock and operational requirements.',
-    image: '/images/category-boxcars.jpg',
+    image: '/images/equipment/category-boxcars.jpg',
     imageAlt: '60-foot American railroad freight boxcar on rail yard tracks',
     configurations: [
       { name: '50-ft Standard', note: 'Standard cubic capacity for packaged freight and general manufacturing.' },
@@ -35,7 +35,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Dry Bulk, Cement, Grain & Chemicals',
     shortDescription: 'Weather-sealed hopper railcars engineered for gravity, pneumatic, or pressure differential discharge of dry bulk commodities.',
     fullDescription: 'Covered hoppers protect moisture-sensitive dry bulk goods from external contamination while providing specialized discharge methods. Coast Road Capital assists customers in identifying the proper cubic capacity, hatch configuration, and discharge gate style for agricultural, mineral, and plastic polymer movements.',
-    image: '/images/category-covered-hoppers.jpg',
+    image: '/images/equipment/category-covered-hoppers.jpg',
     imageAlt: '3-bay covered hopper railcar at an industrial processing elevator',
     configurations: [
       { name: '3,230 cu ft Pressure Differential', note: 'Specialized pneumatic discharge for dense powders, flour, and starches.' },
@@ -63,7 +63,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Aggregates, Coal & Rapid Discharge',
     shortDescription: 'Rugged open-top steel cars designed for weather-resistant bulk materials requiring fast gravity or automated bottom unloading.',
     fullDescription: 'Open-top hopper cars provide continuous high-volume movement for heavy, dense aggregates, ballast, and raw minerals. CRC sources standard manual bottom-gate hoppers as well as rapid-discharge automated door systems for fast terminal turnarounds.',
-    image: '/images/category-open-top-hoppers.jpg',
+    image: '/images/equipment/category-open-top-hoppers.jpg',
     imageAlt: 'Heavy steel open-top hopper railcar with ballast aggregate on mainline track',
     configurations: [
       { name: '2,400 cu ft', note: 'Compact high-density car for heavy quarry rock, ores, and dense aggregate.' },
@@ -87,7 +87,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Steel Coils, Mill Products & Scrap',
     shortDescription: 'Heavy-duty open-top cars with fixed sides and solid floors, optimized for dense industrial commodities loaded from above.',
     fullDescription: 'Gondolas are the workhorses of the steel, manufacturing, and recycling sectors. Coast Road Capital assists in sourcing specialized trough-equipped coil cars, standard mill gondolas with drop or fixed ends, and high-sided cars for scrap metals and bulk recyclables.',
-    image: '/images/category-gondolas.jpg',
+    image: '/images/equipment/category-gondolas.jpg',
     imageAlt: 'Industrial steel mill gondola railcar on yard siding',
     configurations: [
       { name: '42-ft Coil Car', note: 'Fitted with interior troughs and locking hood covers to protect coiled steel.' },
@@ -113,7 +113,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Lumber & Engineered Wood Truss Cars',
     shortDescription: 'Specialized flatcars featuring a central longitudinal steel truss, designed for efficient bundle-loading of forest products.',
     fullDescription: 'Centerbeam flatcars revolutionized building material logistics by allowing simultaneous forklift access from both ground sides. CRC supports forest product producers, distributors, and lumber yards with modern centerbeam leasing solutions in standard lengths and deck profiles.',
-    image: '/images/category-centerbeam.jpg',
+    image: '/images/equipment/category-centerbeam.jpg',
     imageAlt: '73ft centerbeam flatcar loaded with wrapped lumber on railroad tracks',
     configurations: [
       { name: '65-ft', note: 'Shorter wheel-base centerbeam suited for restrictive curves or smaller sidings.' },
@@ -137,7 +137,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Structural Steel, Pipe & Heavy Machinery',
     shortDescription: 'Open flatcars with flat decks or reinforced vertical end bulkheads to protect loads against shifting during transit.',
     fullDescription: 'Bulkhead and general flatcars handle non-standard, long, or over-dimensional freight that cannot fit inside conventional enclosed cars. Coast Road Capital helps shippers evaluate deck lengths, bulkhead reinforcement, and deck stake systems for steel, machinery, and specialty logistics.',
-    image: '/images/category-bulkhead.jpg',
+    image: '/images/equipment/category-bulkhead.jpg',
     imageAlt: '60ft bulkhead flatcar loaded with structural steel beams in a switching yard',
     configurations: [
       { name: '50-ft Bulkhead', note: 'Compact bulkhead flatcar for short structural steel and utility poles.' },
@@ -164,7 +164,7 @@ export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
     eyebrow: 'Liquids, Compressed Gases & Biofuels',
     shortDescription: 'Precision-engineered cylindrical pressure and general purpose tank cars for bulk liquid and chemical transportation.',
     fullDescription: 'Tank car leasing requires strict adherence to commodity compatibility, tank shell pressure ratings, and thermal jacket specifications. Coast Road Capital coordinates sourcing for general-service chemical, biofuel, agricultural liquid, and food-grade rail tank equipment.',
-    image: '/images/category-tank-cars.jpg',
+    image: '/images/equipment/category-tank-cars.jpg',
     imageAlt: 'Modern DOT-117 steel tank car on tracks at a chemical terminal',
     configurations: [
       { name: '13,000–19,000 Gallon', note: 'Shorter cars built for dense liquids such as sulfuric acid, caustic soda, and clay slurry.' },
