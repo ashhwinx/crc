@@ -56,16 +56,14 @@ export const RailcarLeasing: React.FC = () => {
   const location = useLocation();
   const isFirstRender = useRef(true);
 
-  // Smooth scroll helper accounting for sticky navbar & category filter bar
+  // Smooth scroll helper accounting for sticky navbar
   const scrollToTarget = (targetId: string) => {
     const el = document.getElementById(targetId) || document.getElementById('catalog-presentation');
     if (!el) return;
 
-    const stickyBar = document.querySelector('.category-sticky-bar');
     const header = document.querySelector('.site-header');
-    const headerH = header ? header.getBoundingClientRect().height : 72;
-    const barH = stickyBar ? stickyBar.getBoundingClientRect().height : 56;
-    const totalOffset = -(headerH + barH + 16);
+    const headerH = header ? header.getBoundingClientRect().height : 74;
+    const totalOffset = -(headerH + 20);
 
     const lenis = (window as any).__lenis;
     if (lenis && typeof lenis.scrollTo === 'function') {
@@ -76,21 +74,46 @@ export const RailcarLeasing: React.FC = () => {
     }
   };
 
+  // Scroll smoothly to category selection bar so active filter and catalog cards are in focus
+  const scrollToCategoryBar = () => {
+    const el = document.getElementById('catalog-category-bar') || document.querySelector('.category-nav-bar');
+    if (!el) return;
+
+    const header = document.querySelector('.site-header');
+    const headerH = header ? header.getBoundingClientRect().height : 74;
+    const totalOffset = -(headerH + 12);
+
+    const lenis = (window as any).__lenis;
+    if (lenis && typeof lenis.scrollTo === 'function') {
+      lenis.scrollTo(el, { offset: totalOffset, duration: 0.6 });
+    } else {
+      const y = el.getBoundingClientRect().top + window.scrollY + totalOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
+  };
+
   // Handle category filter clicks with auto-scroll and horizontal pill center
   const handleCategorySelect = (slug: string, buttonEl?: HTMLElement) => {
     if (buttonEl) {
-      buttonEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const container = buttonEl.closest('.category-nav-container')?.parentElement || buttonEl.parentElement;
+      if (container) {
+        const btnRect = buttonEl.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const scrollLeft =
+          container.scrollLeft + (btnRect.left - containerRect.left) - containerRect.width / 2 + btnRect.width / 2;
+        container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
     }
 
     if (activeCategory === slug) {
-      // Re-scroll directly if already active
-      scrollToTarget(slug === 'all' ? 'catalog-presentation' : slug);
+      // Re-scroll directly to category bar if already active
+      scrollToCategoryBar();
     } else {
       setActiveCategory(slug);
     }
   };
 
-  // Scroll to selected category or catalog top whenever category changes
+  // Scroll to category bar when category changes, so active selection and cards are neatly in view
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -98,9 +121,8 @@ export const RailcarLeasing: React.FC = () => {
     }
 
     const timer = setTimeout(() => {
-      const targetId = activeCategory === 'all' ? 'catalog-presentation' : activeCategory;
-      scrollToTarget(targetId);
-    }, 60);
+      scrollToCategoryBar();
+    }, 50);
 
     return () => clearTimeout(timer);
   }, [activeCategory]);
@@ -172,8 +194,8 @@ export const RailcarLeasing: React.FC = () => {
         </div>
       </section>
 
-      {/* Category Quick Navigation Bar */}
-      <div className="category-sticky-bar">
+      {/* Category Quick Navigation Bar (Scrolls with page content) */}
+      <div id="catalog-category-bar" className="category-nav-bar category-sticky-bar">
         <div className="container category-nav-container">
           <button
             type="button"
@@ -615,21 +637,22 @@ export const RailcarLeasing: React.FC = () => {
           font-weight: 600;
         }
 
-        /* Sticky Navigation Bar: Firmly locked below header without layout reflows */
+        /* Category Navigation Bar: Scrolls naturally with the page content */
+        .category-nav-bar,
         .category-sticky-bar {
-          position: sticky;
-          top: var(--header-height);
-          z-index: 90;
-          background-color: rgba(255, 255, 255, 0.96);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          position: relative;
+          z-index: 20;
+          background-color: #FFFFFF;
+          border-top: 1px solid #E2E8F0;
           border-bottom: 1px solid #E2E8F0;
-          box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+          box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
           overflow-x: auto;
           white-space: nowrap;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
+          scroll-margin-top: calc(var(--header-height, 74px) + 12px);
         }
+        .category-nav-bar::-webkit-scrollbar,
         .category-sticky-bar::-webkit-scrollbar {
           display: none;
         }
@@ -683,7 +706,7 @@ export const RailcarLeasing: React.FC = () => {
           border: 1px solid #E2E8F0;
           border-radius: 16px;
           box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
-          scroll-margin-top: 140px;
+          scroll-margin-top: calc(var(--header-height, 74px) + 20px);
           overflow: hidden;
           width: 100%;
           box-sizing: border-box;
@@ -1108,7 +1131,7 @@ export const RailcarLeasing: React.FC = () => {
           /* Card Root */
           .catalog-card {
             border-radius: 12px !important;
-            scroll-margin-top: 120px !important;
+            scroll-margin-top: calc(var(--header-height, 72px) + 14px) !important;
             width: 100% !important;
             box-sizing: border-box !important;
           }
