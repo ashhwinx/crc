@@ -122,6 +122,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
                   alt="Railcar fleet haulage and mainline interchange"
+                  width={600}
+                  height={340}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '340px', objectFit: 'cover', display: 'block' }}
@@ -153,21 +155,9 @@ export const About: React.FC = () => {
             }}
             className="approach-grid"
           >
-            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #AA2E1F', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#AA2E1F', borderTopWidth: '3px' }}>
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  backgroundColor: '#FDF3F2',
-                  color: '#AA2E1F',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '10px',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                <Target size={22} />
+            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
+              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
+                <Target size={36} strokeWidth={1.75} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 Track & Facility Compatibility
@@ -177,21 +167,9 @@ export const About: React.FC = () => {
               </p>
             </div>
 
-            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #0A0A09', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#0A0A09', borderTopWidth: '3px' }}>
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  backgroundColor: '#F1F5F9',
-                  color: '#0A0A09',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '10px',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                <Shield size={22} />
+            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
+              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
+                <Shield size={36} strokeWidth={1.75} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 Flexible Lease Structures
@@ -201,21 +179,9 @@ export const About: React.FC = () => {
               </p>
             </div>
 
-            <div style={{ padding: '2rem 1.75rem', borderTop: '3px solid #D97706', borderRadius: '12px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTopColor: '#D97706', borderTopWidth: '3px' }}>
-              <div
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  backgroundColor: '#FEF3C7',
-                  color: '#D97706',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '10px',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                <Compass size={22} />
+            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
+              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
+                <Compass size={36} strokeWidth={1.75} />
               </div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
                 AAR & DOT Compliance
@@ -255,6 +221,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/DSC09750(1).jpg"
                   alt="Locomotive switching cars on industrial siding turnout"
+                  width={400}
+                  height={220}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -276,6 +244,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/16424.jpg"
                   alt="Rail delivery to industrial processing facility"
+                  width={400}
+                  height={220}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -297,6 +267,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/16410.jpg"
                   alt="Track maintenance and siding inspection with railcar staging"
+                  width={400}
+                  height={220}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -318,6 +290,8 @@ export const About: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/16397.jpg"
                   alt="High-cube boxcar deployed on industrial freight corridor"
+                  width={400}
+                  height={220}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}

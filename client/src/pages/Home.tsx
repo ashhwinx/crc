@@ -34,8 +34,10 @@ const HOME_SAMPLE_ESTIMATES = {
   'covered-hoppers': {
     category: 'Covered Hoppers',
     size: '5,161–5,400 cu ft Grain / Fertilizer',
+    sizeParam: '5161-5400',
     quantity: 10,
     term: 'Medium-Term (1–3 Years)',
+    termParam: 'medium',
     rateMin: '$780',
     rateMax: '$1,150',
     totalMin: '$7,800',
@@ -47,8 +49,10 @@ const HOME_SAMPLE_ESTIMATES = {
   'boxcars': {
     category: 'Boxcars',
     size: '50-ft Standard (5,200 cu ft)',
+    sizeParam: '50-ft-standard',
     quantity: 5,
     term: 'Medium-Term (1–3 Years)',
+    termParam: 'medium',
     rateMin: '$637',
     rateMax: '$960',
     totalMin: '$3,185',
@@ -60,8 +64,10 @@ const HOME_SAMPLE_ESTIMATES = {
   'tank-cars': {
     category: 'Tank Cars',
     size: '25,000–28,000 Gal General Purpose',
+    sizeParam: '25000-30000',
     quantity: 8,
     term: 'Long-Term (3–5 Years)',
+    termParam: 'long',
     rateMin: '$880',
     rateMax: '$1,420',
     totalMin: '$7,040',
@@ -327,30 +333,6 @@ export const Home: React.FC = () => {
   const carTypeRef = useRef<HTMLDivElement>(null);
   const quantityRef = useRef<HTMLDivElement>(null);
 
-  // Mobile Services Carousel Scroll State
-  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
-  const servicesTrackRef = useRef<HTMLDivElement>(null);
-
-  const handleServicesScroll = () => {
-    if (servicesTrackRef.current) {
-      const scrollLeft = servicesTrackRef.current.scrollLeft;
-      const cardWidth = servicesTrackRef.current.offsetWidth * 0.84;
-      const index = Math.round(scrollLeft / (cardWidth + 14));
-      setActiveServiceIdx(Math.min(Math.max(index, 0), SERVICES_DATA.length - 1));
-    }
-  };
-
-  const scrollServiceTo = (index: number) => {
-    if (servicesTrackRef.current) {
-      const cardWidth = servicesTrackRef.current.offsetWidth * 0.84 + 14;
-      servicesTrackRef.current.scrollTo({
-        left: index * cardWidth,
-        behavior: 'smooth',
-      });
-      setActiveServiceIdx(index);
-    }
-  };
-
   // Close dropdowns on outside click or Escape key
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -513,7 +495,6 @@ export const Home: React.FC = () => {
                   flexWrap: 'wrap',
                   gap: '0.85rem',
                   alignItems: 'center',
-                  marginBottom: '2.5rem',
                 }}
               >
                 <Link to="/cost-estimator" className="btn btn-primary btn-lg">
@@ -524,37 +505,6 @@ export const Home: React.FC = () => {
                   Browse Equipment Catalog
                   <ArrowRight size={17} />
                 </Link>
-              </div>
-
-              {/* Trust & Spec Highlights */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '1.5rem',
-                  paddingTop: '1.5rem',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.14)',
-                  alignItems: 'center',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
-                    7 Core Car Categories
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#059669', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
-                    AAR &amp; FRA Mechanical Compliance
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                  <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#2563EB', flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>
-                    Full-Service &amp; Net Lease Terms
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -851,6 +801,73 @@ export const Home: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Railcar Data Plate Spec Strip along bottom edge of hero */}
+        <div
+          className="hero-spec-strip"
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 4,
+            borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+            backgroundColor: 'rgba(10, 10, 9, 0.94)',
+            backdropFilter: 'blur(8px)',
+            padding: '0.85rem 0',
+          }}
+        >
+          <div className="container">
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '1rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.82rem',
+                letterSpacing: '0.06em',
+                color: '#CBD5E1',
+                textTransform: 'uppercase',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ color: '#94A3B8' }}>CAR TYPES</span>
+                <span style={{ color: '#AA2E1F', fontWeight: 800 }}>&bull;</span>
+                <strong style={{ color: '#FFFFFF', fontWeight: 700 }}>7</strong>
+              </div>
+
+              <div
+                style={{
+                  height: '16px',
+                  width: '1px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                }}
+              />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ color: '#94A3B8' }}>LEASE TERMS</span>
+                <span style={{ color: '#AA2E1F', fontWeight: 800 }}>&bull;</span>
+                <strong style={{ color: '#FFFFFF', fontWeight: 700 }}>Full-service &amp; net</strong>
+              </div>
+
+              <div
+                style={{
+                  height: '16px',
+                  width: '1px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                }}
+              />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ color: '#94A3B8' }}>COVERAGE</span>
+                <span style={{ color: '#AA2E1F', fontWeight: 800 }}>&bull;</span>
+                <strong style={{ color: '#FFFFFF', fontWeight: 700 }}>North America</strong>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* =========================================================================
@@ -868,69 +885,92 @@ export const Home: React.FC = () => {
             </p>
           </div>
 
-          {/* Services Grid (Desktop 3x2 Grid, Mobile Natural Swipe Track) */}
-          <div
-            ref={servicesTrackRef}
-            onScroll={handleServicesScroll}
-            className="services-grid"
-          >
-            {SERVICES_DATA.map((srv) => {
+          {/* Services Text Rows (Per Client Phase 1 Spec: Large Icon on Left, Title + 1 Line on Right, Dashed Dividers) */}
+          <div className="services-text-rows-list" style={{ maxWidth: '960px', margin: '0 auto' }}>
+            {SERVICES_DATA.map((srv, sIdx) => {
               const IconComp = srv.icon;
               return (
-                <div key={srv.id} className="service-card">
-                  {/* Card Top: Category Icon Box */}
-                  <div className="service-card-top">
+                <div
+                  key={srv.id}
+                  className="service-text-row"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '2rem',
+                    padding: '2rem 0',
+                    borderBottom: sIdx === SERVICES_DATA.length - 1 ? 'none' : '1px dashed #CBD5E1',
+                  }}
+                >
+                  {/* Left Column: Large Lead Icon (Brand Red, No Tinted Box) */}
+                  <div
+                    style={{
+                      color: '#AA2E1F',
+                      flexShrink: 0,
+                      marginTop: '3px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <IconComp size={38} strokeWidth={1.75} />
+                  </div>
+
+                  {/* Right Column: Large Title + One Line Description */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div
-                      className="service-icon-box"
                       style={{
-                        backgroundColor: srv.iconBg,
-                        color: srv.iconColor,
-                        border: `1px solid ${srv.iconBg}`,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'baseline',
+                        flexWrap: 'wrap',
+                        gap: '0.75rem',
+                        marginBottom: '0.45rem',
                       }}
                     >
-                      <IconComp size={19} strokeWidth={1.85} />
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: 'clamp(1.2rem, 2.2vw, 1.4rem)',
+                          fontWeight: 700,
+                          color: '#0A0A09',
+                          margin: 0,
+                          letterSpacing: '-0.01em',
+                        }}
+                      >
+                        {srv.title}
+                      </h3>
+
+                      <Link
+                        to={srv.linkTo}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          fontSize: '0.85rem',
+                          fontWeight: 600,
+                          color: '#AA2E1F',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <span>{srv.linkText}</span>
+                        <ArrowRight size={13} strokeWidth={2} />
+                      </Link>
                     </div>
-                  </div>
 
-                  {/* Title & Short Descriptor */}
-                  <div className="service-heading-wrap">
-                    <h3 className="service-title">{srv.title}</h3>
-                    <p className="service-subtitle">{srv.subtitle}</p>
-                  </div>
-
-                  {/* Clean Structured Points with Minimal Muted Dots */}
-                  <ul className="service-bullets-list">
-                    {srv.points.map((pt, pIdx) => (
-                      <li key={pIdx} className="service-bullet-item">
-                        <span className="service-bullet-dot" />
-                        <span>{pt}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Action Link Footer */}
-                  <div className="service-link-wrap">
-                    <Link to={srv.linkTo} className="service-action-link">
-                      <span>{srv.linkText}</span>
-                      <ArrowRight size={13} strokeWidth={2} />
-                    </Link>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: '0.96rem',
+                        color: '#64748B',
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {srv.subtitle}. {srv.points[0]}
+                    </p>
                   </div>
                 </div>
               );
             })}
-          </div>
-
-          {/* Mobile Swipe Pagination Dots */}
-          <div className="mobile-services-dots-wrap">
-            {SERVICES_DATA.map((_, dotIdx) => (
-              <button
-                key={dotIdx}
-                type="button"
-                onClick={() => scrollServiceTo(dotIdx)}
-                className={`mobile-service-dot ${activeServiceIdx === dotIdx ? 'active' : ''}`}
-                aria-label={`Jump to service ${dotIdx + 1}`}
-              />
-            ))}
           </div>
         </div>
       </section>
@@ -1089,6 +1129,8 @@ export const Home: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
                   alt="Trains serving industrial shippers across North American rail corridors"
+                  width={600}
+                  height={400}
                   loading="lazy"
                   decoding="async"
                   style={{
@@ -1163,6 +1205,8 @@ export const Home: React.FC = () => {
                     <img
                       src={cat.image}
                       alt={cat.imageAlt}
+                      width={500}
+                      height={190}
                       loading="lazy"
                       decoding="async"
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -1497,13 +1541,13 @@ export const Home: React.FC = () => {
                   </div>
 
                   <Link
-                    to={`/cost-estimator?category=${sampleCategory}`}
-                    className="btn btn-success"
+                    to={`/cost-estimator?category=${sampleCategory}&size=${activeSample.sizeParam}&qty=${activeSample.quantity}&term=${activeSample.termParam}`}
+                    className="btn btn-primary"
                     style={{
                       width: '100%',
                       justifyContent: 'center',
                       padding: '0.85rem 1.25rem',
-                      borderRadius: '8px',
+                      borderRadius: '4px',
                       fontSize: '0.94rem',
                       fontWeight: 700,
                       marginBottom: '0.65rem',

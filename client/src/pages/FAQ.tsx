@@ -18,9 +18,36 @@ interface FAQItem {
   categoryLabel: string;
   question: string;
   answer: string;
+  points?: { title: string; text: string }[];
+  cta?: { text: string; link: string };
 }
 
 const FAQ_DATA: FAQItem[] = [
+  {
+    id: 'no-rail-siding',
+    category: 'sourcing',
+    categoryLabel: 'Sourcing & Delivery',
+    question: "I don't have a rail siding. Can I still use railcars?",
+    answer: 'Yes. Three common ways in:',
+    points: [
+      {
+        title: 'Transload',
+        text: 'Ship through a nearby transload facility, where cargo moves between truck and railcar.',
+      },
+      {
+        title: 'Team track',
+        text: 'Load at a railroad-owned public track near you.',
+      },
+      {
+        title: 'Your own track',
+        text: 'Reactivate dormant track on your property, or add a new spur. We can help you find rail-compatible sites, too.',
+      },
+    ],
+    cta: {
+      text: 'Tell us your location',
+      link: '/quote?notes=' + encodeURIComponent('Inquiry: Shippers without rail siding (Transload / Team Track / Track Activation)'),
+    },
+  },
   {
     id: 'full-service-vs-net',
     category: 'leasing',
@@ -467,6 +494,38 @@ export const FAQ: React.FC = () => {
                           >
                             {faq.answer}
                           </p>
+
+                          {faq.points && faq.points.length > 0 && (
+                            <ul
+                              style={{
+                                marginTop: '0.85rem',
+                                marginBottom: faq.cta ? '1.25rem' : '0',
+                                paddingLeft: '1.25rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.65rem',
+                              }}
+                            >
+                              {faq.points.map((pt, i) => (
+                                <li key={i} style={{ color: '#334155', fontSize: '0.95rem', lineHeight: 1.65 }}>
+                                  <strong style={{ color: '#0A0A09' }}>{pt.title}:</strong> {pt.text}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {faq.cta && (
+                            <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px dashed #E2E8F0' }}>
+                              <Link
+                                to={faq.cta.link}
+                                className="btn btn-primary btn-sm"
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                              >
+                                {faq.cta.text}
+                                <ArrowRight size={14} />
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

@@ -25,9 +25,46 @@ export const CostEstimator: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Initial params if directed from 3D Track Layout Visualizer
+  // Helper matching functions for incoming URL query parameters
+  const matchSizeIndex = (category: EquipmentEstimatorItem, querySize: string | null): number => {
+    if (!querySize) return 0;
+    const clean = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const q = clean(querySize);
+    if (!q) return 0;
+    const idx = category.sizesAndCapacities.findIndex((sz) => {
+      const n = clean(sz.name);
+      return n.includes(q) || q.includes(n);
+    });
+    return idx !== -1 ? idx : 0;
+  };
+
+  const matchTermId = (termQuery: string | null): string => {
+    if (!termQuery) return 'medium';
+    const q = termQuery.toLowerCase();
+    if (q.includes('short') || q.includes('surge') || q.includes('12') || q.includes('month')) return 'short';
+    if (q.includes('long') || q.includes('5') || (q.includes('year') && (q.includes('3-5') || q.includes('5+')))) return 'long';
+    return 'medium';
+  };
+
+  const matchLeaseType = (leaseQuery: string | null): 'full' | 'net' => {
+    if (!leaseQuery) return 'full';
+    const q = leaseQuery.toLowerCase();
+    if (q.includes('net')) return 'net';
+    return 'full';
+  };
+
+  const matchQuantity = (qtyParam: string | null): number => {
+    if (!qtyParam) return 5;
+    const q = parseInt(qtyParam, 10);
+    return isNaN(q) ? 5 : Math.max(1, Math.min(60, q));
+  };
+
+  // Deep-linked URL query params (from Catalog, Homepage Preview, or visualizer)
   const paramCategory = searchParams.get('category');
-  const paramQuantity = searchParams.get('quantity');
+  const paramSize = searchParams.get('size') || searchParams.get('config');
+  const paramQuantity = searchParams.get('quantity') || searchParams.get('qty');
+  const paramTerm = searchParams.get('term');
+  const paramLease = searchParams.get('leaseType') || searchParams.get('type');
 
   const initialCategorySlug = useMemo(() => {
     if (!paramCategory) return 'boxcars';
@@ -37,37 +74,59 @@ export const CostEstimator: React.FC = () => {
     return match ? match.slug : 'boxcars';
   }, [paramCategory]);
 
-  const initialQty = useMemo(() => {
-    const q = parseInt(paramQuantity || '5', 10);
-    return isNaN(q) ? 5 : Math.max(1, Math.min(60, q));
-  }, [paramQuantity]);
+  const initialCategoryObj = useMemo(() => {
+    return ESTIMATOR_EQUIPMENT_DATA.find((c) => c.slug === initialCategorySlug) || ESTIMATOR_EQUIPMENT_DATA[0];
+  }, [initialCategorySlug]);
+
+  const initialSizeIdx = useMemo(() => {
+    return matchSizeIndex(initialCategoryObj, paramSize);
+  }, [initialCategoryObj, paramSize]);
+
+  const initialQty = useMemo(() => matchQuantity(paramQuantity), [paramQuantity]);
+  const initialTerm = useMemo(() => matchTermId(paramTerm), [paramTerm]);
+  const initialLease = useMemo(() => matchLeaseType(paramLease), [paramLease]);
 
   // State: Interactive selections
   const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>(initialCategorySlug);
-  const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(0);
-  const [leaseType, setLeaseType] = useState<'full' | 'net'>('full');
-  const [termId, setTermId] = useState<string>('medium');
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState<number>(initialSizeIdx);
+  const [leaseType, setLeaseType] = useState<'full' | 'net'>(initialLease);
+  const [termId, setTermId] = useState<string>(initialTerm);
   const [quantity, setQuantity] = useState<number>(initialQty);
   const [regionId, setRegionId] = useState<string>('gulf-coast');
   const [copied, setCopied] = useState<boolean>(false);
   const [savedEstimateRef, setSavedEstimateRef] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [activeGuideTab, setActiveGuideTab] = useState<string>('boxcars');
+  const [activeGuideTab, setActiveGuideTab] = useState<string>(initialCategorySlug);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Sync if URL search params change
   useEffect(() => {
+    let catSlug = selectedCategorySlug;
     if (paramCategory) {
       const match = ESTIMATOR_EQUIPMENT_DATA.find(
         (c) => c.slug.toLowerCase() === paramCategory.toLowerCase() || c.name.toLowerCase().includes(paramCategory.toLowerCase())
       );
-      if (match) setSelectedCategorySlug(match.slug);
+      if (match) {
+        catSlug = match.slug;
+        setSelectedCategorySlug(match.slug);
+        setActiveGuideTab(match.slug);
+      }
+    }
+    const cat = ESTIMATOR_EQUIPMENT_DATA.find((c) => c.slug === catSlug) || ESTIMATOR_EQUIPMENT_DATA[0];
+    if (paramSize) {
+      const idx = matchSizeIndex(cat, paramSize);
+      setSelectedSizeIndex(idx);
     }
     if (paramQuantity) {
-      const q = parseInt(paramQuantity, 10);
-      if (!isNaN(q)) setQuantity(Math.max(1, Math.min(60, q)));
+      setQuantity(matchQuantity(paramQuantity));
     }
-  }, [paramCategory, paramQuantity]);
+    if (paramTerm) {
+      setTermId(matchTermId(paramTerm));
+    }
+    if (paramLease) {
+      setLeaseType(matchLeaseType(paramLease));
+    }
+  }, [paramCategory, paramSize, paramQuantity, paramTerm, paramLease]);
 
   // Active equipment object
   const currentCategory: EquipmentEstimatorItem = useMemo(() => {
@@ -220,13 +279,23 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
 
   // Direct transfer to quote page
   const handleTransferToQuote = () => {
+    const notesSummary = [
+      `[Formal Estimate via CRC Cost Estimator${savedEstimateRef ? ` · Ref: ${savedEstimateRef}` : ''}]`,
+      `• Equipment: ${currentCategory.name} — ${currentSize.name}`,
+      `• Fleet: ${quantity} car(s) | ${termOption.name} | ${leaseType === 'full' ? 'Full-Service' : 'Net'} Lease`,
+      `• Est. Rate per Car: ${formatCur(calculation.minRate)} – ${formatCur(calculation.maxRate)} / month`,
+      `• Est. Fleet Total: ${formatCur(calculation.totalMinMonthly)} – ${formatCur(calculation.totalMaxMonthly)} / month`,
+      `• Annual Fleet Budget: ${formatCur(calculation.totalMinAnnual)} – ${formatCur(calculation.totalMaxAnnual)} / year`,
+      `• Interchange Delivery: ${regionOption.name}`,
+    ].join('\n');
+
     const params = new URLSearchParams({
       category: currentCategory.name,
       config: currentSize.name,
       quantity: quantity.toString(),
       timing: termOption.name,
       leaseType: leaseType === 'full' ? 'Full-Service Lease' : 'Net Lease',
-      notes: `Generated via CRC Cost Estimator${savedEstimateRef ? ` [Ref: ${savedEstimateRef}]` : ''}. Estimated range: ${formatCur(calculation.minRate)} - ${formatCur(calculation.maxRate)}/car/mo. Interchange: ${regionOption.name}.`,
+      notes: notesSummary,
     });
     if (savedEstimateRef) {
       params.append('estimateRef', savedEstimateRef);
@@ -360,6 +429,8 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                           <img
                             src={item.image}
                             alt={item.name}
+                            width={64}
+                            height={48}
                             loading="lazy"
                             decoding="async"
                           />
@@ -796,6 +867,8 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                     <img
                       src={guideItem.image}
                       alt={guideItem.imageAlt}
+                      width={400}
+                      height={240}
                       loading="lazy"
                       decoding="async"
                     />

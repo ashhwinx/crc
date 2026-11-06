@@ -40,15 +40,15 @@ async function processFile(filePath) {
   let pipeline = sharp(inputBuffer);
   const meta = await sharp(inputBuffer).metadata();
 
-  // Resize rules
+  // Resize rules tailored for responsive web display
   if (base.includes('crc-badge')) {
-    pipeline = pipeline.resize({ width: 384, withoutEnlargement: true });
+    pipeline = pipeline.resize({ width: 320, withoutEnlargement: true });
   } else if (base.startsWith('crc-logo-')) {
-    pipeline = pipeline.resize({ width: 900, withoutEnlargement: true });
+    pipeline = pipeline.resize({ width: 520, withoutEnlargement: true });
   } else if (base.startsWith('category-')) {
-    pipeline = pipeline.resize({ width: 800, withoutEnlargement: true });
-  } else if (meta.width && meta.width > 1280) {
-    pipeline = pipeline.resize({ width: 1280, withoutEnlargement: true });
+    pipeline = pipeline.resize({ width: 720, withoutEnlargement: true });
+  } else if (meta.width && meta.width > 1200) {
+    pipeline = pipeline.resize({ width: 1200, withoutEnlargement: true });
   }
 
   let compressedBuffer;
@@ -57,13 +57,13 @@ async function processFile(filePath) {
       .png({
         compressionLevel: 9,
         palette: true,
-        quality: base.startsWith('crc-') ? 90 : 80,
+        quality: base.startsWith('crc-') ? 85 : 80,
       })
       .toBuffer();
   } else if (ext === '.jpg' || ext === '.jpeg') {
     compressedBuffer = await pipeline
       .jpeg({
-        quality: 80,
+        quality: 74,
         mozjpeg: true,
         progressive: true,
       })
@@ -71,7 +71,7 @@ async function processFile(filePath) {
   } else if (ext === '.webp') {
     compressedBuffer = await pipeline
       .webp({
-        quality: 80,
+        quality: 75,
         effort: 6,
       })
       .toBuffer();

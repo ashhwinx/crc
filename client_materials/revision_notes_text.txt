@@ -1,0 +1,204 @@
+
+========== PAGE 1 ==========
+
+CRC Website — Phase 1 Revision Notes
+Nov 3, 2026 · @Sam Lowe
+Harshit, these notes cover how the site looks and reads. Placeholder copy, contact details,
+legal pages, and the backend are being handled separately, so they're not covered here.
+Each screenshot below has its own notes, followed by a few site-wide design points and
+two new feature ideas.
+Top changes
+1. Replace the cards with text rows only where flagged: the service feature cards
+(section 1) and the value cards (section 6). Cards stay everywhere else.
+2. Redesign the value cards from my sketch: large lead icon, title, tightened text, a stat
+line (section 6).
+3. Rework the hero badges as a spec strip, or remove them (section 4).
+4. Make boxcar sizes selectable and carry the choice straight into the cost estimator.
+The layout stays as it is (section 3).
+5. Connect the estimator to the rest of the site, so every selection and inquiry carries
+straight into the cost tool (section 7).
+6. Idea for later, not part of this build: a 3D railcar viewer.
+7. New FAQ entry for shippers who don't have a rail siding yet.
+CRC Website — Phase 1 Revision Notes
+Page 1 of 11
+
+========== PAGE 2 ==========
+
+1. Service feature cards
+Replace the card grid with text rows (see Text rows instead of cards). Four boxed cards
+in a 2×2 grid look generic.
+One row per point: large icon on the left, title and one line of text on the right, dashed
+rules between rows.
+Remove the pill badges.
+CRC Website — Phase 1 Revision Notes
+Page 2 of 11
+
+========== PAGE 3 ==========
+
+2. Boxcar and covered hopper cards
+The specs block and layout work well.
+Change the button label from "Request Quote" to "Request Sourcing" and have it
+open the request form with the car type already filled in.
+3. Boxcar sizes and configurations
+Leave this section as it is. The only change is the hand-off into the cost estimator:
+CRC Website — Phase 1 Revision Notes
+Page 3 of 11
+
+========== PAGE 4 ==========
+
+Make each size selectable. Clicking a row or its "Inquire Size" link opens the cost
+estimator with the car type and size already filled in. Step 01 shows Boxcars and step
+02 shows the chosen size, for example /cost-estimator?category=boxcars&size=50-
+ft-standard .
+Do the same for every car type's size list in the catalog, so a visitor can browse, pick,
+and land in the estimator already set up.
+4. Hero badges
+The badges as they are don't work: three colored dots and loose text over the photo look
+like leftover UI. Two options:
+Option A (recommended): a spec strip. A thin bar along the bottom edge of the hero
+with three label/value pairs separated by thin vertical rules. For example: CAR TYPES ·
+7 | LEASE TERMS · Full-service & net | COVERAGE · North America. It reads like a data
+plate on a railcar, which fits the subject.
+Option B: remove them. Fold one line into the hero subhead ("Seven car types, full-
+service or net lease") and let the headline and CTAs carry the hero.
+5. How We Structure Railcar Leasing (About page)
+Keep the card layout here.
+CRC Website — Phase 1 Revision Notes
+Page 4 of 11
+
+========== PAGE 5 ==========
+
+Use one accent color for the top borders instead of red, black, and orange.
+Use the same large icon treatment as the value cards, with no tinted box.
+6. Values cards: partnership, environmental, response
+CRC Website — Phase 1 Revision Notes
+Page 5 of 11
+
+========== PAGE 6 ==========
+
+CRC Website — Phase 1 Revision Notes
+Page 6 of 11
+
+========== PAGE 7 ==========
+
+Use my sketch as the layout. Keep the current text, but tighten each value around its
+numbers and why they matter. No card box.
+Layout (top to bottom, centered)
+1. A large icon as the lead: about 64–80 px, brand red line icon, no box or pill behind it.
+2. A short title, one or two words (for example "Environment").
+3. Text: the existing description, cut to two or three lines. Lead with why it matters to the
+shipper.
+4. A stat line: two or three figures separated by thin dividers, set larger and bolder than
+the text so they're the first thing read after the title.
+Remove the colored top borders, the colored subheads (blue, green, purple), and the
+checkmark bullet lists. The stat line replaces the bullets.
+Example: 05 Environment
+Text: Moving freight from highway to rail cuts fuel use and emissions on every load,
+which helps shippers meet their sustainability targets.
+Stats: ~500 miles per ton per gallon | Up to 75% fewer emissions than trucks | 3–4
+trucks off the road per car
+Stat lines for all six, taken from the site's current copy:
+Keep the 3 × 2 grid, but make it flow:
+# Title Stat line
+01 Safety AAR Rule 88 · FRA 49 CFR · Pre-trip inspection
+02 Clear Deals Line-item maintenance scope · No hidden per-diem
+fees
+03 Flexibility 3–12 mo · 1–3 yr · 3–5+ yr terms
+04 Partnership 6 Class I railroads · US, Canada & Mexico
+05 Environment ~500 mi per ton per gallon · Up to 75% fewer
+emissions · 3–4 trucks per car
+06 Response 24-hour quote turnaround · Direct line to a
+specialist
+CRC Website — Phase 1 Revision Notes
+Page 7 of 11
+
+========== PAGE 8 ==========
+
+No card boxes: each value sits on the page background. Separate them with space,
+plus thin vertical rules between columns and one horizontal rule between the two
+rows.
+The same height and alignment for all six: icons on one line, titles on one line, stat lines
+on one line. That way the grid reads straight across.
+Even rhythm: the same spacing between icon, title, text, and stats in every value. Give
+the grid more space around it than it has now.
+A soft entrance: fade each value up slightly as it scrolls into view, one after another (01
+to 06). Skip it for visitors who have reduced motion turned on.
+Phones: two columns, then one on the smallest screens, keeping the same order.
+7. Cost estimator preview
+The estimator itself is staying as it is. The note here is about connecting it to the rest of
+the site, so whatever a visitor picks anywhere carries into the full cost tool without being
+re-entered.
+From this preview card: when a visitor clicks "Customize This Fleet in Full Estimator,"
+pass the car type, size, car count, and term over, not just the category. The link already
+passes ?category=covered-hoppers ; extend it, for example ?category=covered-
+hoppers&size=5161-5400&qty=10&term=medium .
+CRC Website — Phase 1 Revision Notes
+Page 8 of 11
+
+========== PAGE 9 ==========
+
+From "Inquire Size" and "Request Sourcing": open the estimator, or the request form,
+with that car type and size already selected.
+From the estimator to the request form: attach the estimate (car, size, count, term,
+range) to the request, so I see exactly what they priced.
+What makes the reference work:
+CRC Website — Phase 1 Revision Notes
+Page 9 of 11
+
+========== PAGE 10 ==========
+
+Two columns per row: a small label on the left (date, number, or icon) and a large title
+with one or two lines of body text on the right.
+Thin dashed rules between rows instead of borders around each item.
+A big type contrast: the titles are large, and the body text is small and muted.
+No boxes, fills, or shadows. The rows sit directly on the page background.
+A subtle scroll effect: rows brighten as they reach the middle of the screen and dim as
+they leave.
+Text rows instead of cards (flagged sections only)
+I want this layout in the two places I flagged, not across the whole site. Cards still work for
+the equipment catalog, the estimator, and the other sections.
+Where to use it:
+Design rules for every section:
+One accent color (the brand red) plus neutrals. No blue, green, purple, or orange
+accents.
+The same icon treatment everywhere: line icons, large, in the accent color, with no
+tinted box behind them.
+Tighter corners (3–4 px) on what stays boxed: buttons, inputs, and the estimator
+panels.
+Idea for later: 3D railcar viewer
+Not part of this build; noting it for the future.
+The idea: a railcar version of Koenigsegg's online configurator. One car is featured at a
+time in a studio-lit 3D scene. Visitors pick any of the seven car types, rotate and zoom
+it, then send that car to the cost estimator.
+Section Left column Right column
+Company values 01–06
+(section 6)
+Stacked and centered instead
+(see the section 6 sketch):
+large icon, title, text, stat line
+The four service points
+(section 1)
+Large icon Title and one line of text.
+Replaces the card grid.
+CRC Website — Phase 1 Revision Notes
+Page 10 of 11
+
+========== PAGE 11 ==========
+
+Where it could go: the homepage, a "View in 3D" link in the catalog, and step 02 of the
+estimator.
+Feasibility: it works in a browser today (three.js or Google's model-viewer, no plugins).
+The main effort and cost would be seven realistic, textured railcar models, one per car
+type, bought or commissioned.
+New FAQ entry: shippers without a rail siding
+A lot of first-time rail shippers will reach the site without track of their own. Add an FAQ
+entry for them, possibly with a short callout near the quote form:
+"I don't have a rail siding. Can I still use railcars?" Yes. Three common ways in:
+Transload: ship through a nearby transload facility, where cargo moves between truck
+and railcar.
+Team track: load at a railroad-owned public track near you.
+Your own track: reactivate dormant track on your property, or add a new spur. We can
+help you find rail-compatible sites, too.
+End the entry with a "Tell us your location" button that opens the request form.
+CRC Website — Phase 1 Revision Notes
+Page 11 of 11

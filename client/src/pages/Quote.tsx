@@ -515,6 +515,10 @@ export const Quote: React.FC = () => {
                         <img
                           src={currentCategoryObj.image}
                           alt={currentCategoryObj.imageAlt}
+                          width={140}
+                          height={95}
+                          loading="lazy"
+                          decoding="async"
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       </div>
@@ -553,6 +557,26 @@ export const Quote: React.FC = () => {
                   >
                     3. Route, Siding &amp; Lease Specifics
                   </h3>
+
+                  {/* Siding / First-Time Shipper Advisory Callout */}
+                  <div
+                    style={{
+                      backgroundColor: '#F8FAFC',
+                      border: '1px solid #E2E8F0',
+                      borderLeft: '4px solid #AA2E1F',
+                      padding: '1rem 1.25rem',
+                      borderRadius: '6px',
+                      marginBottom: '1.35rem',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.75rem',
+                    }}
+                  >
+                    <Info size={18} style={{ color: '#AA2E1F', flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.55 }}>
+                      <strong style={{ color: '#0A0A09' }}>Don't have an active rail siding?</strong> You can still utilize rail freight via nearby <strong>Transload facilities</strong>, railroad-owned <strong>Team tracks</strong>, or by reactivating dormant spurs. Note your facility city/ZIP below and our logistics desk will map compatible connection points.
+                    </div>
+                  </div>
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="quote-message">

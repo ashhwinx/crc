@@ -31,99 +31,51 @@ export const CompanyValues: React.FC = () => {
   const values = [
     {
       id: 'safety',
-      icon: ShieldCheck,
       number: '01',
-      title: 'Mechanical Rigor & Fleet Safety First',
-      summary: 'Adherence to AAR, FRA, and Transport Canada standards is never compromised.',
-      description:
-        'Rail safety protects cargo, crew, and community. Every boxcar, covered hopper, tank car, and flatcar in our sourcing pool undergoes thorough mechanical inspection, Rule 88 reconditioning checks, and wheelset qualification before delivery to your plant siding.',
-      points: [
-        'AAR Rule 88 structural & component verification',
-        'FRA Title 49 CFR safety appliance compliance',
-        'Pre-trip certified inspection reports prior to interchange',
-      ],
-      badgeColor: '#AA2E1F',
-      accentBg: '#FDF2F0',
+      icon: ShieldCheck,
+      title: 'Safety',
+      text: 'Rail safety protects cargo, crew, and community. Every car undergoes thorough mechanical qualification and pre-trip inspection before interchange.',
+      statLine: 'AAR Rule 88 · FRA 49 CFR · Pre-trip inspection',
     },
     {
-      id: 'transparency',
-      icon: Scale,
+      id: 'clear-deals',
       number: '02',
-      title: 'Transparent Commercial Deal-Making',
-      summary: 'Honest car availability, clear rate ledgers, and zero hidden per-diem fees.',
-      description:
-        'Too often, rail equipment sourcing is clouded by speculative listings and ambiguous maintenance scopes. We present transparent monthly lease rates, explicit full-service vs. net lease boundaries, and genuine market availability you can take to your board.',
-      points: [
-        'Line-item maintenance scope documentation',
-        'Accurate equipment availability verified directly with fleet owners',
-        'Predictable capital budgeting without surprise fees',
-      ],
-      badgeColor: '#0A0A09',
-      accentBg: '#F8FAFC',
+      icon: Scale,
+      title: 'Clear Deals',
+      text: 'Predictable capital budgeting with transparent commercial ledgers, itemized maintenance scopes, verified car availability, and zero hidden per-diem fees.',
+      statLine: 'Line-item maintenance scope · No hidden per-diem fees',
     },
     {
-      id: 'agility',
-      icon: Zap,
+      id: 'flexibility',
       number: '03',
-      title: 'Operational Agility & Fleet Flexibility',
-      summary: 'Lease structures engineered around your specific production and harvest cycles.',
-      description:
-        'Industrial supply chains are dynamic. Whether you require a short-term 6-month surge fleet for a seasonal grain harvest or a 5-year master lease for private chemical distribution, we tailor our lease duration, delivery cadence, and car set sizing to your facility.',
-      points: [
-        'Short-term surge, medium-term (1–3 yr), and long-term commitments',
-        'Flexible fleet expansion and staged delivery options',
-        'Purchase-leaseback structures to unlock balance sheet capital',
-      ],
-      badgeColor: '#D97706',
-      accentBg: '#FEF3C7',
+      icon: Zap,
+      title: 'Flexibility',
+      text: 'Lease structures engineered around your specific production and harvest cycles, with tailored terms from seasonal surge to multi-year master leases.',
+      statLine: '3–12 mo · 1–3 yr · 3–5+ yr terms',
     },
     {
       id: 'partnership',
-      icon: Handshake,
       number: '04',
-      title: 'Continental Shipper Partnership',
-      summary: 'Acting as an extension of your logistics desk across Class I and short-line railroads.',
-      description:
-        'We do not view ourselves as an impersonal equipment broker. We partner directly with industrial plant managers, logistics directors, and Class I railroads (BNSF, UP, CSX, NS, CN, CPKC) to ensure seamless interchange routing, OT-5 loading authority, and ongoing fleet performance.',
-      points: [
-        'Interchange coordination and track routing guidance',
-        'Dedicated commercial contact throughout your lease term',
-        'Continental reach across United States, Canada, and Mexico',
-      ],
-      badgeColor: '#2563EB',
-      accentBg: '#EFF6FF',
+      icon: Handshake,
+      title: 'Partnership',
+      text: 'We partner directly with plant managers and Class I railroads across North America to ensure seamless interchange routing and active fleet execution.',
+      statLine: '6 Class I railroads · US, Canada & Mexico',
     },
     {
-      id: 'stewardship',
-      icon: Leaf,
+      id: 'environment',
       number: '05',
-      title: 'Environmental & Energy Stewardship',
-      summary: 'Championing North American rail freight as the cleanest overland transport.',
-      description:
-        'Railroads move one ton of freight approximately 500 miles on a single gallon of diesel fuel, generating up to 75% fewer greenhouse gas emissions than heavy highway trucking. We actively assist industrial shippers in transitioning freight to rail to meet Scope 1 and Scope 3 ESG targets.',
-      points: [
-        '~75% lower emissions per ton-mile compared to semi-trucks',
-        'Relieving highway congestion and road infrastructure strain',
-        'High-density payload optimization reducing total fuel consumed',
-      ],
-      badgeColor: '#059669',
-      accentBg: '#ECFDF5',
+      icon: Leaf,
+      title: 'Environment',
+      text: 'Moving freight from highway to rail cuts fuel use and emissions on every load, which helps shippers meet their sustainability targets.',
+      statLine: '~500 mi per ton per gallon · Up to 75% fewer emissions · 3–4 trucks per car',
     },
     {
-      id: 'responsiveness',
-      icon: Clock,
+      id: 'response',
       number: '06',
-      title: 'Direct Accountability & Rapid Response',
-      summary: 'Prompt answers from knowledgeable rail professionals when minutes matter.',
-      description:
-        'In heavy manufacturing, delayed cars cause production shutdowns. When you request equipment specs, need emergency car replacements, or require mechanical records, our team in Houston responds promptly with decisive, knowledgeable support.',
-      points: [
-        'Direct phone access to commercial leasing specialists',
-        'Rapid 24-hour turnaround on initial quote proposals',
-        'Proactive tracking and milestone communication',
-      ],
-      badgeColor: '#7C3AED',
-      accentBg: '#F5F3FF',
+      icon: Clock,
+      title: 'Response',
+      text: 'In heavy manufacturing, delayed cars cause production shutdowns. Our Houston desk responds promptly with direct specialist access when minutes matter.',
+      statLine: '24-hour quote turnaround · Direct line to a specialist',
     },
   ];
 
@@ -302,11 +254,11 @@ export const CompanyValues: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          CORE VALUES GRID (6 Detailed Value Pillars)
+          CORE VALUES GRID (Redesigned per Client Sketch: No Boxes, Large Icon, Stat Line)
           ========================================================================= */}
-      <section className="section section-subtle" style={{ borderBottom: '1px solid #E2E8F0' }}>
+      <section className="section section-subtle values-sketch-section" style={{ borderBottom: '1px solid #E2E8F0', padding: '5.5rem 0' }}>
         <div className="container">
-          <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
+          <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '4rem' }}>
             <span className="eyebrow" style={{ justifyContent: 'center' }}>Six Core Pillars</span>
             <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
               How Our Values Power Your Supply Chain
@@ -316,126 +268,88 @@ export const CompanyValues: React.FC = () => {
             </p>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-              gap: '2rem',
-            }}
-          >
-            {values.map((v) => {
+          <div className="values-sketch-grid">
+            {values.map((v, vIdx) => {
               const Icon = v.icon;
               return (
                 <div
                   key={v.id}
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    border: '1px solid #E2E8F0',
-                    borderTop: `4px solid ${v.badgeColor}`,
-                    padding: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: '0 2px 8px rgba(15,23,42,0.04)',
-                    transition: 'transform 200ms ease, box-shadow 200ms ease',
-                  }}
-                  className="value-card"
+                  className="value-pillar-item"
+                  style={{ animationDelay: `${vIdx * 90}ms` }}
                 >
-                  <div
+                  {/* Number Eyebrow */}
+                  <span
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '1.25rem',
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      color: '#AA2E1F',
+                      letterSpacing: '0.08em',
+                      marginBottom: '0.85rem',
+                      display: 'block',
                     }}
                   >
-                    <div
-                      style={{
-                        width: '46px',
-                        height: '46px',
-                        borderRadius: '10px',
-                        backgroundColor: v.accentBg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Icon size={22} style={{ color: v.badgeColor }} />
-                    </div>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-railroad)',
-                        fontSize: '1.4rem',
-                        fontWeight: 800,
-                        color: '#94A3B8',
-                        letterSpacing: '0.05em',
-                      }}
-                    >
-                      {v.number}
-                    </span>
+                    {v.number}
+                  </span>
+
+                  {/* 1. Large Lead Icon: 64–80px, brand red line icon, no box or pill behind it */}
+                  <div
+                    style={{
+                      color: '#AA2E1F',
+                      marginBottom: '1.35rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '74px',
+                    }}
+                  >
+                    <Icon size={70} strokeWidth={1.5} />
                   </div>
 
+                  {/* 2. Short Title: One or two words */}
                   <h3
                     style={{
-                      fontSize: '1.22rem',
-                      fontWeight: 700,
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.5rem',
+                      fontWeight: 800,
                       color: '#0A0A09',
-                      marginBottom: '0.5rem',
-                      lineHeight: 1.3,
+                      margin: '0 0 0.85rem 0',
+                      letterSpacing: '-0.02em',
                     }}
                   >
                     {v.title}
                   </h3>
 
-                  <p
-                    style={{
-                      fontSize: '0.88rem',
-                      fontWeight: 600,
-                      color: v.badgeColor,
-                      marginBottom: '1rem',
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {v.summary}
-                  </p>
-
+                  {/* 3. Text: Tight 2-3 lines description, why it matters to the shipper */}
                   <p
                     style={{
                       fontSize: '0.94rem',
                       color: '#475569',
-                      lineHeight: 1.68,
-                      marginBottom: '1.5rem',
+                      lineHeight: 1.65,
+                      margin: '0 0 1.5rem 0',
+                      maxWidth: '340px',
                       flex: 1,
                     }}
                   >
-                    {v.description}
+                    {v.text}
                   </p>
 
+                  {/* 4. Stat Line: Larger and bolder than text, with divider dots */}
                   <div
                     style={{
-                      paddingTop: '1.25rem',
-                      borderTop: '1px solid #F1F5F9',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.55rem',
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '0.96rem',
+                      fontWeight: 700,
+                      color: '#0A0A09',
+                      lineHeight: 1.5,
+                      letterSpacing: '-0.01em',
+                      paddingTop: '1.15rem',
+                      borderTop: '1px solid #E2E8F0',
+                      width: '100%',
+                      maxWidth: '320px',
                     }}
                   >
-                    {v.points.map((pt, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '0.5rem',
-                          fontSize: '0.84rem',
-                          color: '#334155',
-                          lineHeight: 1.45,
-                        }}
-                      >
-                        <CheckCircle2 size={15} style={{ color: v.badgeColor, flexShrink: 0, marginTop: '2px' }} />
-                        <span>{pt}</span>
-                      </div>
-                    ))}
+                    {v.statLine}
                   </div>
                 </div>
               );
@@ -1030,10 +944,89 @@ export const CompanyValues: React.FC = () => {
           }
         }
 
-        .value-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 24px -4px rgba(15,23,42,0.08) !important;
+        /* =========================================================================
+           Values Grid: Redesigned per Client Sketch (3x2 Grid, Dividers, No Boxes)
+           ========================================================================= */
+        .values-sketch-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0;
+          max-width: 1180px;
+          margin: 0 auto;
         }
+
+        .value-pillar-item {
+          padding: 3rem 2.25rem;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          background: transparent;
+          animation: valueFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Thin vertical rules between columns on desktop */
+        .value-pillar-item:not(:nth-child(3n)) {
+          border-right: 1px solid #E2E8F0;
+        }
+
+        /* One thin horizontal rule between row 1 and row 2 */
+        .value-pillar-item:nth-child(-n+3) {
+          border-bottom: 1px solid #E2E8F0;
+        }
+
+        @keyframes valueFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .value-pillar-item {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+          }
+        }
+
+        @media (max-width: 991px) {
+          .values-sketch-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          .value-pillar-item:not(:nth-child(3n)) {
+            border-right: none;
+          }
+          .value-pillar-item:nth-child(-n+3) {
+            border-bottom: none;
+          }
+          .value-pillar-item:not(:nth-child(2n)) {
+            border-right: 1px solid #E2E8F0;
+          }
+          .value-pillar-item:nth-child(-n+4) {
+            border-bottom: 1px solid #E2E8F0;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .values-sketch-grid {
+            grid-template-columns: 1fr;
+          }
+          .value-pillar-item {
+            border-right: none !important;
+            border-bottom: 1px solid #E2E8F0 !important;
+            padding: 2.25rem 1rem !important;
+          }
+          .value-pillar-item:last-child {
+            border-bottom: none !important;
+          }
+        }
+
         .quick-link-card:hover {
           transform: translateY(-3px);
           box-shadow: 0 8px 20px -2px rgba(15,23,42,0.08);

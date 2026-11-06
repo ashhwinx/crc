@@ -1,39 +1,46 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
+import { PageLoadingFallback } from './components/common/LoadingFallback';
+
+// Primary homepage direct import for instant First Contentful Paint without route suspension
 import { Home } from './pages/Home';
-import { About } from './pages/About';
-import { RailcarLeasing } from './pages/RailcarLeasing';
-import { Quote } from './pages/Quote';
-import { Contact } from './pages/Contact';
-import { BookCall } from './pages/BookCall';
-import { CostEstimator } from './pages/CostEstimator';
-import { CompanyValues } from './pages/CompanyValues';
-import { FAQ } from './pages/FAQ';
-import { TrackLayout } from './pages/TrackLayout';
-import { NotFound } from './pages/NotFound';
+
+// Lazy-loaded routes for code-splitting and isolating heavy dependencies (e.g. Three.js)
+const About = lazy(() => import('./pages/About').then((m) => ({ default: m.About })));
+const CompanyValues = lazy(() => import('./pages/CompanyValues').then((m) => ({ default: m.CompanyValues })));
+const FAQ = lazy(() => import('./pages/FAQ').then((m) => ({ default: m.FAQ })));
+const RailcarLeasing = lazy(() => import('./pages/RailcarLeasing').then((m) => ({ default: m.RailcarLeasing })));
+const CostEstimator = lazy(() => import('./pages/CostEstimator').then((m) => ({ default: m.CostEstimator })));
+const TrackLayout = lazy(() => import('./pages/TrackLayout').then((m) => ({ default: m.TrackLayout })));
+const Quote = lazy(() => import('./pages/Quote').then((m) => ({ default: m.Quote })));
+const Contact = lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
+const BookCall = lazy(() => import('./pages/BookCall').then((m) => ({ default: m.BookCall })));
+const NotFound = lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })));
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/company-values" element={<CompanyValues />} />
-          <Route path="/values" element={<Navigate to="/company-values" replace />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/faqs" element={<Navigate to="/faq" replace />} />
-          <Route path="/railcar-leasing" element={<RailcarLeasing />} />
-          <Route path="/catalog" element={<Navigate to="/railcar-leasing" replace />} />
-          <Route path="/cost-estimator" element={<CostEstimator />} />
-          <Route path="/estimator" element={<Navigate to="/cost-estimator" replace />} />
-          <Route path="/track-layout" element={<TrackLayout />} />
-          <Route path="/quote" element={<Quote />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/book-a-call" element={<BookCall />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/company-values" element={<CompanyValues />} />
+            <Route path="/values" element={<Navigate to="/company-values" replace />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/faqs" element={<Navigate to="/faq" replace />} />
+            <Route path="/railcar-leasing" element={<RailcarLeasing />} />
+            <Route path="/catalog" element={<Navigate to="/railcar-leasing" replace />} />
+            <Route path="/cost-estimator" element={<CostEstimator />} />
+            <Route path="/estimator" element={<Navigate to="/cost-estimator" replace />} />
+            <Route path="/track-layout" element={<TrackLayout />} />
+            <Route path="/quote" element={<Quote />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/book-a-call" element={<BookCall />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </BrowserRouter>
   );

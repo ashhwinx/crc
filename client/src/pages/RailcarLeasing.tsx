@@ -248,7 +248,7 @@ export const RailcarLeasing: React.FC = () => {
                       className="btn btn-primary btn-sm catalog-header-cta"
                     >
                       <FileText size={15} />
-                      Request Quote
+                      Request Sourcing
                     </Link>
                   </div>
 
@@ -258,6 +258,8 @@ export const RailcarLeasing: React.FC = () => {
                       <img
                         src={cat.image}
                         alt={cat.imageAlt}
+                        width={420}
+                        height={260}
                         loading="lazy"
                         decoding="async"
                       />
@@ -330,30 +332,31 @@ export const RailcarLeasing: React.FC = () => {
                         </div>
 
                         <div className="catalog-spec-panel">
-                          {cat.configurations.map((cfg, cfgIdx) => (
-                            <div
-                              key={cfgIdx}
-                              className="catalog-spec-row"
-                            >
-                              <div className="catalog-spec-info">
-                                <strong className="catalog-spec-name">
-                                  {cfg.name}
-                                </strong>
-                                <span className="catalog-spec-note">
-                                  {cfg.note}
-                                </span>
-                              </div>
-
+                          {cat.configurations.map((cfg, cfgIdx) => {
+                            const estimatorUrl = `/cost-estimator?category=${encodeURIComponent(cat.slug)}&size=${encodeURIComponent(cfg.name)}`;
+                            return (
                               <Link
-                                to={`/quote?category=${encodeURIComponent(cat.name)}&config=${encodeURIComponent(cfg.name)}`}
-                                className="catalog-spec-inquire-link"
-                                title={`Request quote for ${cfg.name}`}
+                                key={cfgIdx}
+                                to={estimatorUrl}
+                                className="catalog-spec-row catalog-spec-row-selectable"
+                                title={`Configure ${cat.name} (${cfg.name}) in Cost Estimator`}
                               >
-                                Inquire Size
-                                <ChevronRight size={14} />
+                                <div className="catalog-spec-info">
+                                  <strong className="catalog-spec-name">
+                                    {cfg.name}
+                                  </strong>
+                                  <span className="catalog-spec-note">
+                                    {cfg.note}
+                                  </span>
+                                </div>
+
+                                <span className="catalog-spec-inquire-link">
+                                  Inquire Size
+                                  <ChevronRight size={14} />
+                                </span>
                               </Link>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
 
                         {/* Sourcing Callout */}
@@ -477,6 +480,8 @@ export const RailcarLeasing: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/DSC09750(1).jpg"
                   alt="Industrial siding turnout switching"
+                  width={400}
+                  height={210}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -501,6 +506,8 @@ export const RailcarLeasing: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/16424.jpg"
                   alt="Rail delivery to industrial processing facility"
+                  width={400}
+                  height={210}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -525,6 +532,8 @@ export const RailcarLeasing: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
                   alt="Mainline freight rail delivery"
+                  width={400}
+                  height={210}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -549,6 +558,8 @@ export const RailcarLeasing: React.FC = () => {
                 <img
                   src="/images/Trains serving industries-additional railcar images/16410.jpg"
                   alt="Track siding inspection and maintenance"
+                  width={400}
+                  height={210}
                   loading="lazy"
                   decoding="async"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
@@ -924,7 +935,11 @@ export const RailcarLeasing: React.FC = () => {
           justifyContent: space-between;
           align-items: center;
           gap: 1.25rem;
-          transition: background-color 150ms ease;
+          transition: background-color 150ms ease, transform 150ms ease;
+          text-decoration: none;
+        }
+        .catalog-spec-row-selectable {
+          cursor: pointer;
         }
         .catalog-spec-row:nth-child(even) {
           background-color: #FAFBFD;
@@ -933,7 +948,11 @@ export const RailcarLeasing: React.FC = () => {
           border-bottom: none;
         }
         .catalog-spec-row:hover {
-          background-color: #F1F5F9;
+          background-color: #F8FAFC;
+        }
+        .catalog-spec-row-selectable:hover .catalog-spec-inquire-link {
+          background-color: #AA2E1F;
+          color: #FFFFFF;
         }
         .catalog-spec-info {
           flex: 1;

@@ -25,6 +25,8 @@ export const Footer: React.FC = () => {
                 src="/images/branding/crc-logo-color.png"
                 alt="Coast Road Capital"
                 className="footer-logo"
+                width={200}
+                height={50}
                 loading="lazy"
                 decoding="async"
               />

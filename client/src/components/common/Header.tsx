@@ -144,6 +144,8 @@ export const Header: React.FC = () => {
             <img
               src="/images/branding/crc-logo-color.png"
               alt="Coast Road Capital"
+              width={260}
+              height={64}
               fetchPriority="high"
               decoding="async"
               style={{
@@ -283,6 +285,8 @@ export const Header: React.FC = () => {
               <img
                 src="/images/branding/crc-logo-color.png"
                 alt="Coast Road Capital"
+                width={170}
+                height={42}
                 loading="lazy"
                 decoding="async"
                 style={{ height: '42px', width: 'auto' }}
