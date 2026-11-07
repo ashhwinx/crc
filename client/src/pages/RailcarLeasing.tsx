@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import {
   ArrowRight,
-  CheckCircle2,
   FileText,
   SlidersHorizontal,
   Package,
@@ -173,9 +172,6 @@ export const RailcarLeasing: React.FC = () => {
         />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '860px' }}>
-            <span className="eyebrow eyebrow-dark">
-              Equipment Catalog &bull; Sourcing Guide
-            </span>
             <h1 className="catalog-hero-title">
               Railcar Equipment Catalog
             </h1>
@@ -427,17 +423,16 @@ export const RailcarLeasing: React.FC = () => {
                           Standard commodities loaded, hauled, and transferred across Class I networks:
                         </p>
 
-                        <div className="catalog-commodities-grid">
+                        <div className="catalog-commodities-wrap">
                           {cat.typicalCommodities.map((item, i) => (
-                            <div key={i} className="catalog-commodity-card">
-                              <CheckCircle2 size={16} style={{ color: '#059669', flexShrink: 0 }} />
-                              <span className="catalog-commodity-text">{item}</span>
-                            </div>
+                            <span key={i} className="catalog-commodity-chip">
+                              {item}
+                            </span>
                           ))}
                         </div>
 
-                        <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', backgroundColor: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                          <span style={{ fontSize: '0.88rem', color: '#334155', fontWeight: 500 }}>
+                        <div style={{ marginTop: '1.5rem', padding: '0.9rem 1.15rem', backgroundColor: '#FAF9F7', borderRadius: '4px', border: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.85rem' }}>
+                          <span style={{ fontSize: '0.86rem', color: '#334155', fontWeight: 500 }}>
                             Shipping specialized chemicals, bulk minerals, or custom goods?
                           </span>
                           <Link
@@ -1067,27 +1062,32 @@ export const RailcarLeasing: React.FC = () => {
         }
 
         /* Tab 3 Commodities Styles */
+        .catalog-commodities-wrap,
         .catalog-commodities-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 0.75rem;
-          box-sizing: border-box;
-        }
-        .catalog-commodity-card {
-          background-color: #F8FAFC;
-          border: 1px solid #E2E8F0;
-          border-radius: 8px;
-          padding: 0.75rem 0.95rem;
           display: flex;
-          align-items: center;
-          gap: 0.6rem;
+          flex-wrap: wrap;
+          gap: 0.55rem;
           box-sizing: border-box;
         }
-        .catalog-commodity-text {
-          font-size: 0.9rem;
-          color: #334155;
+        .catalog-commodity-chip,
+        .catalog-commodity-card {
+          background-color: #FAF9F7;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 0.5rem 0.85rem;
+          font-size: 0.86rem;
+          color: #1E293B;
           font-weight: 500;
           line-height: 1.4;
+          display: inline-flex;
+          align-items: center;
+          box-sizing: border-box;
+          transition: background-color 150ms ease, border-color 150ms ease;
+        }
+        .catalog-commodity-chip:hover,
+        .catalog-commodity-card:hover {
+          background-color: #FFFFFF;
+          border-color: #CBD5E1;
         }
 
         /* Closing Section */
@@ -1319,15 +1319,14 @@ export const RailcarLeasing: React.FC = () => {
             font-size: 0.82rem !important;
             line-height: 1.5 !important;
           }
+          .catalog-commodities-wrap,
           .catalog-commodities-grid {
-            grid-template-columns: 1fr !important;
-            gap: 0.5rem !important;
+            gap: 0.45rem !important;
           }
+          .catalog-commodity-chip,
           .catalog-commodity-card {
-            padding: 0.65rem 0.85rem !important;
-          }
-          .catalog-commodity-text {
-            font-size: 0.85rem !important;
+            font-size: 0.82rem !important;
+            padding: 0.45rem 0.75rem !important;
           }
 
           /* Closing Section on Mobile */

@@ -7,24 +7,28 @@ import {
   FileText,
   Check,
   Calculator,
-  Truck,
-  SlidersHorizontal,
-  ShieldCheck,
   PhoneCall,
-  Clock,
-  Layers,
-  TrendingUp,
-  HelpCircle,
   Building2,
-  BadgeCheck,
-  Fuel,
-  Scale,
   ChevronDown,
   User,
   Mail,
   Phone,
   MapPin,
 } from 'lucide-react';
+import {
+  IconGasStation,
+  IconTruck,
+  IconChartLine,
+  IconRoute,
+  IconShieldCheck,
+  IconHelpCircle,
+  IconStack2,
+  IconScale,
+  IconAdjustmentsHorizontal,
+  IconBuildingBank,
+  IconCertificate,
+  IconGitFork,
+} from '@tabler/icons-react';
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
 import { submitInquiry } from '../services/api';
 import type { InquiryResponse, InquiryPayload } from '../types';
@@ -222,7 +226,7 @@ const SERVICES_DATA = [
     id: 'full-service',
     title: 'Full-Service Operating Leases',
     subtitle: 'Turnkey fleet maintenance & capital budgeting',
-    icon: Layers,
+    icon: IconStack2,
     iconBg: '#FDF2F0',
     iconColor: '#AA2E1F',
     points: [
@@ -237,7 +241,7 @@ const SERVICES_DATA = [
     id: 'net-leases',
     title: 'Net Leases & Capital Leases',
     subtitle: 'Lower base lease expense for captive loops',
-    icon: Scale,
+    icon: IconScale,
     iconBg: '#ECFDF5',
     iconColor: '#059669',
     points: [
@@ -252,7 +256,7 @@ const SERVICES_DATA = [
     id: 'fleet-sourcing',
     title: 'Specialized Fleet Sourcing & Brokerage',
     subtitle: 'Immediate secondary market placement across North America',
-    icon: SlidersHorizontal,
+    icon: IconAdjustmentsHorizontal,
     iconBg: '#EFF6FF',
     iconColor: '#2563EB',
     points: [
@@ -267,7 +271,7 @@ const SERVICES_DATA = [
     id: 'sale-leaseback',
     title: 'Sale-Leaseback Fleet Financing',
     subtitle: 'Unlock balance sheet capital from private car fleets',
-    icon: Building2,
+    icon: IconBuildingBank,
     iconBg: '#FEF3C7',
     iconColor: '#D97706',
     points: [
@@ -282,7 +286,7 @@ const SERVICES_DATA = [
     id: 'aar-compliance',
     title: 'AAR Mechanical Compliance & Inspections',
     subtitle: 'Rigorous pre-trip qualification & safety appliances',
-    icon: ShieldCheck,
+    icon: IconCertificate,
     iconBg: '#F5F3FF',
     iconColor: '#7C3AED',
     points: [
@@ -297,7 +301,7 @@ const SERVICES_DATA = [
     id: 'logistics-advisory',
     title: 'Siding & Interchange Logistics Advisory',
     subtitle: 'Facility track geometry & Class I carrier clearance',
-    icon: Clock,
+    icon: IconGitFork,
     iconBg: '#FFFBEB',
     iconColor: '#B45309',
     points: [
@@ -887,22 +891,16 @@ export const Home: React.FC = () => {
 
           {/* Services Text Rows (Per Client Phase 1 Spec: Large Icon on Left, Title + 1 Line on Right, Dashed Dividers) */}
           <div className="services-text-rows-list" style={{ maxWidth: '960px', margin: '0 auto' }}>
-            {SERVICES_DATA.map((srv, sIdx) => {
+            {SERVICES_DATA.map((srv) => {
               const IconComp = srv.icon;
               return (
                 <div
                   key={srv.id}
                   className="service-text-row"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '2rem',
-                    padding: '2rem 0',
-                    borderBottom: sIdx === SERVICES_DATA.length - 1 ? 'none' : '1px dashed #CBD5E1',
-                  }}
                 >
                   {/* Left Column: Large Lead Icon (Brand Red, No Tinted Box) */}
                   <div
+                    className="service-lead-icon"
                     style={{
                       color: '#AA2E1F',
                       flexShrink: 0,
@@ -942,6 +940,7 @@ export const Home: React.FC = () => {
 
                       <Link
                         to={srv.linkTo}
+                        className="service-action-link"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -995,9 +994,9 @@ export const Home: React.FC = () => {
 
           <div className="benefits-grid">
             {/* Metric 1 */}
-            <div className="benefit-stat-card card-emerald">
-              <div className="benefit-icon-badge badge-emerald">
-                <Fuel size={22} />
+            <div className="benefit-stat-card">
+              <div className="benefit-icon-wrap">
+                <IconGasStation size={32} stroke={1.6} />
               </div>
               <div className="benefit-stat-num">4:1</div>
               <h3 className="benefit-stat-title">Fuel &amp; Carbon Efficiency</h3>
@@ -1007,9 +1006,9 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Metric 2 */}
-            <div className="benefit-stat-card card-blue">
-              <div className="benefit-icon-badge badge-blue">
-                <Truck size={22} />
+            <div className="benefit-stat-card">
+              <div className="benefit-icon-wrap">
+                <IconTruck size={32} stroke={1.6} />
               </div>
               <div className="benefit-stat-num">3.5–4x</div>
               <h3 className="benefit-stat-title">Cargo Capacity per Railcar</h3>
@@ -1019,9 +1018,9 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Metric 3 */}
-            <div className="benefit-stat-card card-amber">
-              <div className="benefit-icon-badge badge-amber">
-                <TrendingUp size={22} />
+            <div className="benefit-stat-card">
+              <div className="benefit-icon-wrap">
+                <IconChartLine size={32} stroke={1.6} />
               </div>
               <div className="benefit-stat-num">100%</div>
               <h3 className="benefit-stat-title">Rate Predictability</h3>
@@ -1031,9 +1030,9 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Metric 4 */}
-            <div className="benefit-stat-card card-crimson">
-              <div className="benefit-icon-badge badge-crimson">
-                <BadgeCheck size={22} />
+            <div className="benefit-stat-card">
+              <div className="benefit-icon-wrap">
+                <IconRoute size={32} stroke={1.6} />
               </div>
               <div className="benefit-stat-num">6 Lines</div>
               <h3 className="benefit-stat-title">Continental Class I Interchange</h3>
@@ -1078,32 +1077,28 @@ export const Home: React.FC = () => {
               </p>
 
               {/* 2 Callout Badges with internal links */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-                <div style={{ padding: '1.15rem', backgroundColor: '#FAF9F7', borderRadius: '10px', border: '1px solid #E8E5DF' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.3rem' }}>
-                    <CheckCircle2 size={16} style={{ color: '#AA2E1F' }} />
-                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Operating Values</strong>
+              <div className="who-callout-grid">
+                <Link to="/company-values" className="who-callout-card">
+                  <div className="who-callout-icon-wrap">
+                    <IconShieldCheck size={18} stroke={1.8} />
                   </div>
-                  <span style={{ fontSize: '0.84rem', color: '#64748B', display: 'block', marginBottom: '0.4rem' }}>
-                    Mechanical safety first, transparent deal-making, and long-term shipper partnership.
-                  </span>
-                  <Link to="/company-values" style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600, textDecoration: 'none' }}>
-                    Read Our Values &rarr;
-                  </Link>
-                </div>
+                  <div className="who-callout-body">
+                    <span className="who-callout-title">Operating Values</span>
+                    <span className="who-callout-sub">Safety &amp; transparent terms</span>
+                  </div>
+                  <ArrowRight size={13} className="who-callout-arrow" />
+                </Link>
 
-                <div style={{ padding: '1.15rem', backgroundColor: '#FAF9F7', borderRadius: '10px', border: '1px solid #E8E5DF' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.3rem' }}>
-                    <HelpCircle size={16} style={{ color: '#AA2E1F' }} />
-                    <strong style={{ fontSize: '0.92rem', color: '#0A0A09' }}>Leasing FAQs</strong>
+                <Link to="/faq" className="who-callout-card">
+                  <div className="who-callout-icon-wrap">
+                    <IconHelpCircle size={18} stroke={1.8} />
                   </div>
-                  <span style={{ fontSize: '0.84rem', color: '#64748B', display: 'block', marginBottom: '0.4rem' }}>
-                    Answers on net vs full-service leases, delivery timelines, and wheelset maintenance.
-                  </span>
-                  <Link to="/faq" style={{ fontSize: '0.82rem', color: '#AA2E1F', fontWeight: 600, textDecoration: 'none' }}>
-                    Browse FAQs &rarr;
-                  </Link>
-                </div>
+                  <div className="who-callout-body">
+                    <span className="who-callout-title">Leasing FAQs</span>
+                    <span className="who-callout-sub">Net vs full-service &amp; siding</span>
+                  </div>
+                  <ArrowRight size={13} className="who-callout-arrow" />
+                </Link>
               </div>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
@@ -1293,19 +1288,7 @@ export const Home: React.FC = () => {
             }}
           >
             <div>
-              <span
-                style={{
-                  display: 'block',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  color: '#AA2E1F',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                  marginBottom: '0.5rem',
-                }}
-              >
-                Capital Planning &amp; Fleet Budgeting
-              </span>
+           
               <h2
                 style={{
                   fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)',
@@ -1336,9 +1319,9 @@ export const Home: React.FC = () => {
                     style={{
                       width: '38px',
                       height: '38px',
-                      borderRadius: '8px',
-                      backgroundColor: '#FDF2F0',
-                      border: '1px solid #FCDAD7',
+                      borderRadius: '4px',
+                      backgroundColor: '#FAF9F7',
+                      border: '1px solid #E2E8F0',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -1346,7 +1329,7 @@ export const Home: React.FC = () => {
                       marginTop: '2px',
                     }}
                   >
-                    <SlidersHorizontal size={18} style={{ color: '#AA2E1F' }} />
+                    <IconAdjustmentsHorizontal size={20} stroke={1.8} style={{ color: '#AA2E1F' }} />
                   </div>
                   <div>
                     <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
@@ -1363,9 +1346,9 @@ export const Home: React.FC = () => {
                     style={{
                       width: '38px',
                       height: '38px',
-                      borderRadius: '8px',
-                      backgroundColor: '#ECFDF5',
-                      border: '1px solid #A7F3D0',
+                      borderRadius: '4px',
+                      backgroundColor: '#FAF9F7',
+                      border: '1px solid #E2E8F0',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -1373,7 +1356,7 @@ export const Home: React.FC = () => {
                       marginTop: '2px',
                     }}
                   >
-                    <ShieldCheck size={18} style={{ color: '#059669' }} />
+                    <IconShieldCheck size={20} stroke={1.8} style={{ color: '#AA2E1F' }} />
                   </div>
                   <div>
                     <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
@@ -1398,169 +1381,115 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            {/* Benchmark Card */}
+            {/* Benchmark Card (Industrial Data Plate Style) */}
             <div>
-              <div
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #DCE3EB',
-                  borderRadius: '14px',
-                  boxShadow: '0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
-                  overflow: 'hidden',
-                  padding: '1.5rem',
-                }}
-              >
-                <div>
-                  <div style={{ marginBottom: '1.15rem' }}>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '0.35rem',
-                        backgroundColor: '#F1F5F9',
-                        padding: '0.25rem',
-                        borderRadius: '8px',
-                      }}
-                    >
-                      {(
-                        [
-                          { id: 'covered-hoppers', label: 'Hoppers' },
-                          { id: 'boxcars', label: 'Boxcars' },
-                          { id: 'tank-cars', label: 'Tank Cars' },
-                        ] as const
-                      ).map((tab) => {
-                        const isActive = sampleCategory === tab.id;
-                        return (
-                          <button
-                            key={tab.id}
-                            type="button"
-                            onClick={() => setSampleCategory(tab.id)}
-                            style={{
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.45rem 0.35rem',
-                              fontSize: '0.78rem',
-                              fontWeight: isActive ? 700 : 500,
-                              cursor: 'pointer',
-                              backgroundColor: isActive ? '#FFFFFF' : 'transparent',
-                              color: isActive ? '#0A0A09' : '#64748B',
-                              boxShadow: isActive ? '0 1px 4px rgba(15, 23, 42, 0.08)' : 'none',
-                              transition: 'all 150ms ease',
-                            }}
-                          >
-                            {tab.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+              <div className="estimator-benchmark-card">
+                {/* Sliding Category Segmented Control */}
+                <div className="estimator-segmented-control">
+                  <div
+                    className="estimator-segmented-slider"
+                    style={{
+                      transform: `translateX(${
+                        sampleCategory === 'covered-hoppers' ? 0 : sampleCategory === 'boxcars' ? 100 : 200
+                      }%)`,
+                    }}
+                  />
+                  {(
+                    [
+                      { id: 'covered-hoppers', label: 'Hoppers' },
+                      { id: 'boxcars', label: 'Boxcars' },
+                      { id: 'tank-cars', label: 'Tank Cars' },
+                    ] as const
+                  ).map((tab) => {
+                    const isActive = sampleCategory === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setSampleCategory(tab.id)}
+                        className={`estimator-segmented-btn ${isActive ? 'active' : ''}`}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                  <div style={{ marginBottom: '0.85rem' }}>
-                    <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#0A0A09', margin: '0 0 0.15rem 0', lineHeight: 1.25 }}>
+                {/* Equipment & Fleet Scope */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                    <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#0A0A09', margin: 0, lineHeight: 1.25, letterSpacing: '-0.015em' }}>
                       {activeSample.category}
                     </h3>
-                    <p style={{ fontSize: '0.82rem', color: '#64748B', margin: 0, lineHeight: 1.35 }}>
-                      {activeSample.size} &bull; <strong>{activeSample.quantity} Railcars</strong>
-                    </p>
-                  </div>
-
-                  <div
-                    style={{
-                      background: 'linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%)',
-                      border: '1px solid #EADBCC',
-                      borderLeft: '3px solid #059669',
-                      borderRadius: '8px',
-                      padding: '0.85rem 1rem',
-                      marginBottom: '0.95rem',
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: 'block',
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        color: '#8C7B68',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        marginBottom: '0.15rem',
-                      }}
-                    >
-                      Estimated Monthly Rate
+                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0A0A09', backgroundColor: '#F1F5F9', padding: '0.15rem 0.5rem', borderRadius: '3px' }}>
+                      {activeSample.quantity} Railcars
                     </span>
-                    <div
-                      style={{
-                        fontSize: '1.65rem',
-                        fontWeight: 800,
-                        color: '#047857',
-                        fontFamily: 'var(--font-heading)',
-                        letterSpacing: '-0.02em',
-                        lineHeight: 1.1,
-                        marginBottom: '0.15rem',
-                      }}
-                    >
-                      {activeSample.rateMin} – {activeSample.rateMax}
-                    </div>
-                    <div style={{ fontSize: '0.76rem', color: '#64748B' }}>
-                      per car / month &bull; {activeSample.structure}
-                    </div>
                   </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1.15rem' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        backgroundColor: '#F0FDF4',
-                        border: '1px solid #DCFCE7',
-                        borderRadius: '6px',
-                        padding: '0.45rem 0.65rem',
-                        fontSize: '0.82rem',
-                      }}
-                    >
-                      <span style={{ color: '#475569' }}>Monthly Fleet Total</span>
-                      <strong style={{ color: '#047857', fontWeight: 800, fontSize: '0.92rem' }}>
-                        {activeSample.totalMin} – {activeSample.totalMax}/mo
-                      </strong>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', borderBottom: '1px solid #F1F5F9', fontSize: '0.82rem' }}>
-                      <span style={{ color: '#475569' }}>Term Commitment</span>
-                      <strong style={{ color: '#0A0A09', fontWeight: 600 }}>{activeSample.term}</strong>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', borderBottom: '1px solid #F1F5F9', fontSize: '0.82rem' }}>
-                      <span style={{ color: '#475569' }}>Typical Cargo</span>
-                      <span style={{ color: '#0A0A09', fontWeight: 500 }}>{activeSample.cargo}</span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingTop: '0.35rem', fontSize: '0.80rem', color: '#334155' }}>
-                      <Truck size={14} style={{ color: '#2563EB', flexShrink: 0 }} />
-                      <span>{activeSample.trucks} displaced per turn</span>
-                    </div>
-                  </div>
-
-                  <Link
-                    to={`/cost-estimator?category=${sampleCategory}&size=${activeSample.sizeParam}&qty=${activeSample.quantity}&term=${activeSample.termParam}`}
-                    className="btn btn-primary"
-                    style={{
-                      width: '100%',
-                      justifyContent: 'center',
-                      padding: '0.85rem 1.25rem',
-                      borderRadius: '4px',
-                      fontSize: '0.94rem',
-                      fontWeight: 700,
-                      marginBottom: '0.65rem',
-                    }}
-                  >
-                    <span>Customize This Fleet in Full Estimator</span>
-                    <ArrowRight size={16} />
-                  </Link>
-
-                  <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: 0, textAlign: 'center', lineHeight: 1.35 }}>
-                    *Indicative market rate for capital budgeting. Formal quote confirmed upon siding inspection and credit review.
+                  <p style={{ fontSize: '0.82rem', color: '#64748B', margin: 0, lineHeight: 1.4 }}>
+                    {activeSample.size}
                   </p>
                 </div>
+
+                {/* Estimated Monthly Rate Box - Clean Industrial Data Specs (No Cheap AI Green Line) */}
+                <div className="estimator-rate-box">
+                  <div className="estimator-rate-top">
+                    <span className="estimator-rate-label">ESTIMATED MONTHLY RATE</span>
+                  </div>
+                  <div className="estimator-rate-display">
+                    <span className="estimator-rate-numbers">{activeSample.rateMin} – {activeSample.rateMax}</span>
+                    <span className="estimator-rate-unit">/ car / mo</span>
+                  </div>
+                  <div className="estimator-rate-desc">
+                    Includes AAR Rule 88 maintenance &amp; wheelset renewals
+                  </div>
+                </div>
+
+                {/* Structured Breakdown Specs */}
+                <div className="estimator-specs-list">
+                  <div className="estimator-fleet-total-row">
+                    <span className="estimator-spec-name">Monthly Fleet Total ({activeSample.quantity} cars)</span>
+                    <strong className="estimator-fleet-total-val">
+                      {activeSample.totalMin} – {activeSample.totalMax} <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#64748B' }}>/mo</span>
+                    </strong>
+                  </div>
+
+                  <div className="estimator-spec-row">
+                    <span className="estimator-spec-name">Term Commitment</span>
+                    <strong className="estimator-spec-val">{activeSample.term}</strong>
+                  </div>
+
+                  <div className="estimator-spec-row">
+                    <span className="estimator-spec-name">Typical Cargo</span>
+                    <span className="estimator-spec-val" style={{ fontWeight: 500 }}>{activeSample.cargo}</span>
+                  </div>
+
+                  <div className="estimator-displacement-row">
+                    <IconTruck size={15} stroke={1.8} style={{ color: '#AA2E1F', flexShrink: 0 }} />
+                    <span><strong>{activeSample.trucks}</strong> displaced per turn</span>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <Link
+                  to={`/cost-estimator?category=${sampleCategory}&size=${activeSample.sizeParam}&qty=${activeSample.quantity}&term=${activeSample.termParam}`}
+                  className="btn btn-primary"
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    padding: '0.85rem 1.25rem',
+                    borderRadius: '4px',
+                    fontSize: '0.94rem',
+                    fontWeight: 700,
+                    marginBottom: '0.65rem',
+                  }}
+                >
+                  <span>Customize This Fleet in Full Estimator</span>
+                  <ArrowRight size={16} />
+                </Link>
+
+                <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: 0, textAlign: 'center', lineHeight: 1.35 }}>
+                  *Indicative market rate for capital budgeting. Formal quote confirmed upon siding inspection and credit review.
+                </p>
               </div>
             </div>
           </div>
@@ -2392,85 +2321,41 @@ export const Home: React.FC = () => {
           align-items: stretch;
         }
 
-        /* Benefit Stat Cards */
+        /* Benefit Stat Cards - Refined Industrial Design, No Cheap AI Rainbow Lines */
         .benefit-stat-card {
           background-color: #FFFFFF;
-          border: 1px solid #E8E5DF;
-          border-radius: 14px;
-          padding: 2rem 1.35rem 1.85rem;
+          border: 1px solid #E2E8F0;
+          border-top: 3px solid #AA2E1F;
+          border-radius: 4px;
+          padding: 2.25rem 1.45rem 2rem;
           text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
           position: relative;
-          overflow: hidden;
-          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
           transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, border-color 220ms ease;
-        }
-
-        .benefit-stat-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-        }
-
-        .benefit-stat-card.card-emerald::before {
-          background: linear-gradient(90deg, #059669, #34D399);
-        }
-        .benefit-stat-card.card-blue::before {
-          background: linear-gradient(90deg, #2563EB, #60A5FA);
-        }
-        .benefit-stat-card.card-amber::before {
-          background: linear-gradient(90deg, #D97706, #FBBF24);
-        }
-        .benefit-stat-card.card-crimson::before {
-          background: linear-gradient(90deg, #AA2E1F, #EF4444);
         }
 
         .benefit-stat-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 12px 26px -4px rgba(15, 23, 42, 0.09), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+          box-shadow: 0 14px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
           border-color: #CBD5E1;
+          border-top-color: #AA2E1F;
         }
 
-        .benefit-icon-badge {
-          width: 48px;
-          height: 48px;
-          border-radius: 12px;
+        .benefit-icon-wrap {
+          color: #AA2E1F;
+          margin-bottom: 1.15rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto 1.15rem;
+          height: 42px;
           transition: transform 200ms ease;
-          flex-shrink: 0;
         }
 
-        .benefit-stat-card:hover .benefit-icon-badge {
+        .benefit-stat-card:hover .benefit-icon-wrap {
           transform: scale(1.08);
-        }
-
-        .benefit-icon-badge.badge-emerald {
-          background-color: #ECFDF5;
-          color: #059669;
-          border: 1px solid rgba(5, 150, 105, 0.22);
-        }
-        .benefit-icon-badge.badge-blue {
-          background-color: #EFF6FF;
-          color: #2563EB;
-          border: 1px solid rgba(37, 99, 235, 0.22);
-        }
-        .benefit-icon-badge.badge-amber {
-          background-color: #FEF3C7;
-          color: #D97706;
-          border: 1px solid rgba(217, 119, 6, 0.25);
-        }
-        .benefit-icon-badge.badge-crimson {
-          background-color: #FDF2F0;
-          color: #AA2E1F;
-          border: 1px solid rgba(170, 46, 31, 0.22);
         }
 
         .benefit-stat-num {
@@ -2507,6 +2392,297 @@ export const Home: React.FC = () => {
         .preview-card:hover {
           transform: translateY(-4px) translateZ(0) !important;
           box-shadow: 0 14px 28px -4px rgba(15,23,42,0.12) !important;
+        }
+
+        /* Services Text Rows (Phase 1 Revision - Minimal Clean Industrial Aesthetic) */
+        .services-text-rows-list {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .service-text-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 1.75rem;
+          padding: 1.5rem 1.25rem;
+          border-bottom: 1px dashed #CBD5E1;
+          border-radius: 4px;
+          background-color: transparent;
+          transition: background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+          position: relative;
+        }
+
+        .service-text-row:last-child {
+          border-bottom: none;
+        }
+
+        /* Very light, minimal and refined hover effect */
+        .service-text-row:hover {
+          background-color: rgba(170, 46, 31, 0.009);
+          transform: translateX(2px);
+        }
+
+        .service-lead-icon {
+          transition: transform 180ms ease;
+        }
+
+        .service-action-link {
+          transition: color 180ms ease;
+        }
+
+        .service-action-link svg {
+          transition: transform 180ms ease;
+        }
+
+        .service-text-row:hover .service-action-link {
+          color: #8F2417 !important;
+        }
+
+        .service-text-row:hover .service-action-link svg {
+          transform: translateX(2px);
+        }
+
+        /* "Who We Are" Minimal Compact Quick-Links */
+        .who-callout-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 205px));
+          gap: 0.75rem;
+          margin-bottom: 1.75rem;
+        }
+
+        .who-callout-card {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          padding: 0.55rem 0.8rem;
+          background-color: #FAF9F7;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          text-decoration: none;
+          transition: all 180ms ease;
+          box-sizing: border-box;
+          max-width: 205px;
+        }
+
+        .who-callout-card:hover {
+          background-color: #FFFFFF;
+          border-color: #CBD5E1;
+          box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.06);
+          transform: translateY(-1px);
+        }
+
+        .who-callout-icon-wrap {
+          color: #AA2E1F;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .who-callout-body {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+        }
+
+        .who-callout-title {
+          font-family: var(--font-heading);
+          font-size: 0.84rem;
+          font-weight: 700;
+          color: #0A0A09;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .who-callout-sub {
+          font-size: 0.72rem;
+          color: #64748B;
+          line-height: 1.25;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .who-callout-arrow {
+          color: #94A3B8;
+          transition: transform 180ms ease, color 180ms ease;
+          flex-shrink: 0;
+        }
+
+        .who-callout-card:hover .who-callout-arrow {
+          color: #AA2E1F;
+          transform: translateX(3px);
+        }
+
+        /* Cost Estimator Benchmark Card */
+        .estimator-benchmark-card {
+          background-color: #FFFFFF;
+          border: 1px solid #DCE3EB;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+          padding: 1.5rem;
+          box-sizing: border-box;
+        }
+
+        /* Estimator Segmented Control with Smooth Sliding Pill */
+        .estimator-segmented-control {
+          position: relative;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          background-color: #F1F5F9;
+          border-radius: 4px;
+          padding: 3px;
+          margin-bottom: 1.15rem;
+          border: 1px solid #E2E8F0;
+          box-sizing: border-box;
+        }
+
+        .estimator-segmented-slider {
+          position: absolute;
+          top: 3px;
+          bottom: 3px;
+          left: 3px;
+          width: calc((100% - 6px) / 3);
+          background-color: #FFFFFF;
+          border-radius: 3px;
+          box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08), 0 1px 1px rgba(15, 23, 42, 0.04);
+          transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .estimator-segmented-btn {
+          position: relative;
+          z-index: 2;
+          border: none;
+          background: transparent;
+          padding: 0.5rem 0.35rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          color: #64748B;
+          transition: color 200ms ease;
+          text-align: center;
+          border-radius: 3px;
+          font-family: inherit;
+        }
+
+        .estimator-segmented-btn:hover {
+          color: #0A0A09;
+        }
+
+        .estimator-segmented-btn.active {
+          color: #0A0A09;
+          font-weight: 700;
+        }
+
+        /* Estimated Monthly Rate Box */
+        .estimator-rate-box {
+          background-color: #FAF9F7;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 0.95rem 1.1rem;
+          margin-bottom: 1rem;
+        }
+
+        .estimator-rate-top {
+          margin-bottom: 0.35rem;
+        }
+
+        .estimator-rate-label {
+          display: block;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #047857;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+
+        .estimator-rate-display {
+          display: flex;
+          align-items: baseline;
+          gap: 0.45rem;
+          margin-bottom: 0.2rem;
+        }
+
+        .estimator-rate-numbers {
+          font-family: var(--font-heading);
+          font-size: 1.85rem;
+          font-weight: 800;
+          color: #047857;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+
+        .estimator-rate-unit {
+          font-size: 0.8rem;
+          color: #64748B;
+          font-weight: 500;
+        }
+
+        .estimator-rate-desc {
+          font-size: 0.76rem;
+          color: #64748B;
+          line-height: 1.4;
+        }
+
+        /* Structured Spec Breakdown */
+        .estimator-specs-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.45rem;
+          margin-bottom: 1.15rem;
+        }
+
+        .estimator-fleet-total-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 0.55rem 0.85rem;
+          font-size: 0.82rem;
+        }
+
+        .estimator-fleet-total-val {
+          color: #0A0A09;
+          font-weight: 800;
+          font-size: 0.95rem;
+        }
+
+        .estimator-spec-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.4rem 0;
+          border-bottom: 1px dashed #E2E8F0;
+          font-size: 0.82rem;
+        }
+
+        .estimator-spec-name {
+          color: #64748B;
+        }
+
+        .estimator-spec-val {
+          color: #0A0A09;
+          font-weight: 600;
+        }
+
+        .estimator-displacement-row {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding-top: 0.35rem;
+          font-size: 0.80rem;
+          color: #475569;
         }
 
         @media (max-width: 960px) {
@@ -2668,18 +2844,16 @@ export const Home: React.FC = () => {
             gap: 0.75rem !important;
           }
           .benefit-stat-card {
-            padding: 1.15rem 0.75rem 1rem 0.75rem !important;
-            border-radius: 12px !important;
+            padding: 1.25rem 0.85rem 1.15rem 0.85rem !important;
+            border-radius: 4px !important;
           }
-          .benefit-icon-badge {
-            width: 38px !important;
-            height: 38px !important;
-            border-radius: 9px !important;
+          .benefit-icon-wrap {
             margin-bottom: 0.65rem !important;
+            height: 32px !important;
           }
-          .benefit-icon-badge svg {
-            width: 19px !important;
-            height: 19px !important;
+          .benefit-icon-wrap svg {
+            width: 24px !important;
+            height: 24px !important;
           }
           .benefit-stat-num {
             font-size: 1.5rem !important;
@@ -2698,6 +2872,21 @@ export const Home: React.FC = () => {
           .benefit-stat-desc {
             font-size: 0.72rem !important;
             line-height: 1.42 !important;
+          }
+
+          /* Mobile Who We Are Callout Cards */
+          .who-callout-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.75rem !important;
+          }
+          .who-callout-card {
+            max-width: 260px !important;
+          }
+
+          /* Mobile Service Rows Adjustments */
+          .service-text-row {
+            gap: 1.15rem !important;
+            padding: 1.25rem 0.65rem !important;
           }
         }
 

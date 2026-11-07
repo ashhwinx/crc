@@ -234,22 +234,7 @@ export const FAQ: React.FC = () => {
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '780px' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                color: '#F87171',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: '0.85rem',
-              }}
-            >
-              <HelpCircle size={15} />
-              Help &amp; Knowledge Base
-            </span>
+           
             <h1
               style={{
                 fontSize: 'clamp(2.4rem, 4.8vw, 3.5rem)',

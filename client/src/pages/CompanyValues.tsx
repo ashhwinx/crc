@@ -14,6 +14,13 @@ import {
   TrendingUp,
   Award,
 } from 'lucide-react';
+import {
+  IconRulerMeasure,
+  IconRoute,
+  IconCertificate,
+  IconShieldCheck,
+  IconPhone,
+} from '@tabler/icons-react';
 
 export const CompanyValues: React.FC = () => {
   // Update document title and canonical tag for SEO
@@ -175,20 +182,16 @@ export const CompanyValues: React.FC = () => {
               {/* Left Column: Executive Quote & Identity */}
               <div className="promise-quote-col">
                 <div>
-                  <div className="promise-eyebrow">
-                    <span className="promise-dot" />
-                    <span>The Coast Road Capital Promise</span>
-                  </div>
-                  <div className="promise-quote-mark">&ldquo;</div>
+                  <span className="promise-eyebrow">
+                    The Coast Road Capital Promise
+                  </span>
                   <blockquote className="promise-quote-text">
-                    In freight rail logistics, reliability is not measured by promises &mdash;
-                    it is measured by <em>on-track execution</em>, <em>verified car specs</em>,
-                    and <em>steadfast communication</em>.
+                    &ldquo;In freight rail logistics, reliability is not measured by promises &mdash;
+                    it is measured by on-track execution, verified car specs, and steadfast communication.&rdquo;
                   </blockquote>
                 </div>
                 <div className="promise-author-tag">
-                  <span className="promise-author-line" />
-                  <span>Houston Commercial Equipment Desk</span>
+                  <span>Houston Commercial Equipment Desk &bull; Coast Road Capital</span>
                 </div>
               </div>
 
@@ -202,11 +205,11 @@ export const CompanyValues: React.FC = () => {
                     deliver them on schedule, and stand behind every lease structure from start to finish.
                   </p>
 
-                  {/* Clean, unboxed checklist */}
+                  {/* Clean, authentic spec commitments */}
                   <div className="promise-checklist">
                     <div className="promise-check-item">
                       <div className="promise-check-icon-wrap">
-                        <CheckCircle2 size={16} />
+                        <IconRulerMeasure size={16} stroke={1.75} />
                       </div>
                       <div className="promise-check-content">
                         <strong>100% Siding Clearance Match</strong>
@@ -216,7 +219,7 @@ export const CompanyValues: React.FC = () => {
 
                     <div className="promise-check-item">
                       <div className="promise-check-icon-wrap">
-                        <CheckCircle2 size={16} />
+                        <IconRoute size={16} stroke={1.75} />
                       </div>
                       <div className="promise-check-content">
                         <strong>On-Schedule Class I Interchange</strong>
@@ -226,7 +229,7 @@ export const CompanyValues: React.FC = () => {
 
                     <div className="promise-check-item">
                       <div className="promise-check-icon-wrap">
-                        <CheckCircle2 size={16} />
+                        <IconCertificate size={16} stroke={1.75} />
                       </div>
                       <div className="promise-check-content">
                         <strong>Transparent Lease Framework</strong>
@@ -239,12 +242,12 @@ export const CompanyValues: React.FC = () => {
                 {/* Desk Verification Footer */}
                 <div className="promise-col-footer">
                   <div className="promise-spec-badge">
-                    <ShieldCheck size={14} style={{ color: '#AA2E1F' }} />
+                    <IconShieldCheck size={16} stroke={1.75} style={{ color: '#AA2E1F' }} />
                     <span>AAR Rule 88 &amp; FRA Compliant Fleet</span>
                   </div>
                   <a href="tel:+18325551200" className="promise-phone-btn">
-                    <PhoneCall size={13} />
-                    <span>(832) 555-1200</span>
+                    <IconPhone size={14} stroke={1.75} />
+                    <span>Direct Desk: (832) 555-1200</span>
                   </a>
                 </div>
               </div>
@@ -529,7 +532,7 @@ export const CompanyValues: React.FC = () => {
               }}
               className="quick-link-card"
             >
-              <strong style={{ fontSize: '1.05rem', color: '#059669', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <strong style={{ fontSize: '1.05rem', color: '#AA2E1F', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 Cost Estimator <ArrowRight size={15} />
               </strong>
               <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
@@ -553,7 +556,7 @@ export const CompanyValues: React.FC = () => {
               }}
               className="quick-link-card"
             >
-              <strong style={{ fontSize: '1.05rem', color: '#2563EB', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <strong style={{ fontSize: '1.05rem', color: '#AA2E1F', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 Leasing FAQs <ArrowRight size={15} />
               </strong>
               <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
@@ -577,7 +580,7 @@ export const CompanyValues: React.FC = () => {
               }}
               className="quick-link-card"
             >
-              <strong style={{ fontSize: '1.05rem', color: '#D97706', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <strong style={{ fontSize: '1.05rem', color: '#AA2E1F', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 About Coast Road <ArrowRight size={15} />
               </strong>
               <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
@@ -623,102 +626,70 @@ export const CompanyValues: React.FC = () => {
 
       <style>{`
         /* =========================================================================
-           Executive Promise Card (Unified 2-Column Arrangement - No inner boxes)
+           Executive Promise Card (Simple, Authentic & Clean - Non-AI Style)
            ========================================================================= */
         .promise-section {
-          padding: 4.5rem 0;
-          background-color: #FAF8F5;
+          padding: 4rem 0;
+          background-color: #FAF9F7;
         }
 
         .promise-card {
           max-width: 1040px;
           margin: 0 auto;
           background: #FFFFFF;
-          border: 1px solid #E8E5DF;
-          border-top: 4px solid #AA2E1F;
-          border-radius: 16px;
-          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
           overflow: hidden;
         }
 
         .promise-card-grid {
           display: grid;
-          grid-template-columns: 1.12fr 1fr;
+          grid-template-columns: 1.15fr 1fr;
           align-items: stretch;
         }
 
         .promise-quote-col {
-          padding: 3rem 2.75rem 2.5rem;
-          background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
+          padding: 2.75rem 2.5rem 2.25rem;
+          background: #FAF9F7;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          border-right: 1px solid #F0EDE6;
+          border-right: 1px solid #E2E8F0;
         }
 
         .promise-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.45rem;
+          display: inline-block;
           color: #AA2E1F;
           font-family: var(--font-heading);
-          font-size: 0.76rem;
+          font-size: 0.75rem;
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           margin-bottom: 1.25rem;
         }
 
-        .promise-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background-color: #AA2E1F;
-        }
-
-        .promise-quote-mark {
-          font-family: Georgia, serif;
-          font-size: 3.5rem;
-          line-height: 1;
-          color: rgba(170, 46, 31, 0.18);
-          margin-bottom: -1.15rem;
-          user-select: none;
-        }
-
         .promise-quote-text {
           font-family: var(--font-heading);
-          font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+          font-size: clamp(1.22rem, 2vw, 1.5rem);
           font-weight: 700;
           color: #0A0A09;
-          line-height: 1.38;
+          line-height: 1.45;
           letter-spacing: -0.015em;
           margin: 0 0 1.75rem 0;
           padding: 0;
         }
 
-        .promise-quote-text em {
-          font-style: normal;
-          color: #AA2E1F;
-          font-weight: 800;
-        }
-
         .promise-author-tag {
-          display: flex;
-          align-items: center;
-          gap: 0.65rem;
           font-size: 0.82rem;
           color: #64748B;
           font-weight: 600;
-        }
-
-        .promise-author-line {
-          width: 28px;
-          height: 2px;
-          background-color: #AA2E1F;
+          line-height: 1.4;
+          letter-spacing: 0.01em;
         }
 
         .promise-detail-col {
-          padding: 3rem 2.5rem 2.5rem;
+          padding: 2.75rem 2.5rem 2.25rem;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -727,37 +698,45 @@ export const CompanyValues: React.FC = () => {
 
         .promise-detail-heading {
           font-family: var(--font-heading);
-          font-size: 1.2rem;
+          font-size: 1.15rem;
           font-weight: 700;
           color: #0A0A09;
-          margin: 0 0 0.75rem 0;
+          margin: 0 0 0.65rem 0;
           letter-spacing: -0.01em;
         }
 
         .promise-detail-text {
           color: #475569;
-          font-size: 0.95rem;
-          line-height: 1.65;
+          font-size: 0.92rem;
+          line-height: 1.6;
           margin: 0 0 1.5rem 0;
         }
 
         .promise-checklist {
           display: flex;
           flex-direction: column;
-          gap: 0.9rem;
-          margin-bottom: 2rem;
+          gap: 0.95rem;
+          margin-bottom: 1.75rem;
         }
 
         .promise-check-item {
           display: flex;
           align-items: flex-start;
-          gap: 0.65rem;
+          gap: 0.75rem;
         }
 
         .promise-check-icon-wrap {
-          color: #059669;
-          margin-top: 1px;
+          width: 28px;
+          height: 28px;
+          border-radius: 4px;
+          background-color: #FAF9F7;
+          border: 1px solid #E2E8F0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #AA2E1F;
           flex-shrink: 0;
+          margin-top: 1px;
         }
 
         .promise-check-content {
@@ -769,12 +748,14 @@ export const CompanyValues: React.FC = () => {
         .promise-check-content strong {
           font-size: 0.88rem;
           color: #0F172A;
-          font-weight: 700;
+          font-weight: 600;
+          margin-bottom: 2px;
         }
 
         .promise-check-content span {
-          font-size: 0.8rem;
+          font-size: 0.82rem;
           color: #64748B;
+          line-height: 1.45;
         }
 
         .promise-col-footer {
@@ -790,7 +771,7 @@ export const CompanyValues: React.FC = () => {
         .promise-spec-badge {
           display: inline-flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
           font-size: 0.78rem;
           color: #64748B;
           font-weight: 600;
@@ -799,62 +780,59 @@ export const CompanyValues: React.FC = () => {
         .promise-phone-btn {
           display: inline-flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
           font-size: 0.82rem;
-          font-weight: 700;
-          color: #AA2E1F;
+          font-weight: 600;
+          color: #1E293B;
           text-decoration: none;
-          padding: 0.35rem 0.75rem;
-          background: #FDF2F0;
-          border-radius: 6px;
-          border: 1px solid #FCDAD7;
+          padding: 0.4rem 0.8rem;
+          background: #FAF9F7;
+          border-radius: 4px;
+          border: 1px solid #E2E8F0;
           transition: all 150ms ease;
         }
 
         .promise-phone-btn:hover {
-          background: #AA2E1F;
-          color: #FFFFFF;
+          background: #FFFFFF;
+          border-color: #AA2E1F;
+          color: #AA2E1F;
         }
 
         @media (max-width: 860px) {
           .promise-section {
-            padding: 2.75rem 0 !important;
+            padding: 2.5rem 0 !important;
           }
           .promise-card-grid {
             grid-template-columns: 1fr !important;
           }
           .promise-quote-col {
-            padding: 2rem 1.35rem 1.75rem !important;
+            padding: 1.75rem 1.25rem !important;
             border-right: none !important;
-            border-bottom: 1px solid #F0EDE6 !important;
-          }
-          .promise-quote-mark {
-            font-size: 2.75rem !important;
-            margin-bottom: -0.85rem !important;
+            border-bottom: 1px solid #E2E8F0 !important;
           }
           .promise-quote-text {
-            font-size: 1.25rem !important;
-            line-height: 1.35 !important;
+            font-size: 1.15rem !important;
+            line-height: 1.4 !important;
             margin-bottom: 1.25rem !important;
           }
           .promise-detail-col {
-            padding: 1.75rem 1.35rem !important;
+            padding: 1.75rem 1.25rem !important;
           }
           .promise-detail-heading {
             font-size: 1.1rem !important;
           }
           .promise-detail-text {
-            font-size: 0.9rem !important;
+            font-size: 0.88rem !important;
             margin-bottom: 1.25rem !important;
           }
           .promise-checklist {
-            gap: 0.8rem !important;
+            gap: 0.85rem !important;
             margin-bottom: 1.5rem !important;
           }
           .promise-col-footer {
             flex-direction: column !important;
             align-items: flex-start !important;
-            gap: 0.65rem !important;
+            gap: 0.75rem !important;
           }
           .promise-phone-btn {
             width: 100% !important;

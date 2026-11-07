@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Target, Compass, FileText, PhoneCall } from 'lucide-react';
+import { FileText, PhoneCall } from 'lucide-react';
+import { IconRulerMeasure, IconScale, IconCertificate } from '@tabler/icons-react';
 
 export const About: React.FC = () => {
   return (
@@ -147,48 +148,68 @@ export const About: React.FC = () => {
             </p>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '2rem',
-            }}
-            className="approach-grid"
-          >
-            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
-              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
-                <Target size={36} strokeWidth={1.75} />
+          <div className="approach-grid">
+            {/* Card 1: Track & Facility Compatibility */}
+            <div className="approach-card">
+              <div className="approach-card-header">
+                <div className="approach-icon-wrap">
+                  <IconRulerMeasure size={30} stroke={1.6} />
+                </div>
+                <span className="approach-tag">01 / FACILITY FIT</span>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                Track & Facility Compatibility
+              <h3 className="approach-title">
+                Track &amp; Facility Compatibility
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                We evaluate your terminal clearances, dock heights, and discharge systems to ensure every car we source physically fits your operation.
+              <p className="approach-desc">
+                We evaluate your terminal clearances, dock heights, switch curvature, and discharge systems to ensure every car sourced physically integrates with your plant.
               </p>
+              <div className="approach-specs">
+                <span className="approach-spec-item">Plate B/C/F Clearances</span>
+                <span className="approach-spec-item">263k vs 286k GRL Verification</span>
+                <span className="approach-spec-item">Discharge Gate Alignment</span>
+              </div>
             </div>
 
-            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
-              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
-                <Shield size={36} strokeWidth={1.75} />
+            {/* Card 2: Flexible Lease Structures */}
+            <div className="approach-card">
+              <div className="approach-card-header">
+                <div className="approach-icon-wrap">
+                  <IconScale size={30} stroke={1.6} />
+                </div>
+                <span className="approach-tag">02 / CAPITAL TERMS</span>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
+              <h3 className="approach-title">
                 Flexible Lease Structures
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                From short-term project leases and seasonal surges to multi-year commitments — full-service or net lease, we tailor terms to balance your cost and risk.
+              <p className="approach-desc">
+                From seasonal project surge leases to multi-year master commitments — full-service turnkey maintenance or shipper-managed net leases to balance cash flow and risk.
               </p>
+              <div className="approach-specs">
+                <span className="approach-spec-item">Full-Service &amp; Net Structures</span>
+                <span className="approach-spec-item">3 Mo to 5+ Yr Commitments</span>
+                <span className="approach-spec-item">Sale-Leaseback Options</span>
+              </div>
             </div>
 
-            <div style={{ padding: '2rem 1.75rem', borderRadius: '6px', backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '3px solid #AA2E1F' }}>
-              <div style={{ color: '#AA2E1F', marginBottom: '1.25rem' }}>
-                <Compass size={36} strokeWidth={1.75} />
+            {/* Card 3: AAR & DOT Compliance */}
+            <div className="approach-card">
+              <div className="approach-card-header">
+                <div className="approach-icon-wrap">
+                  <IconCertificate size={30} stroke={1.6} />
+                </div>
+                <span className="approach-tag">03 / COMPLIANCE</span>
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                AAR & DOT Compliance
+              <h3 className="approach-title">
+                AAR &amp; DOT Compliance
               </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.65, margin: 0 }}>
-                Our sourcing adheres strictly to Association of American Railroads and DOT safety and maintenance guidelines for every car type.
+              <p className="approach-desc">
+                All car sets undergo strict Association of American Railroads Rule 88 mechanical qualification and FRA safety inspection before delivery to interchange tracks.
               </p>
+              <div className="approach-specs">
+                <span className="approach-spec-item">AAR Rule 88 Mechanical Review</span>
+                <span className="approach-spec-item">FRA 49 CFR Safety Appliances</span>
+                <span className="approach-spec-item">Full Umler &amp; OT-5 Authority</span>
+              </div>
             </div>
           </div>
         </div>
@@ -333,9 +354,108 @@ export const About: React.FC = () => {
       </section>
 
       <style>{`
-        @media (max-width: 768px) {
+        .approach-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
+        }
+
+        .approach-card {
+          background-color: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 1.75rem 1.6rem;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+          position: relative;
+        }
+
+        .approach-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08);
+          border-color: #CBD5E1;
+        }
+
+        .approach-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.15rem;
+        }
+
+        .approach-icon-wrap {
+          color: #AA2E1F;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .approach-tag {
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: #94A3B8;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .approach-title {
+          font-family: var(--font-heading);
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #0A0A09;
+          margin: 0 0 0.65rem 0;
+          line-height: 1.3;
+          letter-spacing: -0.01em;
+        }
+
+        .approach-desc {
+          color: #64748B;
+          font-size: 0.88rem;
+          line-height: 1.6;
+          margin: 0 0 1.25rem 0;
+          flex-grow: 1;
+        }
+
+        .approach-specs {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+          padding-top: 1rem;
+          border-top: 1px dashed #E2E8F0;
+        }
+
+        .approach-spec-item {
+          font-size: 0.78rem;
+          color: #475569;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+
+        .approach-spec-item::before {
+          content: '·';
+          color: #AA2E1F;
+          font-size: 1.3rem;
+          line-height: 0;
+          font-weight: 900;
+        }
+
+        @media (max-width: 900px) {
+          .approach-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 1.25rem !important;
+          }
+        }
+
+        @media (max-width: 640px) {
           .approach-grid {
             grid-template-columns: 1fr !important;
+          }
+          .approach-card {
+            padding: 1.35rem 1.2rem !important;
           }
           .infra-grid {
             grid-template-columns: 1fr !important;
