@@ -189,6 +189,34 @@ export const RailcarLeasing: React.FC = () => {
               Explore standard dimensions, capacities, commodity applications, and discharge profiles across our seven primary freight equipment classes.
             </p>
 
+            {/* 3D Railcar Viewer Studio CTA */}
+            <div style={{ marginTop: '1.25rem', marginBottom: '1rem', display: 'flex', gap: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <Link
+                to="/railcar-viewer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  backgroundColor: '#AA2E1F',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  padding: '0.65rem 1.15rem',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontSize: '0.88rem',
+                  letterSpacing: '0.02em',
+                  boxShadow: '0 2px 8px rgba(170, 46, 31, 0.25)',
+                  transition: 'background-color 0.15s ease',
+                }}
+              >
+                <Package size={16} />
+                <span>Launch Interactive 3D Railcar Studio</span>
+              </Link>
+              <span style={{ fontSize: '0.82rem', color: '#64748B' }}>
+                3D turntable, live loading/unloading demos &amp; capacity calculator
+              </span>
+            </div>
+
             {/* Terms & Equipment Disclaimer Footnote */}
             <p className="catalog-disclaimer-note">
               <span className="disclaimer-star">*</span>

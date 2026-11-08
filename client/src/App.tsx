@@ -13,6 +13,7 @@ const FAQ = lazy(() => import('./pages/FAQ').then((m) => ({ default: m.FAQ })));
 const RailcarLeasing = lazy(() => import('./pages/RailcarLeasing').then((m) => ({ default: m.RailcarLeasing })));
 const CostEstimator = lazy(() => import('./pages/CostEstimator').then((m) => ({ default: m.CostEstimator })));
 const TrackLayout = lazy(() => import('./pages/TrackLayout').then((m) => ({ default: m.TrackLayout })));
+const RailcarViewer = lazy(() => import('./pages/RailcarViewer').then((m) => ({ default: m.RailcarViewer })));
 const Quote = lazy(() => import('./pages/Quote').then((m) => ({ default: m.Quote })));
 const Contact = lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
 const BookCall = lazy(() => import('./pages/BookCall').then((m) => ({ default: m.BookCall })));
@@ -64,6 +65,9 @@ export const App: React.FC = () => {
             <Route path="/catalog" element={<Navigate to="/railcar-leasing" replace />} />
             <Route path="/cost-estimator" element={<CostEstimator />} />
             <Route path="/estimator" element={<Navigate to="/cost-estimator" replace />} />
+            <Route path="/railcar-viewer" element={<RailcarViewer />} />
+            <Route path="/3d-viewer" element={<Navigate to="/railcar-viewer" replace />} />
+            <Route path="/viewer" element={<Navigate to="/railcar-viewer" replace />} />
             <Route path="/track-layout" element={<TrackLayout />} />
             <Route path="/quote" element={<Quote />} />
             <Route path="/contact" element={<Contact />} />

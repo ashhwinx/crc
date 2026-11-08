@@ -44,6 +44,7 @@ export const Header: React.FC = () => {
     { path: '/', label: 'Home' },
     { path: '/railcar-leasing', label: 'Railcar Leasing' },
     { path: '/cost-estimator', label: 'Cost Estimator' },
+    { path: '/railcar-viewer', label: '3D Viewer' },
     { path: '/company-values', label: 'Company Values' },
     { path: '/faq', label: 'FAQ' },
     { path: '/about', label: 'About Us' },

@@ -1,0 +1,1107 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CRC Railcar Viewer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one-screen studio. One car on a turntable fills the stage; the right panel holds car type, specs, and the weekly capacity calculator. Stacks on phones. Single dark studio look by design. */
+:root {
+  --bg: #0c0d0f;
+  --stage: #111316;
+  --panel: #16181b;
+  --raise: #1d2024;
+  --line: #2b2f34;
+  --fg: #ecebe7;
+  --muted: #8e939a;
+  --accent: #d25a4c;
+  --accent-ink: #140907;
+  --head: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --r: 4px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--body); margin: 0; overflow: hidden; }
+.app {
+  height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 360px; grid-template-rows: auto minmax(0, 1fr);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 16px; gap: 12px 14px;
+}
+header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; }
+.brand { font: 700 12px/1 var(--head); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 700 clamp(22px, 3vw, 30px)/1.05 var(--head); margin: 4px 0 0; text-wrap: balance; }
+.hint { color: var(--muted); font-size: 13px; margin: 0; }
+
+.stage { position: relative; min-width: 0; min-height: 0; background: radial-gradient(110% 85% at 50% 30%, #1d2024 0%, var(--stage) 55%, #0a0b0d 100%); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage-name { position: absolute; top: 14px; left: 16px; pointer-events: none; }
+.stage-name .t { font: 700 clamp(22px, 3vw, 32px)/1 var(--head); }
+.stage-name .m { font: 500 12px/1.4 var(--mono); color: var(--muted); margin-top: 6px; }
+.views { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.tool { border: 1px solid var(--line); background: rgba(22,24,27,.88); color: var(--fg); font: 600 12px/1 var(--head); letter-spacing: .1em; text-transform: uppercase; padding: 9px 12px; border-radius: var(--r); cursor: pointer; }
+.tool[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tool:hover { border-color: var(--muted); }
+
+aside { min-height: 0; overflow-y: auto; display: grid; align-content: start; gap: 12px; }
+.plate { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+.plate-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 12px 14px 10px; border-bottom: 1px solid var(--line); }
+.eyebrow { font: 600 11px/1 var(--head); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.types { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 12px 14px 14px; }
+.type { text-align: left; padding: 9px 10px; border-radius: var(--r); border: 1px solid var(--line); background: var(--raise); color: var(--fg); font: 600 14px/1.15 var(--head); cursor: pointer; }
+.type:hover { border-color: var(--muted); }
+.type[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); }
+dl > div { display: contents; }
+dt, dd { padding: 9px 14px; border-top: 1px solid var(--line); margin: 0; }
+dl > div:first-child dt, dl > div:first-child dd { border-top: 0; }
+dt { font: 600 11px/1.6 var(--head); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+dd { font: 600 15px/1.35 var(--head); text-align: right; }
+
+.calc { padding: 12px 14px 4px; display: grid; gap: 10px; }
+.field { display: grid; gap: 5px; }
+.field label { font: 600 11px/1 var(--head); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.inwrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; border: 1px solid var(--line); border-radius: var(--r); background: var(--raise); }
+.inwrap:focus-within { border-color: var(--accent); }
+.inwrap input { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--fg); font: 500 16px/1 var(--mono); padding: 10px 10px; font-variant-numeric: tabular-nums; outline: none; }
+.inwrap span { padding: 0 10px; font: 500 12px/1 var(--mono); color: var(--muted); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.result { margin: 6px 14px 0; padding: 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--raise); display: grid; gap: 10px; }
+.big { display: flex; align-items: baseline; gap: 10px; }
+.big .n { font: 700 40px/1 var(--head); color: var(--fg); font-variant-numeric: tabular-nums; }
+.big .u { font: 600 15px/1.2 var(--head); color: var(--muted); }
+.sub { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+.sub .k { font: 600 11px/1 var(--head); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.sub .v { font: 600 20px/1.2 var(--head); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.math { font: 500 11.5px/1.5 var(--mono); color: var(--muted); }
+.cta { display: block; width: calc(100% - 28px); margin: 12px 14px 12px; padding: 12px; border: 0; border-radius: var(--r); background: var(--accent); color: var(--accent-ink); font: 700 15px/1 var(--head); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.handoff { margin: 0 14px 14px; padding: 10px 12px; background: var(--raise); border: 1px solid var(--line); border-radius: var(--r); font: 500 12px/1.5 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.handoff b { color: var(--fg); font-weight: 500; }
+.note { color: var(--muted); font-size: 12px; margin: 0; padding: 0 2px; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool.load { border-color: var(--accent); color: var(--accent); }
+.tool.load[aria-pressed="true"] { color: var(--accent-ink); }
+.sim { position: absolute; top: 14px; right: 16px; width: min(320px, 52%); background: rgba(22,24,27,.9); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.sim-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.seg { display: flex; }
+.sbtn { border: 1px solid var(--line); background: var(--raise); color: var(--fg); font: 600 11px/1 var(--head); letter-spacing: .08em; text-transform: uppercase; padding: 7px 9px; cursor: pointer; }
+.seg .sbtn:first-child { border-radius: var(--r) 0 0 var(--r); } .seg .sbtn:last-child { border-radius: 0 var(--r) var(--r) 0; } .seg .sbtn + .sbtn { margin-left: -1px; }
+.sbtn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.sim-l { font: 600 14px/1.3 var(--head); }
+.sim-bar { height: 3px; background: var(--line); margin-top: 8px; border-radius: 2px; overflow: hidden; }
+.sim-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); }
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  html, body { height: auto; }
+  .app { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .stage { height: 58vh; min-height: 320px; }
+}
+</style>
+
+<div class="app">
+  <header>
+    <div>
+      <div class="brand">Coast Road Capital · Equipment</div>
+      <h1>Railcar Viewer</h1>
+    </div>
+    <p class="hint">Drag to spin · scroll or pinch to zoom · right-drag to pan</p>
+  </header>
+
+  <section class="stage" id="stage" aria-label="3D railcar view">
+    <div class="stage-name"><div class="t" id="carName">Boxcar</div><div class="m" id="carMark">CLCX 1001</div></div>
+    <div class="views" role="group" aria-label="Camera">
+      <button class="tool" data-view="three" aria-pressed="true">3/4</button>
+      <button class="tool" data-view="side" aria-pressed="false">Side</button>
+      <button class="tool" data-view="end" aria-pressed="false">End</button>
+      <button class="tool" data-view="top" aria-pressed="false">Top</button>
+      <button class="tool" data-view="under" aria-pressed="false">Trucks</button>
+      <button class="tool" id="spin" aria-pressed="true">Turntable</button>
+      <button class="tool load" id="loadBtn" aria-pressed="false" hidden>Loading demo</button>
+    </div>
+    <div class="sim" id="sim" hidden>
+      <div class="sim-row">
+        <div class="seg" role="group" aria-label="Demo"><button type="button" class="sbtn" data-mode="load" aria-pressed="true">Load</button><button type="button" class="sbtn" data-mode="unload" aria-pressed="false">Unload</button></div>
+        <div class="seg"><button type="button" class="sbtn" id="simPause" aria-pressed="false">Pause</button><button type="button" class="sbtn" id="simSpeed" aria-pressed="false">1×</button></div>
+      </div>
+      <div class="sim-l" id="simLabel"></div><div class="sim-bar"><i id="simBar"></i></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="plate">
+      <div class="plate-h"><span class="eyebrow">Car type</span></div>
+      <div class="types" id="types" role="group" aria-label="Car type"></div>
+    </div>
+
+    <div class="plate">
+      <div class="plate-h"><span class="eyebrow">Specs</span><span class="eyebrow" id="specLen"></span></div>
+      <dl id="specs"></dl>
+    </div>
+
+    <div class="plate">
+      <div class="plate-h"><span class="eyebrow">How many cars do you need?</span></div>
+      <div class="calc">
+        <div class="field">
+          <label for="vol">Product moved per week</label>
+          <div class="inwrap"><input id="vol" type="number" inputmode="decimal" min="0" step="any" value="500"><span id="volUnit">tons</span></div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="cap">Load per car</label>
+            <div class="inwrap"><input id="cap" type="number" inputmode="decimal" min="1" step="any"><span id="capUnit">tons</span></div>
+          </div>
+          <div class="field">
+            <label for="trip">Round trip</label>
+            <div class="inwrap"><input id="trip" type="number" inputmode="numeric" min="1" step="1" value="14"><span>days</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="result" aria-live="polite">
+        <div class="big"><span class="n" id="perWeek">0</span><span class="u" id="perWeekLabel">boxcars loaded per week</span></div>
+        <div class="sub">
+          <div><div class="k">Fleet needed</div><div class="v" id="fleet">0 cars</div></div>
+          <div><div class="k">Trucks replaced</div><div class="v" id="trucks">0 / wk</div></div>
+        </div>
+        <div class="math" id="math"></div>
+      </div>
+      <button class="cta" id="price" type="button">Price these cars</button>
+      <div class="handoff" id="handoff" hidden></div>
+    </div>
+
+    <p class="note">Every car type has a load and unload demo (Loading demo, under the car). Prototype. The car is built in code at approximate real proportions to show the interaction. The production version would use a professionally modeled, textured car. Load per car and truck payloads are typical values and can be edited.</p>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script>
+(function () {
+  const stageEl = document.getElementById('stage');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FT = 3.28084;
+  const TRUCK_TONS = 22, TRUCK_GAL = 7500;
+
+  const TYPES = [
+    { id: 'boxcar', slug: 'boxcars', name: 'Boxcar', plural: 'boxcars', mark: 'CLCX 1001', len: 16.6, unit: 'tons', load: 80,
+      specs: [['Lengths', '50′ & 60′'], ['Payload', '70–100 tons'], ['Doors', 'Plug or sliding'], ['Typical cargo', 'Paper, packaged goods, food']] },
+    { id: 'covered-hopper', slug: 'covered-hoppers', name: 'Covered Hopper', plural: 'covered hoppers', mark: 'CLCX 2001', len: 18.0, unit: 'tons', load: 110,
+      specs: [['Volume', '3,230–6,541 cu ft'], ['Discharge', 'Gravity & PD'], ['Hatches', 'Trough & round'], ['Typical cargo', 'Grain, pellets, sand']] },
+    { id: 'open-top-hopper', slug: 'open-top-hoppers', name: 'Open-Top Hopper', plural: 'open-top hoppers', mark: 'CLCX 3001', len: 16.0, unit: 'tons', load: 110,
+      specs: [['Volume', '2,400–4,000 cu ft'], ['Gates', 'Manual & rapid'], ['Body', 'All-welded steel'], ['Typical cargo', 'Aggregates, ballast']] },
+    { id: 'gondola', slug: 'gondolas', name: 'Gondola', plural: 'gondolas', mark: 'CLCX 4001', len: 17.0, unit: 'tons', load: 100,
+      specs: [['Lengths', '42′–66′ mill'], ['Loading', 'Crane & magnet'], ['Couplers', 'Rotary & standard'], ['Typical cargo', 'Scrap, coil, plate']] },
+    { id: 'centerbeam', slug: 'centerbeam-flatcars', name: 'Centerbeam Flatcar', plural: 'centerbeams', mark: 'CLCX 5001', len: 22.8, unit: 'tons', load: 90,
+      specs: [['Deck', '73′ typical'], ['Center beam', 'Full length'], ['Loading', 'Side, by forklift'], ['Typical cargo', 'Lumber, wallboard']] },
+    { id: 'bulkhead', slug: 'bulkhead-flatcars', name: 'Bulkhead Flatcar', plural: 'bulkhead flats', mark: 'CLCX 6001', len: 19.0, unit: 'tons', load: 90,
+      specs: [['Deck', '60′–73′ typical'], ['Ends', 'Fixed bulkheads'], ['Securement', 'Stake pockets'], ['Typical cargo', 'Pipe, poles, steel']] },
+    { id: 'tank', slug: 'tank-cars', name: 'Tank Car', plural: 'tank cars', mark: 'CLCX 7001', len: 18.4, unit: 'gal', load: 25500,
+      specs: [['Capacity', '~20,000–30,000 gal'], ['Service', 'General purpose'], ['Fittings', 'Top manway & valves'], ['Typical cargo', 'Oils, chemicals']] }
+  ];
+
+  // State (declared before anything can call into it)
+  let renderer = null, scene = null, camera = null, controls = null, key = null;
+  let current = 0, carGroup = null, view = 'three', anim = null;
+  const weekly = { tons: 500, gal: 100000 };
+
+  // ---------- Panel UI ----------
+  const typesEl = document.getElementById('types');
+  TYPES.forEach((t, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'type'; b.id = 'type-' + t.id;
+    b.textContent = t.name; b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+    b.addEventListener('click', () => selectType(i));
+    typesEl.appendChild(b);
+  });
+  const $ = id => document.getElementById(id);
+  const volEl = $('vol'), capEl = $('cap'), tripEl = $('trip');
+  [volEl, capEl, tripEl].forEach(el => el.addEventListener('input', () => { if (el === volEl) weekly[TYPES[current].unit] = +volEl.value || 0; calc(); }));
+
+  function fmt(n) { return Math.round(n).toLocaleString(); }
+
+  function calc() {
+    const t = TYPES[current];
+    const vol = Math.max(0, +volEl.value || 0), cap = Math.max(1, +capEl.value || t.load), trip = Math.max(1, +tripEl.value || 14);
+    const perWeek = vol > 0 ? Math.ceil(vol / cap) : 0;
+    const fleet = perWeek > 0 ? Math.ceil(perWeek * trip / 7) : 0;
+    const truckCap = t.unit === 'gal' ? TRUCK_GAL : TRUCK_TONS;
+    const trucks = vol > 0 ? Math.ceil(vol / truckCap) : 0;
+    $('perWeek').textContent = fmt(perWeek);
+    $('perWeekLabel').textContent = (perWeek === 1 ? t.name.toLowerCase() : t.plural) + ' loaded per week';
+    $('fleet').textContent = fmt(fleet) + (fleet === 1 ? ' car' : ' cars');
+    $('trucks').textContent = fmt(trucks) + ' / wk';
+    $('math').textContent = fmt(vol) + ' ' + t.unit + ' ÷ ' + fmt(cap) + ' ' + t.unit + ' per car = ' + fmt(perWeek) + ' cars/wk · × ' + trip + '-day round trip ÷ 7 = ' + fmt(fleet) + ' in the fleet · trucks at ' + fmt(truckCap) + ' ' + t.unit + ' each';
+    $('handoff').hidden = true;
+    return { perWeek, fleet };
+  }
+
+  $('price').addEventListener('click', () => {
+    const t = TYPES[current], r = calc();
+    const h = $('handoff');
+    h.innerHTML = 'Opens the cost estimator with:<br><b>/cost-estimator?category=' + t.slug + '&amp;qty=' + r.fleet + '</b>';
+    h.hidden = false;
+  });
+
+  function renderPanel() {
+    const t = TYPES[current];
+    document.querySelectorAll('.type').forEach((b, i) => b.setAttribute('aria-pressed', i === current ? 'true' : 'false'));
+    $('carName').textContent = t.name; $('carMark').textContent = t.mark;
+    $('specs').innerHTML = t.specs.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('');
+    $('specLen').textContent = '≈ ' + Math.round(t.len * FT) + ' ft over couplers';
+    $('volUnit').textContent = t.unit; $('capUnit').textContent = t.unit;
+    volEl.value = weekly[t.unit]; capEl.value = t.load;
+    calc();
+  }
+
+  // ---------- WebGL ----------
+  function hasWebGL() {
+    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl') || c.getContext('experimental-webgl')); } catch (e) { return false; }
+  }
+  function selectType(i) {
+    current = i; renderPanel();
+    if (scene) { simMode = 'load'; stopSim(); setView(view === 'load' ? 'three' : view, true); }
+  }
+  if (!(window.THREE && THREE.OrbitControls && hasWebGL())) {
+    const f = document.createElement('div'); f.className = 'fallback';
+    f.textContent = 'This browser could not start the 3D view (WebGL is unavailable). The capacity calculator still works.';
+    stageEl.appendChild(f); renderPanel(); return;
+  }
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.85;
+  stageEl.insertBefore(renderer.domElement, stageEl.firstChild);
+
+  scene = new THREE.Scene();
+  if (THREE.RoomEnvironment) {
+    const pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  }
+  camera = new THREE.PerspectiveCamera(32, 16 / 9, 0.1, 300);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, minDistance: 4, maxDistance: 80, maxPolarAngle: Math.PI * 0.52, autoRotate: !reduceMotion, autoRotateSpeed: 0.7 });
+  controls.addEventListener('start', () => { if (controls.autoRotate) { controls.autoRotate = false; $('spin').setAttribute('aria-pressed', 'false'); } anim = null; });
+  if (reduceMotion) $('spin').setAttribute('aria-pressed', 'false');
+
+  scene.add(new THREE.HemisphereLight(0xdfe6ee, 0x15171a, 0.35));
+  key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(12, 22, 14); key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004;
+  Object.assign(key.shadow.camera, { left: -22, right: 22, top: 18, bottom: -18, near: 1, far: 90 });
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffe2d6, 0.5); rim.position.set(-16, 9, -14); scene.add(rim);
+
+  // Turntable: dark disc with a thin accent ring, the car sits on a short section of track
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(17, 17, 0.12, 96), new THREE.MeshStandardMaterial({ color: 0x17191c, roughness: 0.55, metalness: 0.3, envMapIntensity: 0.05 }));
+  disc.position.y = -0.67; disc.receiveShadow = true; scene.add(disc);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(17.02, 0.035, 8, 160), new THREE.MeshBasicMaterial({ color: 0xd25a4c }));
+  ring.rotation.x = Math.PI / 2; ring.position.y = -0.6; scene.add(ring);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0x0e1012, roughness: 0.95, envMapIntensity: 0 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -0.73; floor.receiveShadow = true; scene.add(floor);
+
+  // ---------- Materials & part helpers ----------
+  const mat = (color, rough = 0.6, metal = 0.35) => new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, envMapIntensity: 0.18 });
+  const M = {
+    steel: mat(0x2a2c2e, 0.55, 0.6), wheel: mat(0x4a4d51, 0.35, 0.85), tread: mat(0x9aa0a6, 0.25, 0.95), rail: mat(0xa4aab0, 0.25, 0.9),
+    tie: mat(0x3a2e25, 0.95, 0.0), ballast: mat(0x5d5b58, 1.0, 0.0), dark: mat(0x1c1e20, 0.6, 0.4), grab: mat(0xe1dccf, 0.45, 0.4), spring: mat(0xb8a23a, 0.4, 0.6), floor: mat(0x5a4632, 0.9, 0.0)
+  };
+  const BODY = {
+    boxcar: mat(0x8e2a21, 0.5, 0.25), boxcarDoor: mat(0x7c241c, 0.5, 0.25), hopper: mat(0xc2c5c7, 0.4, 0.45), hopperTrough: mat(0xa5a9ac, 0.4, 0.45),
+    oth: mat(0x2c2e30, 0.6, 0.45), othSlope: mat(0x3a3c3f, 0.7, 0.3), gon: mat(0x3b302a, 0.7, 0.35),
+    cbDeck: mat(0x55626b, 0.6, 0.45), cbBeam: mat(0x5f6d77, 0.55, 0.5), bhDeck: mat(0x7a6a52, 0.75, 0.2), bhEnd: mat(0x6b5c46, 0.6, 0.35),
+    bhPlank: mat(0x8a7a60, 0.9, 0.0), tank: mat(0x1e2022, 0.28, 0.6)
+  };
+  const P = {
+    yellow: mat(0xe2a72e, 0.5, 0.25), concrete: mat(0x45433f, 0.92, 0.0), rubber: mat(0x141516, 0.8, 0.0),
+    lumber: mat(0xb07c43, 0.85, 0.0), ply: mat(0xc9a066, 0.8, 0.0), pallet: mat(0x9a7a52, 0.9, 0.0), carton: mat(0xb48a5a, 0.85, 0.0),
+    strap: mat(0x22262a, 0.5, 0.4), pipe: mat(0xd4a02a, 0.4, 0.5), rack: mat(0x4d5a63, 0.55, 0.5),
+    blue: mat(0x2f6fd6, 0.5, 0.2), rock: mat(0x504c47, 0.95, 0.0), grain: mat(0xc9a24e, 0.9, 0.0), rust: mat(0x6b3a22, 0.8, 0.3), rust2: mat(0x4a3b33, 0.85, 0.3),
+    cab: mat(0x3a4c5e, 0.45, 0.4), alum: mat(0xb9bec3, 0.35, 0.7), log: mat(0x7d5a3a, 0.9, 0.0), bag: mat(0xd9d6cf, 0.6, 0.0), silo: mat(0xa9a499, 0.85, 0.0), ground: mat(0x3c8a3c, 0.5, 0.3)
+  };
+  const shared = new Set([...Object.values(M), ...Object.values(BODY), ...Object.values(P)]);
+
+  function box(w, h, d, m, x = 0, y = 0, z = 0) { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); o.castShadow = true; o.receiveShadow = true; return o; }
+  function cyl(rt, rb, h, m, seg = 20) { const o = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), m); o.castShadow = true; o.receiveShadow = true; return o; }
+  function truck(x) {
+    const g = new THREE.Group(); g.position.x = x;
+    [-0.89, 0.89].forEach(ax => {
+      const axle = cyl(0.08, 0.08, 1.7, M.steel, 12); axle.rotation.x = Math.PI / 2; axle.position.set(ax, 0.457, 0); g.add(axle);
+      [-0.72, 0.72].forEach(z => {
+        const w = cyl(0.457, 0.457, 0.14, M.wheel, 32); w.rotation.x = Math.PI / 2; w.position.set(ax, 0.457, z); g.add(w);
+        const fl = cyl(0.49, 0.49, 0.03, M.tread, 32); fl.rotation.x = Math.PI / 2; fl.position.set(ax, 0.457, z - Math.sign(z) * 0.07); g.add(fl);
+        const hub = cyl(0.12, 0.12, 0.18, M.dark, 16); hub.rotation.x = Math.PI / 2; hub.position.set(ax, 0.457, z + Math.sign(z) * 0.14); g.add(hub);
+      });
+    });
+    [-0.98, 0.98].forEach(z => {
+      g.add(box(2.5, 0.36, 0.13, M.steel, 0, 0.5, z));
+      g.add(box(0.55, 0.22, 0.16, M.steel, 0, 0.8, z));
+      [-0.18, 0, 0.18].forEach(dx => { const s = cyl(0.065, 0.065, 0.24, M.spring, 10); s.position.set(dx, 0.62, z); g.add(s); });
+    });
+    g.add(box(0.42, 0.3, 2.1, M.steel, 0, 0.76, 0));
+    return g;
+  }
+  function underframe(L, W, sideSills = true) {
+    const g = new THREE.Group();
+    g.add(box(L - 0.3, 0.45, 0.55, M.steel, 0, 1.0, 0));
+    if (sideSills) [-1, 1].forEach(s => g.add(box(L - 0.3, 0.22, 0.12, M.steel, 0, 1.12, s * (W / 2 - 0.06))));
+    [-1, 1].forEach(s => {
+      g.add(box(0.25, 0.35, W, M.steel, s * (L / 2 - 0.15), 1.05, 0));
+      g.add(box(0.55, 0.22, 0.3, M.steel, s * (L / 2 + 0.2), 0.88, 0));
+      g.add(box(0.16, 0.34, 0.42, M.steel, s * (L / 2 + 0.5), 0.88, 0.06));
+      const hose = cyl(0.03, 0.03, 0.5, M.dark, 8); hose.rotation.z = 0.5; hose.position.set(s * (L / 2 + 0.25), 0.62, -0.35); g.add(hose);
+    });
+    const res = cyl(0.25, 0.25, 1.2, M.dark, 16); res.rotation.z = Math.PI / 2; res.position.set(-1.5, 0.82, 0.55); g.add(res);
+    return g;
+  }
+  function ladder(x, z, y0, h, facing) {
+    const g = new THREE.Group();
+    [-0.22, 0.22].forEach(dz => { const r = cyl(0.018, 0.018, h, M.grab, 6); r.position.set(x, y0 + h / 2, z + dz * facing); g.add(r); });
+    for (let y = y0 + 0.2; y < y0 + h; y += 0.42) { const rung = cyl(0.016, 0.016, 0.44, M.grab, 6); rung.rotation.x = Math.PI / 2; rung.position.set(x, y, z); g.add(rung); }
+    return g;
+  }
+  function brakeWheel(x, y) { const t = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.03, 8, 24), M.dark); t.position.set(x, y, 0); t.rotation.y = Math.PI / 2; t.castShadow = true; return t; }
+  function decal(text, w, h) {
+    const c = document.createElement('canvas'); c.width = 1024; c.height = 256;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#f2efe8';
+    ctx.font = '700 140px Barlow, "Helvetica Neue", Arial, sans-serif'; ctx.textBaseline = 'middle'; ctx.fillText(text, 24, 132);
+    const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
+    return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+  }
+  function addMarks(g, text, x, y, zOut) {
+    const a = decal(text, 3.2, 0.8); a.position.set(x, y, zOut); g.add(a);
+    const b = decal(text, 3.2, 0.8); b.position.set(-x, y, -zOut); b.rotation.y = Math.PI; g.add(b);
+  }
+  function hopperBay(x, w, h, yTop, m) {
+    const p = new THREE.Mesh(new THREE.ConeGeometry(w / Math.SQRT2, h, 4, 1), m);
+    p.rotation.x = Math.PI; p.rotation.y = Math.PI / 4; p.position.set(x, yTop - h / 2, 0); p.castShadow = true; return p;
+  }
+
+  const BUILD = {
+    'boxcar'(mark) {
+      const L = 15.6, W = 3.2, H = 3.45, y0 = 1.25, body = BODY.boxcar, g = new THREE.Group();
+      // Hollow body so the interior shows through the open door
+      const t = 0.06, D0 = 0.25 - 1.6, D1 = 0.25 + 1.6, DH = H - 0.25, zN = W / 2 - t / 2;
+      g.add(underframe(L, W)); g.add(box(L, 0.1, W, M.floor, 0, y0 + 0.05, 0));
+      g.add(box(L, t, W, body, 0, y0 + H - t / 2, 0)); g.add(box(L + 0.06, 0.12, W + 0.06, body, 0, y0 + H + 0.03, 0));
+      g.add(box(L, H, t, body, 0, y0 + H / 2, -zN));
+      [-1, 1].forEach(s => g.add(box(t, H, W, body, s * (L / 2 - t / 2), y0 + H / 2, 0)));
+      g.add(box(D0 + L / 2, H, t, body, (D0 - L / 2) / 2, y0 + H / 2, zN));
+      g.add(box(L / 2 - D1, H, t, body, (D1 + L / 2) / 2, y0 + H / 2, zN));
+      g.add(box(D1 - D0, 0.18, t, body, 0.25, y0 + H - 0.09, zN));
+      for (let x = -L / 2 + 0.55; x <= L / 2 - 0.5; x += 0.78) { if (Math.abs(x) < 1.8) continue; [-1, 1].forEach(s => g.add(box(0.09, H - 0.1, 0.05, body, x, y0 + H / 2, s * (W / 2 + 0.025)))); }
+      [-1, 1].forEach(s => {
+        const dg = new THREE.Group(); dg.position.set(0.25, 0, s * (W / 2 + 0.06));
+        dg.add(box(3.2, DH, 0.07, BODY.boxcarDoor, 0, y0 + H / 2 - 0.05, 0));
+        [-0.9, 0.9].forEach(dx => dg.add(box(0.06, 1.0, 0.06, M.grab, dx, y0 + 1.5, s * 0.05)));
+        g.add(dg); if (s === 1) { g.userData.door = dg; g.userData.doorZ = W / 2 + 0.06; }
+        g.add(box(8.2, 0.08, 0.1, M.steel, -0.35, y0 + H - 0.08, s * (W / 2 + 0.08)));
+        g.add(box(8.2, 0.08, 0.1, M.steel, -0.35, y0 + 0.04, s * (W / 2 + 0.08)));
+        for (let y = y0 + 0.5; y < y0 + H; y += 0.6) g.add(box(0.06, 0.06, W - 0.2, body, s * (L / 2 + 0.03), y, 0));
+      });
+      g.add(ladder(-L / 2 + 0.35, W / 2 + 0.06, y0 + 0.2, H - 0.3, 1)); g.add(ladder(L / 2 - 0.35, -W / 2 - 0.06, y0 + 0.2, H - 0.3, -1));
+      g.add(brakeWheel(-L / 2 - 0.12, y0 + H - 0.9)); addMarks(g, mark, -4.6, y0 + H - 0.75, W / 2 + 0.06);
+      return g;
+    },
+    'covered-hopper'(mark) {
+      const L = 17.2, W = 3.2, y0 = 1.6, H = 2.3, body = BODY.hopper, g = new THREE.Group();
+      g.add(underframe(L, W, false)); g.add(box(L, H, W, body, 0, y0 + H / 2, 0));
+      const roof = cyl(W / 2, W / 2, L, body, 40); roof.rotation.z = Math.PI / 2; roof.scale.x = 0.3; roof.position.y = y0 + H; g.add(roof);
+      const hatch = box(L - 2.2, 0.2, 0.75, BODY.hopperTrough, 0, y0 + H + 0.52, 0); g.add(hatch); g.userData.hatch = hatch; g.userData.gates = [];
+      [-4.3, 0, 4.3].forEach(x => { g.add(hopperBay(x, W - 0.1, 1.1, y0 + 0.02, body)); const gt = box(0.7, 0.18, 0.7, M.dark, x, y0 - 1.05, 0); g.add(gt); g.userData.gates.push(gt); });
+      for (let x = -L / 2 + 0.6; x <= L / 2 - 0.5; x += 1.15) [-1, 1].forEach(s => g.add(box(0.07, H, 0.05, body, x, y0 + H / 2, s * (W / 2 + 0.025))));
+      [-1, 1].forEach(s => g.add(box(0.3, 0.6, W - 0.6, M.steel, s * (L / 2 - 0.5), y0 - 0.25, 0)));
+      g.add(ladder(-L / 2 - 0.05, W / 2 - 0.4, 1.0, H + 0.6, 1)); g.add(ladder(L / 2 + 0.05, -W / 2 + 0.4, 1.0, H + 0.6, -1));
+      addMarks(g, mark, -5.5, y0 + H - 0.55, W / 2 + 0.06);
+      return g;
+    },
+    'open-top-hopper'(mark) {
+      const L = 15.0, W = 3.2, y0 = 1.6, H = 2.4, t = 0.08, body = BODY.oth, g = new THREE.Group();
+      g.add(underframe(L, W, false));
+      [-1, 1].forEach(s => {
+        g.add(box(L, H, t, body, 0, y0 + H / 2, s * (W / 2 - t / 2))); g.add(box(t, H, W, body, s * (L / 2 - t / 2), y0 + H / 2, 0));
+        g.add(box(L + 0.1, 0.14, 0.2, body, 0, y0 + H, s * (W / 2)));
+        for (let x = -L / 2 + 0.4; x <= L / 2 - 0.3; x += 1.1) g.add(box(0.12, H, 0.1, body, x, y0 + H / 2, s * (W / 2 + 0.04)));
+      });
+      g.userData.gates = []; [-3.8, 0, 3.8].forEach(x => { g.add(hopperBay(x, W - 0.15, 1.2, y0 + 0.05, body)); const gt = box(0.8, 0.16, 0.9, M.steel, x, y0 - 1.15, 0); g.add(gt); g.userData.gates.push(gt); });
+      [-1, 1].forEach(s => { const p = box(3.2, 0.06, W - 0.2, BODY.othSlope, s * (L / 2 - 1.4), y0 + 0.9, 0); p.rotation.z = s * -0.6; g.add(p); });
+      g.add(ladder(-L / 2 - 0.05, W / 2 - 0.4, 1.0, H + 0.4, 1)); g.add(ladder(L / 2 + 0.05, -W / 2 + 0.4, 1.0, H + 0.4, -1));
+      addMarks(g, mark, -3.6, y0 + H - 0.55, W / 2 + 0.1);
+      return g;
+    },
+    'gondola'(mark) {
+      const L = 16.0, W = 3.15, y0 = 1.25, H = 1.45, t = 0.07, body = BODY.gon, g = new THREE.Group();
+      g.add(underframe(L, W)); g.add(box(L, 0.1, W, body, 0, y0 + 0.05, 0));
+      [-1, 1].forEach(s => {
+        g.add(box(L, H, t, body, 0, y0 + H / 2, s * (W / 2 - t / 2))); g.add(box(t, H, W, body, s * (L / 2 - t / 2), y0 + H / 2, 0));
+        g.add(box(L + 0.06, 0.12, 0.16, body, 0, y0 + H, s * W / 2));
+        for (let x = -L / 2 + 0.4; x <= L / 2 - 0.3; x += 0.95) g.add(box(0.1, H - 0.05, 0.08, body, x, y0 + H / 2, s * (W / 2 + 0.03)));
+      });
+      g.add(brakeWheel(-L / 2 - 0.12, y0 + H - 0.4)); addMarks(g, mark, -4.2, y0 + H - 0.55, W / 2 + 0.08);
+      return g;
+    },
+    'centerbeam'(mark) {
+      const L = 22.4, W = 2.95, y0 = 1.25, H = 3.9, g = new THREE.Group();
+      g.add(underframe(L, W)); g.add(box(L, 0.2, W, BODY.cbDeck, 0, y0 - 0.06, 0)); g.add(box(L - 0.8, 0.26, 0.34, BODY.cbBeam, 0, y0 + H, 0));
+      for (let x = -L / 2 + 0.6; x <= L / 2 - 0.5; x += 1.55) { g.add(box(0.14, H, 0.22, BODY.cbBeam, x, y0 + H / 2, 0)); g.add(box(0.12, 0.12, W - 0.1, BODY.cbDeck, x + 0.75, y0 + 0.1, 0)); }
+      for (let x = -L / 2 + 0.6; x < L / 2 - 2; x += 1.55) { const d = box(0.08, Math.hypot(1.55, H) - 0.2, 0.12, BODY.cbBeam, x + 0.775, y0 + H / 2, 0); d.rotation.z = Math.atan2(1.55, H); g.add(d); }
+      [-1, 1].forEach(s => {
+        g.add(box(0.28, H + 0.35, W, BODY.cbBeam, s * (L / 2 - 0.14), y0 + (H + 0.35) / 2, 0));
+        for (let y = y0 + 0.5; y < y0 + H; y += 0.55) g.add(box(0.06, 0.08, W, BODY.cbDeck, s * (L / 2 + 0.02), y, 0));
+      });
+      g.add(brakeWheel(-L / 2 - 0.3, y0 + 1.2));
+      return g;
+    },
+    'bulkhead'(mark) {
+      const L = 18.6, W = 2.95, y0 = 1.25, H = 2.6, g = new THREE.Group();
+      g.add(underframe(L, W)); g.add(box(L, 0.22, W, BODY.bhDeck, 0, y0 - 0.05, 0));
+      for (let x = -L / 2 + 0.25; x < L / 2; x += 0.3) g.add(box(0.26, 0.03, W - 0.04, BODY.bhPlank, x, y0 + 0.07, 0));
+      [-1, 1].forEach(s => {
+        g.add(box(0.22, H, W, BODY.bhEnd, s * (L / 2 - 0.12), y0 + H / 2, 0));
+        for (let z = -W / 2 + 0.3; z <= W / 2 - 0.3; z += 0.48) g.add(box(0.12, H, 0.1, BODY.bhEnd, s * (L / 2 - 0.26), y0 + H / 2, z));
+        g.add(box(0.26, 0.16, W + 0.1, BODY.bhEnd, s * (L / 2 - 0.12), y0 + H, 0));
+        for (let x = -L / 2 + 1.2; x < L / 2 - 1; x += 1.25) g.add(box(0.18, 0.22, 0.12, M.steel, x, y0 - 0.12, s * (W / 2 + 0.06)));
+      });
+      g.add(brakeWheel(-L / 2 - 0.12, y0 + 1.4));
+      return g;
+    },
+    'tank'(mark) {
+      const L = 17.6, R = 1.5, yc = 2.85, shell = BODY.tank, g = new THREE.Group();
+      g.add(underframe(L, 2.6, false));
+      const tank = cyl(R, R, L - 1.0, shell, 56); tank.rotation.z = Math.PI / 2; tank.position.y = yc; g.add(tank);
+      [-1, 1].forEach(s => {
+        const head = new THREE.Mesh(new THREE.SphereGeometry(R, 40, 20), shell); head.scale.x = 0.33; head.position.set(s * (L / 2 - 0.5), yc, 0); head.castShadow = true; g.add(head);
+        g.add(box(1.0, 0.5, 2.2, M.steel, s * (L / 2 - 2.2), 1.45, 0));
+        g.add(box(0.12, 0.12, 2 * R + 0.1, M.grab, s * (L / 2 - 1.2), yc, 0));
+        g.add(ladder(s * (L / 2 + 0.15), 0.9 * s, 1.0, 1.9, s));
+      });
+      const man = cyl(0.42, 0.45, 0.38, shell, 28); man.position.set(0, yc + R + 0.12, 0); g.add(man);
+      const lidG = new THREE.Group(); lidG.position.set(-0.48, yc + R + 0.34, 0);
+      const lid = cyl(0.48, 0.48, 0.06, M.dark, 28); lid.position.x = 0.48; lidG.add(lid); g.add(lidG); g.userData.lid = lidG;
+      g.add(box(2.2, 0.06, 1.4, M.dark, 0, yc + R + 0.02, 0));
+      [-1, 1].forEach(s => [-1, 1].forEach(z => { const post = cyl(0.02, 0.02, 0.9, M.grab, 6); post.position.set(s * 1.05, yc + R + 0.47, z * 0.68); g.add(post); }));
+      [-1, 1].forEach(z => g.add(box(2.1, 0.04, 0.04, M.grab, 0, yc + R + 0.9, z * 0.68)));
+      const outlet = cyl(0.18, 0.18, 0.45, M.dark, 16); outlet.position.set(0, yc - R - 0.15, 0); g.add(outlet);
+      addMarks(g, mark, -4.5, yc + 0.55, R + 0.02);
+      return g;
+    }
+  };
+
+  function track(len) {
+    const g = new THREE.Group();
+    const bal = box(len, 0.36, 4.0, M.ballast, 0, -0.42, 0); bal.castShadow = false; g.add(bal);
+    const n = Math.ceil(len / 0.5);
+    const ties = new THREE.InstancedMesh(new THREE.BoxGeometry(0.23, 0.17, 2.6), M.tie, n);
+    const m4 = new THREE.Matrix4();
+    for (let i = 0; i < n; i++) { m4.makeTranslation(-len / 2 + 0.25 + i * 0.5, -0.17, 0); ties.setMatrixAt(i, m4); }
+    ties.receiveShadow = true; g.add(ties);
+    [-0.7535, 0.7535].forEach(z => { const r = box(len, 0.16, 0.075, M.rail, 0, -0.005, z); r.castShadow = false; g.add(r); });
+    return g;
+  }
+
+  // ---------- Loading demos ----------
+  // Each demo is a list of timed steps. Every frame the state is rebuilt from the start, so looping,
+  // seeking and playing the timeline backwards (unload = load in reverse) are exact.
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const clamp01 = k => Math.max(0, Math.min(1, k));
+  function timeline(init) {
+    const steps = [], cur = JSON.parse(JSON.stringify(init));
+    const api = {
+      cur, steps,
+      push(label, d, f) { steps.push({ label, d, f }); return api; },
+      to(label, d, target) {
+        const from = {}; for (const k in target) from[k] = cur[k];
+        Object.assign(cur, target);
+        return api.push(label, d, (S, k) => { for (const key in target) S[key] = from[key] + (target[key] - from[key]) * k; });
+      },
+      set(fn) { return api.push(null, 0.001, fn); },
+      wait(label, d) { return api.push(label, d, () => {}); },
+      get dur() { return steps.reduce((a, s) => a + s.d, 0); }
+    };
+    return api;
+  }
+  function runTimeline(sim, t) {
+    const tl = sim.tl, rev = sim.reverse, tt = rev ? tl.dur - t : t;
+    const S = JSON.parse(JSON.stringify(sim.init)); let acc = 0, lab = tl.steps[0].label;
+    for (const s of tl.steps) {
+      if (tt <= acc) break;
+      const k = Math.min(1, (tt - acc) / s.d); s.f(S, k * k * (3 - 2 * k));
+      if (s.label) lab = s.label; acc += s.d;
+    }
+    const text = typeof lab === 'function' ? lab(S) : Array.isArray(lab) ? lab[rev ? 1 : 0] : lab;
+    return { S, label: text };
+  }
+
+  // Forklift driving: straight runs and true arcs, so it turns like a machine instead of sliding
+  function drive(tl, label, dist, v = 3.8) {
+    const c = tl.cur, x0 = c.fx, z0 = c.fz, h = c.fh, dx = -Math.sin(h) * dist, dz = -Math.cos(h) * dist;
+    c.fx = x0 + dx; c.fz = z0 + dz;
+    return tl.push(label, Math.abs(dist) / v + 0.25, (S, k) => { S.fx = x0 + dx * k; S.fz = z0 + dz * k; S.fh = h; });
+  }
+  const driveTo = (tl, label, z, v) => drive(tl, label, tl.cur.fz - z, v); // heading 0 (facing the track)
+  function turn(tl, label, dh, r, fwd, v = 3.0) {
+    const c = tl.cur, x0 = c.fx, z0 = c.fz, h0 = c.fh, R = (fwd ? 1 : -1) * Math.sign(dh) * r;
+    const P = h => [x0 + R * (Math.cos(h) - Math.cos(h0)), z0 + R * (Math.sin(h0) - Math.sin(h))];
+    const e = P(h0 + dh); c.fx = e[0]; c.fz = e[1]; c.fh = h0 + dh;
+    return tl.push(label, Math.abs(r * dh) / v + 0.25, (S, k) => { const h = h0 + dh * k, p = P(h); S.fx = p[0]; S.fz = p[1]; S.fh = h; });
+  }
+  function shiftX(tl, label, x1, r) { // back-and-turn, drive across, turn back in: a three-point move to a new lane
+    const dx = x1 - tl.cur.fx; if (Math.abs(dx) < 0.01) return;
+    const s = Math.sign(dx);
+    turn(tl, label, -s * Math.PI / 2, r, false); drive(tl, label, Math.abs(dx)); turn(tl, label, s * Math.PI / 2, r, true);
+  }
+
+  // Shared props
+  const pad = (x0, x1, z0, z1) => box(x1 - x0, 0.37, z1 - z0, P.concrete, (x0 + x1) / 2, -0.425, (z0 + z1) / 2);
+  function beam(a, b, w, h, m) {
+    const d = new THREE.Vector3().subVectors(b, a), len = d.length(), o = box(len, h, w, m);
+    o.position.copy(a).addScaledVector(d, 0.5); o.quaternion.setFromUnitVectors(V(1, 0, 0), d.normalize()); return o;
+  }
+  function hose(pts, r, m) {
+    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => V(p[0], p[1], p[2]))), 48, r, 8, false);
+    const o = new THREE.Mesh(geo, m); o.castShadow = true; o.userData.n = geo.index.count; return o;
+  }
+  function grow(o, k) { o.visible = k > 0.002; o.geometry.setDrawRange(0, Math.floor(o.userData.n * clamp01(k) / 6) * 6); }
+  function bundle(l, h, w, m) {
+    const b = new THREE.Group(); b.add(box(l, h, w, m, 0, h / 2, 0));
+    [-l * 0.32, l * 0.32].forEach(x => b.add(box(0.05, h + 0.02, w + 0.02, P.strap, x, h / 2, 0)));
+    return b;
+  }
+  function safety(g, ctx, chocks = true) {
+    g.add(box(0.07, 1.4, 0.07, M.steel, 14.5, 0.45, 0)); g.add(box(0.05, 0.5, 0.8, P.blue, 14.5, 1.0, 0)); // blue flag
+    if (!chocks) return;
+    const tx = (ctx.t.len - 1) / 2 - 2;
+    [0.52, -0.52].forEach((dx, i) => [-0.7535, 0.7535].forEach(z => { const c = box(0.28, 0.14, 0.15, P.yellow, tx + 0.89 + dx, 0.15, z); c.rotation.z = i ? 0.4 : -0.4; g.add(c); }));
+  }
+  function forklift({ s = 1, fork = 1.4, clamp = false } = {}) {
+    const g = new THREE.Group(), b = new THREE.Group(); g.add(b); b.scale.setScalar(s);
+    b.add(box(1.0, 0.7, 1.6, P.yellow, 0, 0.6, 0.95));
+    b.add(box(1.02, 0.85, 0.45, M.dark, 0, 0.67, 1.95));
+    b.add(box(0.5, 0.18, 0.45, M.dark, 0, 1.03, 1.15)); b.add(box(0.46, 0.5, 0.08, M.dark, 0, 1.3, 1.38));
+    [[-0.45, 0.45], [0.45, 0.45], [-0.45, 1.65], [0.45, 1.65]].forEach(([x, z]) => b.add(box(0.06, 1.25, 0.06, M.dark, x, 1.55, z)));
+    b.add(box(1.0, 0.06, 1.3, M.dark, 0, 2.18, 1.05));
+    [0.36, 1.72].forEach(z => [-0.42, 0.42].forEach(x => { const w = cyl(0.28, 0.28, 0.24, P.rubber, 20); w.rotation.z = Math.PI / 2; w.position.set(x, 0.28, z); b.add(w); }));
+    [-0.32, 0.32].forEach(x => b.add(box(0.08, 2.3, 0.12, M.steel, x, 1.2, 0)));
+    const inner = new THREE.Group(); [-0.25, 0.25].forEach(x => inner.add(box(0.07, 2.1, 0.1, M.steel, x, 1.1, -0.1))); b.add(inner);
+    const car = new THREE.Group();
+    car.add(box(0.95, 0.08, 0.06, M.dark, 0, 0.2, -0.16)); car.add(box(0.95, 0.08, 0.06, M.dark, 0, 0.95, -0.16));
+    [-0.4, -0.13, 0.13, 0.4].forEach(x => car.add(box(0.05, 0.8, 0.04, M.dark, x, 0.58, -0.16)));
+    [-0.3, 0.3].forEach(x => { car.add(box(0.12, 0.05, fork, M.steel, x, 0.05, -(0.15 + fork / 2))); car.add(box(0.12, 0.5, 0.05, M.steel, x, 0.27, -0.17)); });
+    let cl = null;
+    if (clamp) { // top clamp that pins logs to the tines
+      cl = new THREE.Group(); cl.position.set(0, 1.0, -0.16); cl.add(box(0.9, 0.08, 0.08, M.dark, 0, 0, 0));
+      [-0.3, 0.3].forEach(x => { cl.add(box(0.08, 0.08, 1.5, M.dark, x, 0, -0.75)); cl.add(box(0.08, 0.3, 0.08, M.dark, x, -0.15, -1.5)); });
+      car.add(cl);
+    }
+    b.add(car);
+    const fc = s * (0.15 + fork / 2);
+    return {
+      g, fc, tip: s * (0.15 + fork), top: s * 0.075,
+      place(S, base, mirror) {
+        g.position.set(S.fx, base, mirror ? -S.fz : S.fz); g.rotation.y = mirror ? Math.PI - S.fh : S.fh;
+        car.position.y = S.lift / s; inner.position.y = Math.max(0, S.lift / s - 1);
+        if (cl) cl.rotation.x = 0.85 - 0.91 * (S.clamp || 0);
+      },
+      held(S, mirror) { const x = S.fx - Math.sin(S.fh) * fc, z = S.fz - Math.cos(S.fh) * fc; return [x, mirror ? -z : z, mirror ? Math.PI - S.fh : S.fh]; }
+    };
+  }
+  function semi(kind) {
+    const g = new THREE.Group(), y0 = -0.24;
+    [11.4, 7.6, 6.5, -3.4, -4.6].forEach(x => [-1.05, 1.05].forEach(z => { const w = cyl(0.52, 0.52, 0.32, P.rubber, 20); w.rotation.x = Math.PI / 2; w.position.set(x, y0 + 0.52, z); g.add(w); }));
+    g.add(box(6.6, 0.3, 1.0, M.steel, 8.7, y0 + 1.0, 0));
+    g.add(box(2.0, 2.5, 2.45, P.cab, 9.9, y0 + 2.45, 0)); g.add(box(1.4, 1.25, 2.2, P.cab, 11.6, y0 + 1.75, 0));
+    g.add(box(0.04, 0.9, 2.1, M.dark, 10.92, y0 + 3.05, 0));
+    [-1.24, 1.24].forEach(z => g.add(box(0.9, 0.7, 0.04, M.dark, 10.2, y0 + 3.0, z)));
+    const st = cyl(0.09, 0.09, 2.2, M.steel, 10); st.position.set(8.75, y0 + 3.3, 1.1); g.add(st);
+    g.add(box(1.2, 0.2, 1.8, M.dark, 7.0, y0 + 1.25, 0));
+    g.add(box(11.6, 0.25, 1.1, M.steel, 0.6, y0 + 1.3, 0));
+    let heap = null;
+    if (kind === 'tank') {
+      const tk = cyl(1.05, 1.05, 10.4, P.alum, 36); tk.rotation.z = Math.PI / 2; tk.position.set(0.6, y0 + 2.5, 0); g.add(tk);
+      [-1, 1].forEach(s => { const e = new THREE.Mesh(new THREE.SphereGeometry(1.05, 28, 14), P.alum); e.scale.x = 0.3; e.position.set(0.6 + s * 5.2, y0 + 2.5, 0); e.castShadow = true; g.add(e); });
+      g.add(box(0.5, 0.4, 0.3, M.dark, -1.0, y0 + 1.35, -0.95));
+    } else {
+      [-1, 1].forEach(s => g.add(box(11.4, 1.6, 0.06, P.alum, 0.6, y0 + 2.9, s * 1.22)));
+      [-1, 1].forEach(s => g.add(box(0.06, 1.6, 2.5, P.alum, 0.6 + s * 5.7, y0 + 2.9, 0)));
+      g.add(box(11.4, 0.06, 2.44, P.alum, 0.6, y0 + 2.12, 0));
+      [-1.6, 2.8].forEach(x => { const c = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.8, 4), P.alum); c.rotation.x = Math.PI; c.rotation.y = Math.PI / 4; c.position.set(x, y0 + 1.7, 0); g.add(c); });
+      heap = box(11.2, 1, 2.36, P.grain, 0.6, 0, 0); g.add(heap);
+    }
+    return { g, heap };
+  }
+  const cap = () => +capEl.value || TYPES[current].load;
+  const flowRod = (r, m) => { const o = cyl(r, r, 1, m, 12); o.castShadow = false; return o; };
+  function span(o, x, y0, y1, z) { const len = Math.max(0.01, y0 - y1); o.scale.y = len; o.position.set(x, y1 + len / 2, z); }
+
+  const SIMS = {
+    // Boxcar: dock forklift fills the car ends first, then the doorway, then an airbag in the gap
+    'boxcar'(ctx, mode) {
+      const g = new THREE.Group(), base = 1.35, fl = forklift(), r = 1.6, SZ = 5.6, BACK = SZ + 0.5 + fl.tip + 0.35;
+      g.add(box(13, base + 0.61, 9.5, P.concrete, 0.25, (base - 0.61) / 2, 6.75));
+      [-1, 1].forEach(s => g.add(box(0.3, 0.45, 0.18, P.rubber, 0.25 + s * 2.3, base - 0.35, 1.95)));
+      g.add(box(3.0, 0.04, 0.62, M.steel, 0.25, base, 1.85)); g.add(box(13, 0.02, 0.14, P.yellow, 0.25, base + 0.01, 2.08));
+      safety(g, ctx); g.add(fl.g);
+      const LANE = -0.95, ZS = LANE + r;
+      const jobs = [
+        { sx: -4.6, end: true, dh: Math.PI / 2, px: -7.15, pz: LANE, name: 'the far end' },
+        { sx: 4.6, end: true, dh: -Math.PI / 2, px: 7.15, pz: LANE, name: 'the near end' },
+        { sx: -3.4, px: -0.55, pz: -1.0, name: 'the doorway' },
+        { sx: 3.4, px: 1.05, pz: -1.0, name: 'the doorway' }
+      ];
+      const pals = jobs.map(() => {
+        const p = new THREE.Group();
+        [0, 1.09].forEach(y => { p.add(box(0.9, 0.14, 1.0, P.pallet, 0, y + 0.07, 0)); p.add(box(0.86, 0.93, 0.96, P.carton, 0, y + 0.61, 0)); p.add(box(0.88, 0.04, 0.98, P.strap, 0, y + 0.75, 0)); });
+        g.add(p); return p;
+      });
+      const bag = box(1, 2.0, 0.95, P.bag, 0.25, base + 1.05, -1.0); g.add(bag);
+      const init = { fx: jobs[0].sx, fz: BACK, fh: 0, lift: 0, doorOut: 0, doorSlide: 0, bag: 0, items: jobs.map(() => 0) };
+      const tl = timeline(init), n = jobs.length;
+      tl.wait(['Car spotted at the dock · chocked, blue flag up', 'Unloaded · 4 pallet loads back on the dock'], 1.5);
+      tl.to(['Opening door', 'Closing door'], 0.6, { doorOut: 1 }).to(['Opening door', 'Closing door'], 1.6, { doorSlide: 1 });
+      jobs.forEach((j, i) => {
+        const lab = [`Load ${i + 1} of ${n} · into ${j.name}`, `Load ${n - i} of ${n} · out of ${j.name}`];
+        shiftX(tl, lab, j.sx, r);
+        driveTo(tl, lab, SZ + fl.fc); tl.set(S => { S.items[i] = 1; }); tl.to(lab, 0.4, { lift: 0.15 });
+        driveTo(tl, lab, BACK);
+        if (j.end) {
+          shiftX(tl, lab, 0.25, r); driveTo(tl, lab, ZS); turn(tl, lab, j.dh, r, true);
+          const d = Math.abs(j.px - (tl.cur.fx - Math.sign(j.dh) * fl.fc));
+          drive(tl, lab, d); tl.to(lab, 0.4, { lift: 0 }); tl.set(S => { S.items[i] = 2; });
+          drive(tl, lab, -d); turn(tl, lab, -j.dh, r, false); driveTo(tl, lab, BACK);
+        } else {
+          shiftX(tl, lab, j.px, r); driveTo(tl, lab, j.pz + fl.fc);
+          tl.to(lab, 0.4, { lift: 0 }); tl.set(S => { S.items[i] = 2; }); driveTo(tl, lab, BACK);
+        }
+      });
+      tl.to(['Airbag inflated in the doorway gap', 'Deflating the doorway airbag'], 1.2, { bag: 1 });
+      tl.to(['Closing door', 'Opening door'], 1.6, { doorSlide: 0 }).to(['Closing door', 'Opening door'], 0.6, { doorOut: 0 });
+      tl.wait(['Loaded · 4 pallet loads, door sealed', 'Car spotted at the dock · chocked, blue flag up'], 2.5);
+      const door = ctx.root.userData.door, dz = ctx.root.userData.doorZ;
+      return { group: g, tl, init, reverse: mode === 'unload', render(S) {
+        fl.place(S, base);
+        door.position.z = dz + 0.14 * S.doorOut; door.position.x = 0.25 - 3.35 * S.doorSlide;
+        bag.visible = S.bag > 0.01; bag.scale.x = 0.05 + 0.61 * S.bag;
+        pals.forEach((p, i) => {
+          const m = S.items[i], j = jobs[i];
+          if (m === 0) { p.position.set(j.sx, base, SZ); p.rotation.y = 0; }
+          else if (m === 1) { const [x, z, h] = fl.held(S); p.position.set(x, base + S.lift, z); p.rotation.y = h; }
+          else { p.position.set(j.px, base, j.pz); p.rotation.y = j.end ? j.dh : 0; }
+        });
+      } };
+    },
+
+    // Covered hopper: load under a silo spout, unload through bottom gates onto a belt into a hopper-bottom truck
+    'covered-hopper'(ctx, mode) {
+      const g = new THREE.Group(), hatch = ctx.root.userData.hatch, hy = hatch.position.y, gates = ctx.root.userData.gates, gy = gates[0].position.y;
+      safety(g, ctx, false);
+      if (mode === 'load') {
+        g.add(pad(-12, 2, 4, 13));
+        const silo = cyl(2.6, 2.6, 15, P.silo, 40); silo.position.set(-7, 6.89, 8.5); g.add(silo);
+        g.add(box(3.2, 2.2, 3.2, P.silo, -7, 15.4, 8.5));
+        g.add(beam(V(-6, 15.6, 7.4), V(0, 9.0, 0.6), 1.2, 1.1, P.silo));
+        [-1.2, 1.2].forEach(x => [-2.6, 2.6].forEach(z => g.add(box(0.25, 9.6, 0.25, M.steel, x, 4.19, z))));
+        g.add(box(2.8, 1.3, 5.6, P.silo, 0, 9.0, 0));
+        const outer = cyl(0.36, 0.36, 1.2, M.steel, 20); outer.position.set(0, 7.8, 0); g.add(outer);
+        const spout = cyl(0.28, 0.28, 1, M.steel, 20); g.add(spout);
+        const stream = flowRod(0.14, P.grain); g.add(stream);
+        const init = { off: 4.3, hatch: 0, spout: 7.2, flow: 0, fill: 0 };
+        const tl = timeline(init), stops = [4.3, 0, -4.3];
+        tl.wait('Car spotted under the silo spout', 1.4).to('Opening the top hatch', 1.0, { hatch: 1 });
+        stops.forEach((p, i) => {
+          if (i) tl.to('Car puller indexes the car to the next hatch section', 1.6, { off: p });
+          tl.to('Lowering the spout into the hatch', 0.8, { spout: 4.7 }).set(S => { S.flow = 1; })
+            .to(S => 'Loading grain · ' + fmt(S.fill * cap()) + ' tons', 3.2, { fill: (i + 1) / 3 })
+            .set(S => { S.flow = 0; }).to('Raising the spout', 0.6, { spout: 5.8 });
+        });
+        tl.to('Closing the hatch', 1.0, { hatch: 0 }).to('Closing the hatch', 0.6, { spout: 7.2 })
+          .wait(() => 'Loaded · ' + fmt(cap()) + ' tons of grain', 2.5);
+        return { group: g, tl, init, cam: { pos: V(22, 15, 27), target: V(-2, 5, 3) }, render(S) {
+          ctx.move(S.off);
+          hatch.position.z = 0.6 * S.hatch; hatch.position.y = hy - 0.05 * S.hatch;
+          span(spout, 0, 7.3, S.spout, 0);
+          stream.visible = S.flow > 0; span(stream, 0, S.spout, 3.2, 0);
+        } };
+      }
+      g.add(pad(-9, 13, 2, 9.5));
+      g.add(box(15.3, 0.2, 0.55, M.dark, 2.15, 0.12, 0));
+      const a = V(9.8, 0.25, 0), b2 = V(2.5, 4.5, 5.6);
+      g.add(beam(a, b2, 0.6, 0.25, M.dark)); g.add(box(0.7, 0.5, 0.7, M.dark, 2.5, 4.5, 5.6));
+      const mid = V().lerpVectors(a, b2, 0.5); g.add(beam(V(mid.x, -0.24, mid.z), V(mid.x, mid.y - 0.1, mid.z), 0.15, 0.15, M.steel));
+      const beltG = box(15.3, 0.04, 0.36, P.grain, 2.15, 0.24, 0); g.add(beltG);
+      const beltI = beam(V(9.8, 0.4, 0), V(2.6, 4.65, 5.6), 0.36, 0.04, P.grain); g.add(beltI);
+      const drops = [-4.3, 0, 4.3].map(x => { const o = flowRod(0.1, P.grain); span(o, x, 0.46, 0.22, 0); g.add(o); return o; });
+      const head = flowRod(0.14, P.grain); g.add(head);
+      const tk = semi('hopper'); tk.g.position.z = 5.6; g.add(tk.g);
+      const init = { tx: -34, gate: 0, flow: 0, fill: 0 };
+      const tl = timeline(init);
+      tl.wait('Car spotted over the belt conveyor', 1.2).to('Hopper-bottom truck pulls up under the conveyor', 4, { tx: 0 })
+        .to('Opening the bottom gates', 1.0, { gate: 1 }).set(S => { S.flow = 1; })
+        .to(S => 'Unloading into the truck · ' + fmt(S.fill * TRUCK_TONS) + ' of ' + TRUCK_TONS + ' tons', 7, { fill: 1 })
+        .set(S => { S.flow = 0; }).to('Closing the gates', 0.8, { gate: 0 })
+        .to('Truck pulls out', 4, { tx: 34 })
+        .wait(() => '1 truck = ' + TRUCK_TONS + ' tons · ≈ ' + Math.ceil(cap() / TRUCK_TONS) + ' truckloads per car', 2.5);
+      return { group: g, tl, init, cam: { pos: V(18, 17, 22), target: V(2, 1.8, 2.6) }, render(S) {
+        tk.g.position.x = S.tx; gates.forEach(o => { o.position.y = gy - 0.12 * S.gate; });
+        const on = S.flow > 0; beltG.visible = beltI.visible = head.visible = on; drops.forEach(o => { o.visible = on; });
+        const h = Math.max(0.01, 1.35 * S.fill); tk.heap.visible = S.fill > 0.005; tk.heap.scale.y = h; tk.heap.position.y = 1.91 + h / 2;
+        span(head, 2.5, 4.25, 1.91 + h, 5.6);
+      } };
+    },
+
+    // Open-top hopper: pulled under a loadout chute; unloaded bay by bay over a pit that feeds a stockpile conveyor
+    'open-top-hopper'(ctx, mode) {
+      const g = new THREE.Group(), gates = ctx.root.userData.gates, gy = gates[0].position.y, HM = 2.05, Y0 = 2.0;
+      safety(g, ctx, false);
+      const segs = [0, 1, 2, 3, 4, 5].map(i => { const o = box(2.38, 1, 2.95, P.rock, 0, 0, 0); o.userData.cx = -7.2 + 1.2 + 2.4 * i; g.add(o); return o; });
+      const drawHeap = S => segs.forEach((o, i) => { const h = Math.max(0.01, S.hs[i]); o.visible = S.hs[i] > 0.01; o.scale.y = h; o.position.set(S.off + o.userData.cx, Y0 + h / 2, 0); });
+      const stream = flowRod(0.3, P.rock); g.add(stream);
+      if (mode === 'load') {
+        [-1.6, 1.6].forEach(x => [-2.8, 2.8].forEach(z => g.add(box(0.3, 10.1, 0.3, M.steel, x, 4.44, z))));
+        g.add(box(3.6, 2.6, 6.0, P.silo, 0, 10.8, 0));
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(2.2, 1.6, 4), P.silo); cone.rotation.x = Math.PI; cone.rotation.y = Math.PI / 4; cone.position.y = 8.7; g.add(cone);
+        g.add(box(0.9, 2.2, 0.9, M.steel, 0, 6.9, 0));
+        const init = { off: 7.2, flow: 0, hs: segs.map(() => 0) };
+        const tl = timeline(init);
+        tl.wait('Car spotted at the loadout', 1.2).set(S => { S.flow = 1; })
+          .push(S => 'Loading rock as the car pulls through · ' + fmt(S.hs.reduce((a, b) => a + b, 0) / (6 * HM) * cap()) + ' tons', 9, (S, k) => {
+            S.off = 7.2 - 14.4 * k; S.hs = S.hs.map((_, i) => HM * clamp01((7.2 - S.off) / 2.4 - i));
+          })
+          .set(S => { S.flow = 0; }).wait(() => 'Loaded · ' + fmt(cap()) + ' tons of rock', 2.5);
+        return { group: g, tl, init, cam: { pos: V(20, 13, 25), target: V(0, 4, 1) }, render(S) {
+          ctx.move(S.off); drawHeap(S);
+          const i = Math.max(0, Math.min(5, Math.floor((7.2 - S.off) / 2.4))); stream.visible = S.flow > 0; span(stream, 0, 5.8, Y0 + S.hs[i], 0);
+        } };
+      }
+      g.add(pad(-3, 10, 2, 12.5));
+      g.add(box(2.6, 0.03, 1.35, M.dark, 0, -0.06, 0));
+      for (let x = -1.2; x <= 1.2; x += 0.3) g.add(box(0.05, 0.05, 1.35, M.steel, x, -0.03, 0));
+      g.add(beam(V(0, -0.2, 2.1), V(5.5, 4.6, 9.4), 0.7, 0.3, M.dark));
+      g.add(beam(V(2.75, -0.24, 5.75), V(2.75, 2.2, 5.75), 0.2, 0.2, M.steel));
+      const pile = new THREE.Mesh(new THREE.ConeGeometry(3.4, 4.2, 28), P.rock); pile.castShadow = pile.receiveShadow = true; g.add(pile);
+      const bays = [-3.8, 0, 3.8];
+      const init = { off: 3.8, flow: 0, gates: [0, 0, 0], hs: segs.map(() => HM) };
+      const tl = timeline(init);
+      tl.wait('Car spotted over the unloading pit', 1.2);
+      bays.forEach((bx, j) => {
+        if (j) tl.to('Indexing the next bay over the pit', 1.6, { off: -bx });
+        tl.push(`Opening bay ${j + 1} gates`, 0.6, (S, k) => { S.gates[j] = k; }).set(S => { S.flow = 1; })
+          .push(`Dumping bay ${j + 1} of 3 into the pit`, 2.6, (S, k) => { S.hs[2 * j] = S.hs[2 * j + 1] = HM * (1 - k); })
+          .set(S => { S.flow = 0; }).push(`Closing bay ${j + 1} gates`, 0.6, (S, k) => { S.gates[j] = 1 - k; });
+      });
+      tl.wait('Empty · rock conveyed to the stockpile', 2.5);
+      return { group: g, tl, init, render(S) {
+        ctx.move(S.off); drawHeap(S);
+        gates.forEach((o, i) => { o.position.y = gy - 0.14 * S.gates[i]; });
+        stream.visible = S.flow > 0; span(stream, 0, 0.4, -0.05, 0);
+        const f = Math.max(0.001, 1 - S.hs.reduce((a, b) => a + b, 0) / (6 * HM)); pile.scale.setScalar(f); pile.position.set(6, -0.24 + 2.1 * f, 10);
+      } };
+    },
+
+    // Gondola: scrap handler with an orange-peel grapple, pile to car (unload is the same machine in reverse)
+    'gondola'(ctx, mode) {
+      const g = new THREE.Group(), base = -0.24, L1 = 6.5, L2 = 5.0, BZ = 6.3, PY = base + 1.15 + 1.6;
+      g.add(pad(-7, 7, 2, 14)); safety(g, ctx);
+      const mh = new THREE.Group(); mh.position.set(0, base, BZ); g.add(mh);
+      mh.add(box(2.6, 0.7, 3.8, M.dark, 0, 0.8, 0));
+      [-1.25, 1.25].forEach(x => [-1.3, 1.3].forEach(z => { const w = cyl(0.55, 0.55, 0.45, P.rubber, 20); w.rotation.z = Math.PI / 2; w.position.set(x, 0.55, z); mh.add(w); }));
+      const up = new THREE.Group(); up.position.y = 1.15; mh.add(up);
+      up.add(box(2.4, 1.2, 3.2, P.yellow, 0, 0.6, 0.4)); up.add(box(2.4, 0.9, 0.8, M.dark, 0, 0.55, 2.1));
+      up.add(box(0.2, 2.0, 0.2, M.dark, 0.8, 2.2, -0.3)); up.add(box(1.0, 1.2, 1.2, P.yellow, 0.8, 3.6, -0.4)); up.add(box(1.02, 0.6, 1.0, M.dark, 0.8, 3.75, -0.45));
+      const boom = new THREE.Group(); boom.position.set(-0.2, 1.6, -0.9); up.add(boom);
+      boom.add(box(0.45, 0.55, L1, P.yellow, 0, 0, -L1 / 2));
+      const stick = new THREE.Group(); stick.position.z = -L1; boom.add(stick);
+      stick.add(box(0.35, 0.4, L2, P.yellow, 0, 0, -L2 / 2));
+      const grap = new THREE.Group(); grap.position.z = -L2; stick.add(grap);
+      const link = cyl(0.08, 0.08, 0.6, M.dark, 8); link.position.y = -0.3; grap.add(link);
+      const hub = cyl(0.4, 0.4, 0.4, M.dark, 14); hub.position.y = -0.8; grap.add(hub);
+      const tines = [0, 1, 2, 3].map(q => {
+        const a = q * Math.PI / 2 + Math.PI / 4, tg = new THREE.Group(); tg.position.set(Math.cos(a) * 0.35, -1.0, Math.sin(a) * 0.35); tg.rotation.y = -a;
+        const pv = new THREE.Group(); tg.add(pv); pv.add(box(0.12, 0.9, 0.1, M.dark, 0, -0.45, 0)); grap.add(tg); return pv;
+      });
+      const rng = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+      const chunk = () => { const c = new THREE.Group(); for (let i = 0; i < 8; i++) { const o = box(0.3 + rng() * 0.7, 0.15 + rng() * 0.3, 0.2 + rng() * 0.6, rng() > 0.5 ? P.rust : P.rust2, (rng() - 0.5) * 0.9, 0.12 + rng() * 0.3, (rng() - 0.5) * 0.9); o.rotation.set(rng(), rng() * 3, rng()); c.add(o); } g.add(c); return c; };
+      const pileC = new THREE.Mesh(new THREE.ConeGeometry(3.0, 2.0, 24), P.rust2); pileC.position.set(-1.2, base + 1.0, 11); pileC.receiveShadow = true; g.add(pileC);
+      const src = [[-1.2, 1.35, 11], [-0.4, 0.95, 10.3], [-2.0, 0.95, 11.5], [-0.5, 0.75, 11.8], [-1.9, 0.7, 10.2]];
+      const dst = [-5.2, -2.6, 0, 2.6, 5.2].map(x => [x, 1.35, 0]);
+      const chunks = src.map(chunk);
+      const ik = (x, tipY, z) => {
+        const dx = x, dz = z - BZ, sl = Math.atan2(-dx, -dz), R = Math.hypot(dx, dz) - 0.9, Y = tipY - PY;
+        const c2 = Math.max(-1, Math.min(1, (R * R + Y * Y - L1 * L1 - L2 * L2) / (2 * L1 * L2))), a2 = -Math.acos(c2);
+        return { sl, a1: Math.atan2(Y, R) - Math.atan2(L2 * Math.sin(a2), L1 + L2 * Math.cos(a2)), a2 };
+      };
+      const p0 = ik(src[0][0], src[0][1] + 4.8, src[0][2]);
+      const init = { sl: p0.sl, a1: p0.a1, a2: p0.a2, grip: 0, items: src.map(() => 0) };
+      const tl = timeline(init);
+      const poseTo = (lab, d, p, extra) => { let sl = p.sl; while (sl - tl.cur.sl > Math.PI) sl -= 2 * Math.PI; while (sl - tl.cur.sl < -Math.PI) sl += 2 * Math.PI; tl.to(lab, d, Object.assign({ sl, a1: p.a1, a2: p.a2 }, extra || {})); };
+      tl.wait(['Car spotted and chocked · blue flag up', 'Empty · scrap back on the pile'], 1.4);
+      src.forEach((s, i) => {
+        const d = dst[i], lab = [`Grab ${i + 1} of 5 · pile to car`, `Grab ${5 - i} of 5 · car to pile`];
+        poseTo(lab, 1.4, ik(s[0], s[1] + 4.8, s[2])); poseTo(lab, 0.9, ik(s[0], s[1] + 2.35, s[2]));
+        tl.to(lab, 0.5, { grip: 1 }).set(S => { S.items[i] = 1; });
+        poseTo(lab, 0.9, ik(s[0], s[1] + 4.8, s[2])); poseTo(lab, 1.8, ik(d[0], 6.0, d[2]));
+        poseTo(lab, 0.9, ik(d[0], d[1] + 2.35, d[2])); tl.to(lab, 0.5, { grip: 0 }).set(S => { S.items[i] = 2; });
+        poseTo(lab, 0.7, ik(d[0], 6.0, d[2]));
+      });
+      tl.wait(['Loaded · 5 grapple loads of scrap', 'Car spotted and chocked · blue flag up'], 2.5);
+      const v = V(0, 0, 0);
+      return { group: g, tl, init, reverse: mode === 'unload', cam: { pos: V(17, 15, 26), target: V(0, 2, 5) }, render(S) {
+        up.rotation.y = S.sl; boom.rotation.x = S.a1; stick.rotation.x = S.a2; grap.rotation.x = -(S.a1 + S.a2);
+        tines.forEach(t => { t.rotation.z = 0.8 - 0.7 * S.grip; });
+        g.updateMatrixWorld(true); grap.getWorldPosition(v); g.worldToLocal(v);
+        chunks.forEach((c, i) => {
+          const m = S.items[i];
+          if (m === 0) { c.position.set(src[i][0], src[i][1], src[i][2]); c.rotation.y = 0; }
+          else if (m === 1) { c.position.set(v.x, v.y - 2.35, v.z); c.rotation.y = S.sl; }
+          else { c.position.set(dst[i][0], dst[i][1], dst[i][2]); c.rotation.y = 0; }
+        });
+      } };
+    },
+
+    // Centerbeam: two big lumber forklifts load plywood bundles on both sides of the beam, then winch straps
+    'centerbeam'(ctx, mode) {
+      const g = new THREE.Group(), base = -0.24, deck = 1.29, BL = 2.44, BH = 0.6, BW = 1.22, SZ = 5.6, TZ = 0.78, r = 2.4, STAGE = 3.5;
+      const fl = forklift({ s: 1.4, fork: 1.6 }), fl2 = forklift({ s: 1.4, fork: 1.6 }), BACK = SZ + BW / 2 + fl.tip + 0.25;
+      g.add(pad(-7, 7, 2, 13)); g.add(pad(-7, 7, -13, -2)); safety(g, ctx); g.add(fl.g, fl2.g);
+      const liftFor = y => y - base - fl.top, jobs = [];
+      [-3, 0, 3].forEach(x => {
+        [-1, 1].forEach(s => [-0.8, 0.8].forEach(dx => g.add(box(0.12, 0.1, BW, P.lumber, x + dx, base + 0.05, s * SZ))));
+        jobs.push({ x, sy: base + 0.1 + BH + 0.06, ty: deck }, { x, sy: base + 0.1, ty: deck + BH + 0.04 });
+      });
+      const bundles = jobs.map(() => [1, -1].map(() => { const b = bundle(BL, BH, BW, P.ply); g.add(b); return b; }));
+      const straps = new THREE.Group(); g.add(straps);
+      [-3, 0, 3].forEach(x => [-0.6, 0.6].forEach(dx => [1, -1].forEach(s => {
+        straps.add(beam(V(x + dx, 5.05, s * 0.17), V(x + dx, deck + 2 * BH + 0.06, s * 1.42), 0.08, 0.02, P.strap));
+        straps.add(beam(V(x + dx, deck + 2 * BH + 0.06, s * 1.42), V(x + dx, 1.12, s * 1.46), 0.08, 0.02, P.strap));
+      })));
+      [-3, 0, 3].forEach(x => [-1, 1].forEach(s => [-0.6, 0.6].forEach(dx => g.add(box(0.2, 0.14, 0.14, M.dark, x + dx, 1.05, s * 1.48)))));
+      const init = { fx: jobs[0].x, fz: BACK, fh: 0, lift: 0, strap: 0, items: jobs.map(() => 0) };
+      const tl = timeline(init), n = jobs.length;
+      tl.wait(['Car spotted and chocked · both sides open', 'Unloaded · bundles back in the yard'], 1.4);
+      jobs.forEach((j, i) => {
+        const lab = [`Plywood bundles ${i + 1} of ${n} · both sides of the beam`, `Plywood bundles ${n - i} of ${n} · off both sides`];
+        shiftX(tl, lab, j.x, r); tl.to(lab, 0.6, { lift: liftFor(j.sy) });
+        driveTo(tl, lab, SZ + fl.fc); tl.set(S => { S.items[i] = 1; }); tl.to(lab, 0.4, { lift: liftFor(j.sy) + 0.1 });
+        driveTo(tl, lab, STAGE); tl.to(lab, 0.8, { lift: liftFor(j.ty) + 0.12 });
+        driveTo(tl, lab, TZ + fl.fc); tl.to(lab, 0.5, { lift: liftFor(j.ty) }); tl.set(S => { S.items[i] = 2; });
+        driveTo(tl, lab, BACK);
+      });
+      tl.to(['Straps winched tight over the load', 'Releasing the straps'], 1.6, { strap: 1 });
+      tl.wait(['Loaded · 12 plywood bundles, strapped', 'Car spotted and chocked · both sides open'], 2.5);
+      return { group: g, tl, init, reverse: mode === 'unload', cam: { pos: V(22, 15, 22), target: V(0, 2, 0) }, render(S) {
+        fl.place(S, base); fl2.place(S, base, true); straps.visible = S.strap > 0.5;
+        bundles.forEach((pair, i) => pair.forEach((b, k) => {
+          const m = S.items[i], j = jobs[i], s = k ? -1 : 1;
+          if (m === 0) b.position.set(j.x, j.sy, s * SZ);
+          else if (m === 1) { const [x, z] = fl.held(S, k === 1); b.position.set(x, base + S.lift + fl.top, z); }
+          else b.position.set(j.x, j.ty, s * TZ);
+        }));
+      } };
+    },
+
+    // Bulkhead flat: log loader with a top clamp sets log bundles between the bulkheads, then chains
+    'bulkhead'(ctx, mode) {
+      const g = new THREE.Group(), base = -0.24, deck = 1.34, LL = 5.4, LD = 2.4, LH = 0.88, SZ = 5.4, r = 2.0, STAGE = 3.7;
+      const fl = forklift({ s: 1.5, fork: 1.7, clamp: true }), BACK = SZ + LD / 2 + fl.tip + 0.25;
+      g.add(pad(-9, 9, 2, 14)); safety(g, ctx); g.add(fl.g);
+      const logs = () => {
+        const b = new THREE.Group();
+        for (let k = 0; k < 5; k++) { const o = cyl(0.23 + (k % 2) * 0.02, 0.23 + (k % 2) * 0.02, LL, P.log, 14); o.rotation.z = Math.PI / 2; o.position.set((k % 3 - 1) * 0.08, 0.24, -0.96 + 0.48 * k); b.add(o); }
+        for (let k = 0; k < 4; k++) { const o = cyl(0.22, 0.22, LL - 0.2, P.log, 14); o.rotation.z = Math.PI / 2; o.position.set((k % 2) * 0.1, 0.66, -0.72 + 0.48 * k); b.add(o); }
+        g.add(b); return b;
+      };
+      const liftFor = y => y - base - fl.top, jobs = [];
+      [-6, 0, 6].forEach(x => {
+        [-1.8, 1.8].forEach(dx => g.add(box(0.25, 0.15, LD + 0.2, P.lumber, x + dx, base + 0.075, SZ)));
+        jobs.push({ x, sy: base + 0.15 + LH, ty: deck }, { x, sy: base + 0.15, ty: deck + LH - 0.02 });
+      });
+      const bundles = jobs.map(logs);
+      const chains = new THREE.Group(); g.add(chains);
+      const topY = deck + 2 * LH;
+      [-6, 0, 6].forEach(x => [-1.6, 1.6].forEach(dx => {
+        chains.add(box(0.05, 0.05, LD + 0.1, P.strap, x + dx, topY, 0));
+        [-1, 1].forEach(s => chains.add(box(0.05, topY - deck, 0.05, P.strap, x + dx, (topY + deck) / 2, s * (LD / 2 + 0.05))));
+      }));
+      const init = { fx: jobs[0].x, fz: BACK, fh: 0, lift: 0, clamp: 0, chain: 0, items: jobs.map(() => 0) };
+      const tl = timeline(init), n = jobs.length;
+      tl.wait(['Car spotted and chocked · blue flag up', 'Unloaded · logs back on the deck'], 1.4);
+      jobs.forEach((j, i) => {
+        const lab = [`Log bundle ${i + 1} of ${n} · onto the car`, `Log bundle ${n - i} of ${n} · off the car`];
+        shiftX(tl, lab, j.x, r); tl.to(lab, 0.6, { lift: liftFor(j.sy) });
+        driveTo(tl, lab, SZ + fl.fc); tl.set(S => { S.items[i] = 1; }); tl.to(lab, 0.6, { clamp: 1, lift: liftFor(j.sy) + 0.12 });
+        driveTo(tl, lab, STAGE); tl.to(lab, 0.9, { lift: liftFor(j.ty) + 0.15 });
+        driveTo(tl, lab, fl.fc); tl.to(lab, 0.5, { lift: liftFor(j.ty) }); tl.to(lab, 0.5, { clamp: 0 }); tl.set(S => { S.items[i] = 2; });
+        driveTo(tl, lab, BACK);
+      });
+      tl.to(['Chaining the load down', 'Releasing the chains'], 1.6, { chain: 1 });
+      tl.wait(['Loaded · 6 log bundles, chained', 'Car spotted and chocked · blue flag up'], 2.5);
+      return { group: g, tl, init, reverse: mode === 'unload', cam: { pos: V(22, 14, 26), target: V(0, 2, 4) }, render(S) {
+        fl.place(S, base); chains.visible = S.chain > 0.5;
+        bundles.forEach((b, i) => {
+          const m = S.items[i], j = jobs[i];
+          if (m === 0) b.position.set(j.x, j.sy, SZ);
+          else if (m === 1) { const [x, z] = fl.held(S); b.position.set(x, base + S.lift + fl.top, z); }
+          else b.position.set(j.x, j.ty, 0);
+        });
+      } };
+    },
+
+    // Tank car: top-load at a rack; unload from the bottom outlet with a pump into a tank truck
+    'tank'(ctx, mode) {
+      const g = new THREE.Group(); safety(g, ctx);
+      const gc = hose(mode === 'load' ? [[-2.4, 1.0, 2.45], [-2.4, 0.35, 1.95], [-2.4, 1.2, 1.4], [-2.4, 1.75, 1.15]] : [[-2.7, 0.3, 3.0], [-2.6, 0.0, 2.2], [-2.4, 1.0, 1.4], [-2.4, 1.75, 1.15]], 0.02, P.ground);
+      g.add(gc);
+      if (mode === 'load') {
+        const PY = 4.95, Z0 = 2.4, Z1 = 4.6, X0 = -2.4, X1 = 2.4, ROOF = 7.4, AY = 6.4, AL = Z0 + 0.3;
+        g.add(pad(-9, 9, 2, 10.2));
+        [X0, X1].forEach(x => [Z0 + 0.1, Z1].forEach(z => g.add(box(0.22, ROOF + 0.24, 0.22, P.rack, x, (ROOF - 0.24) / 2, z))));
+        g.add(box(X1 - X0 + 0.4, 0.12, Z1 - Z0 + 0.3, P.rack, 0, PY - 0.06, (Z0 + Z1) / 2));
+        g.add(box(X1 - X0 + 1.4, 0.14, Z1 - Z0 + 1.8, P.rack, 0, ROOF, (Z0 + Z1) / 2 - 0.3));
+        [0.5, 1.0].forEach(h => { g.add(box(X1 - X0, 0.05, 0.05, P.yellow, 0, PY + h, Z1)); [X0, X1].forEach(x => g.add(box(0.05, 0.05, Z1 - Z0, P.yellow, x, PY + h, (Z0 + Z1) / 2))); });
+        const run = 5.2, rise = PY + 0.24, ang = Math.atan2(rise, run);
+        const stair = box(Math.hypot(run, rise), 0.12, 0.9, P.rack, X1 + run / 2 + 0.2, (PY - 0.24) / 2, Z1 - 0.6); stair.rotation.z = -ang; g.add(stair);
+        for (let i = 1; i < 12; i++) { const f = i / 12; g.add(box(0.28, 0.04, 0.9, P.yellow, X1 + 0.2 + run * f, PY - rise * f + 0.08, Z1 - 0.6)); }
+        const riser = cyl(0.1, 0.1, 7.0 - PY, P.pipe, 14); riser.position.set(0, (7.0 + PY) / 2, AL); g.add(riser);
+        const hdr = cyl(0.12, 0.12, X1 - X0, P.pipe, 14); hdr.rotation.z = Math.PI / 2; hdr.position.set(0, 7.0, AL); g.add(hdr);
+        const arm = new THREE.Group(); arm.position.set(0, AY, AL); g.add(arm);
+        const bm = cyl(0.09, 0.09, AL, P.pipe, 14); bm.rotation.x = Math.PI / 2; bm.position.z = -AL / 2; arm.add(bm);
+        const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 12), P.pipe); elbow.position.z = -AL; arm.add(elbow);
+        arm.add(cyl(0.17, 0.17, 0.3, M.dark, 16));
+        const tube = cyl(0.11, 0.11, 1, M.steel, 16); arm.add(tube);
+        const hood = cyl(0.13, 0.3, 0.22, M.dark, 20); arm.add(hood);
+        const gw = new THREE.Group(); gw.position.set(-1.5, PY, Z0); g.add(gw);
+        gw.add(box(1.0, 0.06, 2.0, P.rack, 0, 0, -1.0));
+        [-0.5, 0.5].forEach(x => { gw.add(box(0.04, 0.04, 2.0, P.yellow, x, 0.9, -1.0)); [-0.1, -1.0, -1.9].forEach(z => gw.add(box(0.04, 0.9, 0.04, P.yellow, x, 0.45, z))); });
+        const init = { gw: Math.PI / 2, lid: 0, arm: -Math.PI / 2, drop: 5.7, fill: 0, ground: 0 };
+        const tl = timeline(init);
+        tl.wait('Car spotted at the rack · chocked, blue flag up', 1.2).to('Grounding cable clamped on', 0.8, { ground: 1 })
+          .to('Lowering the gangway', 1.6, { gw: -0.38 }).to('Opening the manway', 0.8, { lid: 1.9 })
+          .to('Swinging the loading arm over the manway', 1.4, { arm: 0 }).to('Lowering the drop tube', 1.0, { drop: 4.45 })
+          .to(S => 'Filling · ' + Math.round(S.fill * 100) + '% · ' + fmt(S.fill * cap()) + ' gal', 7, { fill: 1 })
+          .to('Raising the drop tube', 1.0, { drop: 5.7 }).to('Stowing the arm', 1.2, { arm: -Math.PI / 2 })
+          .to('Closing the manway', 0.6, { lid: 0 }).to('Raising the gangway', 1.4, { gw: Math.PI / 2 }).to('Grounding cable off', 0.6, { ground: 0 })
+          .wait(() => 'Loaded · ' + fmt(cap()) + ' gal', 2.5);
+        const lidG = ctx.root.userData.lid;
+        return { group: g, tl, init, render(S) {
+          gw.rotation.x = S.gw; lidG.rotation.z = S.lid; arm.rotation.y = S.arm; grow(gc, S.ground);
+          const len = AY - S.drop; tube.scale.y = len; tube.position.set(0, -len / 2, -AL); hood.position.set(0, S.drop - AY + 0.35, -AL);
+        } };
+      }
+      g.add(pad(-9, 13, 2, 9.5));
+      const skid = new THREE.Group(); skid.position.set(-2.2, -0.24, 3.3); g.add(skid);
+      skid.add(box(1.5, 0.2, 1.0, M.steel, 0, 0.1, 0)); skid.add(box(0.6, 0.45, 0.5, P.yellow, -0.3, 0.42, 0));
+      const mo = cyl(0.22, 0.22, 0.7, P.blue, 16); mo.rotation.z = Math.PI / 2; mo.position.set(0.4, 0.45, 0); skid.add(mo);
+      const h1 = hose([[0, 0.95, 0], [0, 0.55, 0.6], [-1.0, 0.2, 1.9], [-1.8, 0.35, 3.0], [-2.0, 0.45, 3.2]], 0.07, M.dark);
+      const h2 = hose([[-1.6, 0.45, 3.6], [-1.4, 0.2, 4.0], [-1.0, 0.7, 4.35], [-1.0, 1.1, 4.5]], 0.07, M.dark);
+      g.add(h1, h2);
+      const tk = semi('tank'); tk.g.position.z = 5.6; g.add(tk.g);
+      const init = { tx: -34, h1: 0, h2: 0, ground: 0, fill: 0 };
+      const tl = timeline(init);
+      tl.wait('Car spotted at the transload spot · chocked, blue flag up', 1.2).to('Tank truck pulls up', 4, { tx: 0 })
+        .to('Grounding cable clamped on', 0.8, { ground: 1 }).to('Hose on the car’s bottom outlet', 1.2, { h1: 1 }).to('Hose on the truck', 1.0, { h2: 1 })
+        .to(S => 'Pumping into the truck · ' + fmt(S.fill * TRUCK_GAL) + ' of ' + fmt(TRUCK_GAL) + ' gal', 7, { fill: 1 })
+        .to('Disconnecting the hoses', 1.2, { h1: 0, h2: 0 }).to('Grounding cable off', 0.6, { ground: 0 })
+        .to('Truck pulls out', 4, { tx: 34 })
+        .wait(() => '1 truck = ' + fmt(TRUCK_GAL) + ' gal · ≈ ' + Math.ceil(cap() / TRUCK_GAL) + ' truckloads per car', 2.5);
+      return { group: g, tl, init, cam: { pos: V(5, 19, 19), target: V(-1, 0.6, 2.4) }, render(S) { tk.g.position.x = S.tx; grow(h1, S.h1); grow(h2, S.h2); grow(gc, S.ground); } };
+    }
+  };
+
+  function dispose(g) {
+    g.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material && !shared.has(o.material)) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); } });
+  }
+
+  function buildCurrent() {
+    const t = TYPES[current];
+    if (carGroup) { scene.remove(carGroup); dispose(carGroup); }
+    carGroup = new THREE.Group();
+    const carRoot = BUILD[t.id](t.mark); carGroup.add(carRoot);
+    const L = t.len - 1.0, trs = [truck(-(L / 2 - 2.0)), truck(L / 2 - 2.0)];
+    trs.forEach(o => carGroup.add(o));
+    carGroup.add(track(26));
+    scene.add(carGroup);
+    const bx = trs.map(o => o.position.x);
+    ctx = { root: carRoot, t, move(x) { carRoot.position.x = x; trs.forEach((o, i) => { o.position.x = bx[i] + x; }); } };
+    $('loadBtn').hidden = !SIMS[t.id];
+  }
+
+  let ctx = null, sim = null, simOn = false, simMode = 'load', simT = 0, simPaused = false, simSpeed = 1, lastT = performance.now();
+  const BASE_SPEED = 1.6;
+  function applySim() {
+    const r = runTimeline(sim, simT); sim.render(r.S);
+    $('simLabel').textContent = r.label; $('simBar').style.width = (100 * Math.min(1, simT / sim.tl.dur)).toFixed(1) + '%';
+  }
+  function simUI() {
+    $('loadBtn').setAttribute('aria-pressed', simOn ? 'true' : 'false'); $('sim').hidden = !simOn;
+    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === simMode ? 'true' : 'false'));
+    $('simPause').textContent = simPaused ? 'Play' : 'Pause'; $('simPause').setAttribute('aria-pressed', simPaused ? 'true' : 'false');
+    $('simSpeed').textContent = simSpeed + '×'; $('simSpeed').setAttribute('aria-pressed', simSpeed > 1 ? 'true' : 'false');
+  }
+  function startSim(mode) {
+    simMode = mode; buildCurrent();
+    sim = SIMS[TYPES[current].id](ctx, mode); sim.reverse = !!sim.reverse;
+    [-1, 1].forEach(s => { const tr = track(10); tr.position.x = s * 18; sim.group.add(tr); });
+    carGroup.add(sim.group); simOn = true; simT = 0; simPaused = false; applySim(); simUI();
+  }
+  function stopSim() { simOn = false; sim = null; buildCurrent(); simUI(); }
+  $('loadBtn').addEventListener('click', () => {
+    if (simOn) { stopSim(); return; }
+    startSim(simMode); controls.autoRotate = false; $('spin').setAttribute('aria-pressed', 'false'); setView('load');
+  });
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { if (simOn) { startSim(b.dataset.mode); setView('load'); } }));
+  $('simPause').addEventListener('click', () => { simPaused = !simPaused; simUI(); });
+  $('simSpeed').addEventListener('click', () => { simSpeed = simSpeed > 1 ? 1 : 2; simUI(); });
+  window.crcSimSeek = f => { if (sim) { simT = f * sim.tl.dur; applySim(); return sim.tl.dur; } };
+
+  // ---------- Camera ----------
+  function pose(name) {
+    const L = TYPES[current].len, t = new THREE.Vector3(0, 1.9, 0);
+    const p = {
+      three: new THREE.Vector3(L * 0.95, L * 0.3 + 2.2, L * 1.1),
+      side: new THREE.Vector3(0, 2.4, L * 1.6),
+      end: new THREE.Vector3(L * 0.5 + 6.5, 2.6, 2.2),
+      top: new THREE.Vector3(0.001, L * 1.8, 0.6),
+      under: new THREE.Vector3(-L * 0.32, 0.9, 5.2),
+      load: new THREE.Vector3(L * 0.8, L * 0.45 + 6, L * 1.25 + 9)
+    }[name];
+    if (name === 'under') t.set(-L * 0.28, 0.6, 0);
+    if (name === 'load') { if (sim && sim.cam) return { pos: sim.cam.pos.clone(), target: sim.cam.target.clone() }; t.set(0, 2.6, 4); }
+    return { pos: p, target: t };
+  }
+  function setView(name, instant) {
+    view = name;
+    document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === name ? 'true' : 'false'));
+    const { pos, target } = pose(name);
+    if (instant || reduceMotion) { camera.position.copy(pos); controls.target.copy(target); controls.update(); anim = null; return; }
+    anim = { t0: performance.now(), dur: 800, p0: camera.position.clone(), p1: pos, q0: controls.target.clone(), q1: target };
+  }
+  document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+    controls.autoRotate = false; $('spin').setAttribute('aria-pressed', 'false'); setView(b.dataset.view);
+  }));
+  $('spin').addEventListener('click', () => {
+    controls.autoRotate = !controls.autoRotate; $('spin').setAttribute('aria-pressed', controls.autoRotate ? 'true' : 'false');
+  });
+
+  // ---------- Loop ----------
+  function resize() { const w = stageEl.clientWidth, h = stageEl.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  new ResizeObserver(resize).observe(stageEl); resize();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+    if (simOn) { if (!simPaused) { simT += dt * BASE_SPEED * simSpeed; if (simT > sim.tl.dur) simT = 0; } applySim(); }
+    if (anim) {
+      const k = Math.min(1, (now - anim.t0) / anim.dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      camera.position.lerpVectors(anim.p0, anim.p1, e); controls.target.lerpVectors(anim.q0, anim.q1, e);
+      if (k >= 1) anim = null;
+    }
+    controls.update(); renderer.render(scene, camera); requestAnimationFrame(frame);
+  }
+  const start = () => { renderPanel(); buildCurrent(); setView('three', true); requestAnimationFrame(frame); };
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start, start);
+})();
+</script>
+
+</body></html>
