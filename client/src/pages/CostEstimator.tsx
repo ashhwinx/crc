@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Calculator,
   FileText,
-  Truck,
   ShieldCheck,
   Wrench,
   Copy,
@@ -12,6 +11,7 @@ import {
   ArrowRight,
   Bookmark,
 } from 'lucide-react';
+import { IconTruck } from '@tabler/icons-react';
 import {
   ESTIMATOR_EQUIPMENT_DATA,
   LEASE_TERM_OPTIONS,
@@ -641,181 +641,190 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                 ------------------------------------------------------------------- */}
             <div className="estimator-sidebar-col">
               <div className="estimator-summary-card">
-                {/* Executive Top Banner */}
-                <div className="benchmark-card-header">
-                  <div className="benchmark-header-left">
-                    <span className="benchmark-dot" />
-                    <span className="benchmark-eyebrow">CRC Rail Desk</span>
+                {/* Equipment & Fleet Scope */}
+                <div style={{ marginBottom: '0.85rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.15rem' }}>
+                    <h3 style={{ fontSize: '1.18rem', fontWeight: 800, color: '#0A0A09', margin: 0, lineHeight: 1.25, letterSpacing: '-0.015em' }}>
+                      {currentCategory.name}
+                    </h3>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0A0A09', backgroundColor: '#F1F5F9', padding: '0.12rem 0.45rem', borderRadius: '3px' }}>
+                      {quantity} {quantity === 1 ? 'Railcar' : 'Railcars'}
+                    </span>
                   </div>
-           
-                </div>
-
-                <div className="summary-card-body">
-                  {/* Category Title & Equipment Profile */}
-                  <div className="summary-header">
-                    <h3 className="summary-title">{currentCategory.name}</h3>
-                    <div className="summary-subtitle">
-                      {currentSize.name} &bull; <strong>{quantity} {quantity === 1 ? 'Railcar' : 'Railcars'}</strong>
-                    </div>
-                  </div>
-
-                  {/* Primary Rate Box */}
-                  <div className="summary-rate-box">
-                    <span className="summary-rate-label">Estimated Monthly Rate</span>
-                    <div className="summary-rate-value">
-                      {formatCur(calculation.minRate)} – {formatCur(calculation.maxRate)}
-                    </div>
-                    <div className="summary-rate-unit">
-                      per car / month &bull; {leaseType === 'full' ? 'Full-Service (Maintenance Included)' : 'Net Lease (Lessee Maintained)'}
-                    </div>
-                  </div>
-
-                  {/* Clean Ledger Breakdown */}
-                  <div className="summary-metrics-list">
-                    <div className="summary-metric-row highlight">
-                      <span className="metric-label">Monthly Fleet Total</span>
-                      <strong className="metric-val primary">
-                        {formatCur(calculation.totalMinMonthly)} – {formatCur(calculation.totalMaxMonthly)}/mo
-                      </strong>
-                    </div>
-
-                    <div className="summary-metric-row">
-                      <span className="metric-label">Annualized Fleet Budget</span>
-                      <strong className="metric-val">
-                        {formatCur(calculation.totalMinAnnual)} – {formatCur(calculation.totalMaxAnnual)}/yr
-                      </strong>
-                    </div>
-
-                    <div className="summary-metric-row">
-                      <span className="metric-label">Term Commitment</span>
-                      <span className="metric-text">{termOption.name}</span>
-                    </div>
-
-                    {volumeDiscount < 1.0 && (
-                      <div className="summary-metric-row discount-row">
-                        <span className="metric-label">Volume Tier Discount</span>
-                        <span className="discount-tag">
-                          -{Math.round((1 - volumeDiscount) * 100)}% Volume Applied
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="summary-metric-row subtle-row">
-                      <span className="metric-label" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Truck size={13} style={{ color: '#2563EB' }} />
-                        Highway Relief
-                      </span>
-                      <span className="metric-text">
-                        ~{calculation.trucksReplacedMin}–{calculation.trucksReplacedMax} semi-trucks
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Primary Call to Action */}
-                  <div className="summary-actions">
-                    <button
-                      type="button"
-                      onClick={handleTransferToQuote}
-                      className="summary-cta-btn"
-                    >
-                      <span>Request Official Quote with Estimate</span>
-                      <ArrowRight size={17} style={{ flexShrink: 0 }} />
-                    </button>
-
-                    {/* Backend Formal Estimate Persistence */}
-                    {savedEstimateRef ? (
-                      <div
-                        style={{
-                          backgroundColor: '#F0FDF4',
-                          border: '1px solid #BBF7D0',
-                          borderRadius: '6px',
-                          padding: '0.65rem 0.85rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          fontSize: '0.82rem',
-                          color: '#166534',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                          <Check size={14} style={{ color: '#16A34A', flexShrink: 0 }} />
-                          <span>Estimate Saved: <strong>{savedEstimateRef}</strong></span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(savedEstimateRef);
-                            setCopied(true);
-                            setTimeout(() => setCopied(false), 2000);
-                          }}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                            color: '#15803D',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '2px',
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
-                          }}
-                        >
-                          <Copy size={12} />
-                          <span>Copy ID</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleSaveEstimate}
-                        disabled={isSaving}
-                        style={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '0.45rem',
-                          padding: '0.65rem 1rem',
-                          borderRadius: '6px',
-                          border: '1px solid #CBD5E1',
-                          backgroundColor: '#F8FAFC',
-                          color: '#0F172A',
-                          fontSize: '0.85rem',
-                          fontWeight: 700,
-                          cursor: isSaving ? 'wait' : 'pointer',
-                          transition: 'all 150ms ease',
-                        }}
-                      >
-                        <Bookmark size={14} style={{ color: '#AA2E1F' }} />
-                        <span>{isSaving ? 'Generating Formal CRC Ref...' : 'Save & Generate Estimate Ref'}</span>
-                      </button>
-                    )}
-
-                    <div className="summary-secondary-actions">
-                      <button
-                        type="button"
-                        onClick={handleCopySummary}
-                        className="sublink-btn"
-                      >
-                        {copied ? <Check size={13} style={{ color: '#059669' }} /> : <Copy size={13} />}
-                        <span>{copied ? 'Summary Copied!' : 'Copy Estimate'}</span>
-                      </button>
-
-                      <Link
-                        to="/book-a-call"
-                        className="sublink-btn"
-                      >
-                        <PhoneCall size={13} />
-                        <span>Speak with Desk</span>
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Footnote */}
-                  <p className="summary-disclaimer">
-                    *Indicative benchmark for capital budgeting. Formal quote confirmed upon siding inspection and credit review.
+                  <p style={{ fontSize: '0.80rem', color: '#64748B', margin: 0, lineHeight: 1.35 }}>
+                    {currentSize.name} &bull; {leaseType === 'full' ? 'Full-Service Lease' : 'Net Lease'}
                   </p>
                 </div>
+
+                {/* Estimated Monthly Rate Box - Clean Industrial Data Specs (Aligned with Home Page) */}
+                <div className="estimator-rate-box">
+                  <div className="estimator-rate-top">
+                    <span className="estimator-rate-label">ESTIMATED MONTHLY RATE</span>
+                  </div>
+                  <div className="estimator-rate-display">
+                    <span className="estimator-rate-numbers">
+                      {formatCur(calculation.minRate)} – {formatCur(calculation.maxRate)}
+                    </span>
+                    <span className="estimator-rate-unit">/ car / mo</span>
+                  </div>
+                  <div className="estimator-rate-desc">
+                    {leaseType === 'full'
+                      ? 'Includes AAR Rule 88 maintenance & wheelset renewals'
+                      : 'Net lease structure; lessee maintained & FRA certified'}
+                  </div>
+                </div>
+
+                {/* Structured Breakdown Specs */}
+                <div className="estimator-specs-list">
+                  <div className="estimator-fleet-total-row">
+                    <span className="estimator-spec-name">Monthly Fleet Total ({quantity} {quantity === 1 ? 'car' : 'cars'})</span>
+                    <strong className="estimator-fleet-total-val">
+                      {formatCur(calculation.totalMinMonthly)} – {formatCur(calculation.totalMaxMonthly)} <span style={{ fontSize: '0.75rem', fontWeight: 500, color: '#64748B' }}>/mo</span>
+                    </strong>
+                  </div>
+
+                  <div className="estimator-spec-row">
+                    <span className="estimator-spec-name">Annualized Fleet Budget</span>
+                    <strong className="estimator-spec-val">
+                      {formatCur(calculation.totalMinAnnual)} – {formatCur(calculation.totalMaxAnnual)}/yr
+                    </strong>
+                  </div>
+
+                  <div className="estimator-spec-row">
+                    <span className="estimator-spec-name">Term Commitment</span>
+                    <strong className="estimator-spec-val">{termOption.name}</strong>
+                  </div>
+
+                  {volumeDiscount < 1.0 && (
+                    <div className="estimator-spec-row" style={{ backgroundColor: '#F8FAFC', padding: '0.35rem 0.5rem', borderRadius: '3px' }}>
+                      <span className="estimator-spec-name" style={{ color: '#047857', fontWeight: 600 }}>Volume Tier Discount</span>
+                      <strong className="estimator-spec-val" style={{ color: '#047857' }}>
+                        -{Math.round((1 - volumeDiscount) * 100)}% Volume Applied
+                      </strong>
+                    </div>
+                  )}
+
+                  <div className="estimator-displacement-row">
+                    <IconTruck size={15} stroke={1.8} style={{ color: '#AA2E1F', flexShrink: 0 }} />
+                    <span>
+                      <strong>~{calculation.trucksReplacedMin}–{calculation.trucksReplacedMax}</strong> highway trucks displaced
+                    </span>
+                  </div>
+                </div>
+
+                {/* Primary Call to Action & Secondary Tools */}
+                <div className="summary-actions">
+                  <button
+                    type="button"
+                    onClick={handleTransferToQuote}
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%',
+                      justifyContent: 'center',
+                      padding: '0.75rem 1.15rem',
+                      borderRadius: '4px',
+                      fontSize: '0.90rem',
+                      fontWeight: 700,
+                      marginBottom: '0.45rem',
+                    }}
+                  >
+                    <span>Request Official Quote with Estimate</span>
+                    <ArrowRight size={16} />
+                  </button>
+
+                  {/* Backend Formal Estimate Persistence */}
+                  {savedEstimateRef ? (
+                    <div
+                      style={{
+                        backgroundColor: '#F0FDF4',
+                        border: '1px solid #BBF7D0',
+                        borderRadius: '4px',
+                        padding: '0.55rem 0.8rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '0.82rem',
+                        color: '#166534',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <Check size={14} style={{ color: '#16A34A', flexShrink: 0 }} />
+                        <span>Estimate Saved: <strong>{savedEstimateRef}</strong></span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(savedEstimateRef);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#15803D',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                        }}
+                      >
+                        <Copy size={12} />
+                        <span>Copy ID</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSaveEstimate}
+                      disabled={isSaving}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.45rem',
+                        padding: '0.55rem 0.85rem',
+                        borderRadius: '4px',
+                        border: '1px solid #E2E8F0',
+                        backgroundColor: '#FAF9F7',
+                        color: '#0A0A09',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        cursor: isSaving ? 'wait' : 'pointer',
+                        transition: 'all 150ms ease',
+                      }}
+                    >
+                      <Bookmark size={14} style={{ color: '#AA2E1F' }} />
+                      <span>{isSaving ? 'Generating Formal CRC Ref...' : 'Save & Generate Estimate Ref'}</span>
+                    </button>
+                  )}
+
+                  <div className="summary-secondary-actions">
+                    <button
+                      type="button"
+                      onClick={handleCopySummary}
+                      className="sublink-btn"
+                    >
+                      {copied ? <Check size={13} style={{ color: '#059669' }} /> : <Copy size={13} />}
+                      <span>{copied ? 'Summary Copied!' : 'Copy Estimate'}</span>
+                    </button>
+
+                    <Link
+                      to="/book-a-call"
+                      className="sublink-btn"
+                    >
+                      <PhoneCall size={13} />
+                      <span>Speak with Desk</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Footnote */}
+                <p style={{ fontSize: '0.66rem', color: '#94A3B8', margin: 0, textAlign: 'center', lineHeight: 1.35 }}>
+                  *Indicative market rate for capital budgeting. Formal quote confirmed upon siding inspection and credit review.
+                </p>
               </div>
             </div>
           </div>
@@ -1524,224 +1533,126 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
           top: calc(var(--header-height, 74px) + 12px);
           background-color: #FFFFFF;
           border: 1px solid #DCE3EB;
-          border-radius: 12px;
-          box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-          overflow: hidden;
-          max-height: calc(100vh - 92px);
-          overflow-y: auto;
-          scrollbar-width: thin;
-        }
-
-        /* Top Executive Header */
-        .benchmark-card-header {
-          background-color: #0A0A09;
-          padding: 0.7rem 1.15rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 2px solid #AA2E1F;
-        }
-
-        .benchmark-header-left {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .benchmark-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background-color: #ffffff;
-          display: inline-block;
-          flex-shrink: 0;
-        }
-
-        .benchmark-eyebrow {
-          font-size: 0.72rem;
-          font-weight: 700;
-          color: #EDE6D4;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-
-        .benchmark-source-pill {
-          font-size: 0.68rem;
-          font-weight: 600;
-          color: #94A3B8;
-          background-color: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          padding: 0.15rem 0.5rem;
-          border-radius: 4px;
-          letter-spacing: 0.03em;
-        }
-
-        .summary-card-body {
-          padding: 1rem 1.15rem 0.9rem 1.15rem;
-        }
-
-        .summary-header {
-          margin-bottom: 0.75rem;
-        }
-
-        .summary-title {
-          font-size: 1.22rem;
-          font-weight: 800;
-          color: #0A0A09;
-          margin: 0 0 0.15rem 0;
-          line-height: 1.2;
-        }
-
-        .summary-subtitle {
-          font-size: 0.80rem;
-          color: #64748B;
-          line-height: 1.3;
-        }
-
-        .summary-rate-box {
-          background: linear-gradient(180deg, #FAF8F5 0%, #F5F1EB 100%);
-          border: 1px solid #EADBCC;
-          border-left: 3px solid #059669;
           border-radius: 8px;
-          padding: 0.75rem 0.95rem;
-          margin-bottom: 0.75rem;
+          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+          padding: 1.25rem 1.25rem 1.15rem;
+          box-sizing: border-box;
+          overflow: visible;
         }
 
-        .summary-rate-label {
+        /* Estimated Monthly Rate Box - Matches Home.tsx */
+        .estimator-rate-box {
+          background-color: #FAF9F7;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 0.8rem 1rem;
+          margin-bottom: 0.85rem;
+        }
+
+        .estimator-rate-top {
+          margin-bottom: 0.25rem;
+        }
+
+        .estimator-rate-label {
           display: block;
-          font-size: 0.68rem;
+          font-size: 0.70rem;
           font-weight: 700;
-          color: #8C7B68;
-          text-transform: uppercase;
+          color: #047857;
           letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+
+        .estimator-rate-display {
+          display: flex;
+          align-items: baseline;
+          gap: 0.4rem;
           margin-bottom: 0.15rem;
         }
 
-        .summary-rate-value {
-          font-size: 1.6rem;
+        .estimator-rate-numbers {
+          font-family: var(--font-heading);
+          font-size: 1.75rem;
           font-weight: 800;
           color: #047857;
-          font-family: var(--font-heading);
           letter-spacing: -0.02em;
           line-height: 1.1;
-          margin-bottom: 0.15rem;
         }
 
-        .summary-rate-unit {
+        .estimator-rate-unit {
+          font-size: 0.78rem;
+          color: #64748B;
+          font-weight: 500;
+        }
+
+        .estimator-rate-desc {
           font-size: 0.74rem;
           color: #64748B;
-          line-height: 1.2;
+          line-height: 1.35;
         }
 
-        /* Metric Rows */
-        .summary-metrics-list {
+        /* Structured Spec Breakdown - Matches Home.tsx */
+        .estimator-specs-list {
           display: flex;
           flex-direction: column;
-          margin-bottom: 0.75rem;
+          gap: 0.35rem;
+          margin-bottom: 0.85rem;
         }
 
-        .summary-metric-row {
+        .estimator-fleet-total-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0.38rem 0;
-          border-bottom: 1px solid #F1F5F9;
+          background-color: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 4px;
+          padding: 0.48rem 0.75rem;
           font-size: 0.80rem;
-          gap: 0.5rem;
         }
 
-        .summary-metric-row.highlight {
-          background-color: #F0FDF4;
-          border: 1px solid #DCFCE7;
-          border-radius: 6px;
-          padding: 0.45rem 0.6rem;
-          margin: 0.1rem 0 0.25rem 0;
-        }
-
-        .summary-metric-row.subtle-row {
-          border-bottom: none;
-          padding-top: 0.38rem;
-        }
-
-        .metric-label {
-          color: #475569;
-          font-size: 0.78rem;
-        }
-
-        .metric-val {
+        .estimator-fleet-total-val {
           color: #0A0A09;
-          font-weight: 700;
-          text-align: right;
-          font-size: 0.82rem;
-        }
-
-        .metric-val.primary {
-          color: #047857;
           font-weight: 800;
-          font-size: 0.90rem;
+          font-size: 0.92rem;
         }
 
-        .metric-text {
+        .estimator-spec-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.32rem 0;
+          border-bottom: 1px dashed #E2E8F0;
+          font-size: 0.80rem;
+        }
+
+        .estimator-spec-name {
+          color: #64748B;
+        }
+
+        .estimator-spec-val {
           color: #0A0A09;
           font-weight: 600;
+        }
+
+        .estimator-displacement-row {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding-top: 0.25rem;
           font-size: 0.78rem;
-          text-align: right;
-        }
-
-        .discount-row {
-          background-color: #ECFDF5;
-          border: 1px solid #A7F3D0;
-          border-radius: 6px;
-          padding: 0.3rem 0.5rem;
-          margin: 0.15rem 0;
-        }
-
-        .discount-tag {
-          font-size: 0.72rem;
-          font-weight: 700;
-          color: #059669;
+          color: #475569;
         }
 
         /* Actions */
         .summary-actions {
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
-          margin-bottom: 0.6rem;
-        }
-
-        .summary-cta-btn {
-          width: 100% !important;
-          background-color: #AA2E1F !important;
-          color: #FFFFFF !important;
-          border: 1px solid #91271A !important;
-          border-radius: 7px !important;
-          padding: 0.75rem 0.85rem !important;
-          font-size: 0.86rem !important;
-          font-weight: 700 !important;
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 0.45rem !important;
-          cursor: pointer !important;
-          transition: all 180ms ease !important;
-          white-space: normal !important;
-          word-break: normal !important;
-          text-align: center !important;
-          line-height: 1.2 !important;
-          box-shadow: 0 4px 12px rgba(170, 46, 31, 0.22) !important;
-          text-decoration: none !important;
-        }
-
-        .summary-cta-btn:hover {
-          background-color: #8F2619 !important;
-          transform: translateY(-1px) !important;
-          box-shadow: 0 6px 16px rgba(170, 46, 31, 0.3) !important;
+          gap: 0.45rem;
+          margin-bottom: 0.65rem;
         }
 
         .summary-secondary-actions {
           display: flex;
-          gap: 0.4rem;
+          gap: 0.5rem;
         }
 
         .sublink-btn {
@@ -1750,11 +1661,11 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
           align-items: center;
           justify-content: center;
           gap: 0.35rem;
-          padding: 0.42rem 0.5rem;
-          background-color: #F8FAFC;
+          padding: 0.45rem 0.5rem;
+          background-color: #FAF9F7;
           border: 1px solid #E2E8F0;
-          border-radius: 6px;
-          font-size: 0.72rem;
+          border-radius: 4px;
+          font-size: 0.75rem;
           font-weight: 600;
           color: #475569;
           text-decoration: none;
@@ -1764,8 +1675,8 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
         }
 
         .sublink-btn:hover {
-          background-color: #EDE6D4;
-          color: #0A0A09;
+          background-color: #FFFFFF;
+          color: #AA2E1F;
           border-color: #CBD5E1;
         }
 
