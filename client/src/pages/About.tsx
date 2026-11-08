@@ -16,16 +16,27 @@ export const About: React.FC = () => {
           overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
-            backgroundPosition: 'center 38%',
-            backgroundSize: 'cover',
-            opacity: 0.3,
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <picture>
+            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
+            <img
+              src="/images/hero/DSC_0004.jpg"
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 38%',
+                opacity: 0.3,
+              }}
+            />
+          </picture>
+        </div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '720px' }}>
             <h1

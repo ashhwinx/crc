@@ -424,17 +424,25 @@ export const Home: React.FC = () => {
       >
         {/* Background Image Container with overflow hidden to clip scaled image */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 1, pointerEvents: 'none' }}>
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
-              backgroundPosition: 'center 38%',
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              transform: 'scale(1.02)',
-            }}
-          />
+          <picture>
+            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
+            <img
+              src="/images/hero/DSC_0004.jpg"
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 38%',
+                transform: 'scale(1.02)',
+              }}
+            />
+          </picture>
           <div
             style={{
               position: 'absolute',

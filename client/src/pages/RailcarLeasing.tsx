@@ -151,17 +151,27 @@ export const RailcarLeasing: React.FC = () => {
     <div className="railcar-leasing-page">
       {/* Header Banner */}
       <section className="catalog-hero-section" style={{ position: 'relative', overflow: 'hidden' }}>
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
-            backgroundPosition: 'center 38%',
-            backgroundSize: 'cover',
-            opacity: 0.28,
-            pointerEvents: 'none',
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <picture>
+            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
+            <img
+              src="/images/hero/DSC_0004.jpg"
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 38%',
+                opacity: 0.28,
+              }}
+            />
+          </picture>
+        </div>
         <div
           style={{
             position: 'absolute',

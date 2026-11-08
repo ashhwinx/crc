@@ -3,7 +3,24 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'static-assets-cache',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (
+            req.url &&
+            (req.url.startsWith('/images/') ||
+              req.url.match(/\.(jpg|jpeg|png|webp|svg|gif|ico|woff2?)$/i))
+          ) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+          }
+          next();
+        });
+      },
+    },
+  ],
   build: {
     target: 'es2020',
     cssCodeSplit: true,

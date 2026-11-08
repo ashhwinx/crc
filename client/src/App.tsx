@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { PageLoadingFallback } from './components/common/LoadingFallback';
@@ -19,6 +19,36 @@ const BookCall = lazy(() => import('./pages/BookCall').then((m) => ({ default: m
 const NotFound = lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })));
 
 export const App: React.FC = () => {
+  // Idle prefetching for critical equipment & fleet images so all tab/page transitions are instant
+  useEffect(() => {
+    const criticalImages = [
+      '/images/hero/DSC_0004.webp',
+      '/images/hero/DSC_0004.jpg',
+      '/images/equipment/category-covered-hoppers.jpg',
+      '/images/equipment/category-boxcars.jpg',
+      '/images/equipment/category-open-top-hoppers.jpg',
+      '/images/equipment/category-tank-cars.jpg',
+      '/images/equipment/category-gondolas.jpg',
+      '/images/equipment/category-centerbeam.jpg',
+      '/images/equipment/category-bulkhead.jpg',
+      '/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg',
+      '/images/Trains serving industries-additional railcar images/DSC09750(1).jpg',
+    ];
+
+    const prefetch = () => {
+      criticalImages.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    if ('requestIdleCallback' in window) {
+      (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(prefetch);
+    } else {
+      setTimeout(prefetch, 1000);
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Layout>

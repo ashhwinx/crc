@@ -100,16 +100,27 @@ export const CompanyValues: React.FC = () => {
           overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url('/images/hero/DSC_0004.jpg')`,
-            backgroundPosition: 'center 38%',
-            backgroundSize: 'cover',
-            opacity: 0.3,
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <picture>
+            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
+            <img
+              src="/images/hero/DSC_0004.jpg"
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+              decoding="async"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 38%',
+                opacity: 0.3,
+              }}
+            />
+          </picture>
+        </div>
         <div
           style={{
             position: 'absolute',
@@ -473,7 +484,7 @@ export const CompanyValues: React.FC = () => {
           backgroundColor: '#FAF9F7',
           padding: '4rem 0',
           borderBottom: '1px solid #E8E5DF',
-        }}
+        }}  
       >
         <div className="container">
           <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', marginBottom: '2.5rem' }}>
