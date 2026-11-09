@@ -914,12 +914,15 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                         {guideItem.industriesServed.description}
                       </p>
 
-                      <div className="guide-sectors-chips">
-                        {guideItem.industriesServed.sectors.map((sec, sIdx) => (
-                          <span key={sIdx} className="sector-chip">
-                            &bull; {sec}
-                          </span>
-                        ))}
+                      <div className="guide-sectors-wrap">
+                        <span className="guide-sectors-label">Primary Commodities &amp; Applications:</span>
+                        <div className="guide-sectors-chips">
+                          {guideItem.industriesServed.sectors.map((sec, sIdx) => (
+                            <span key={sIdx} className="sector-chip">
+                              {sec}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1792,16 +1795,16 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
         .guide-industry-callout {
           background-color: #F8FAFC;
           border: 1px solid #E2E8F0;
-          border-left: 3px solid #AA2E1F;
-          border-radius: 8px;
-          padding: 1.1rem;
+          border-radius: 6px;
+          padding: 1.25rem;
         }
 
         .guide-industry-title {
-          font-size: 0.95rem;
+          font-size: 0.98rem;
           font-weight: 700;
           color: #0A0A09;
-          margin: 0 0 0.35rem 0;
+          margin: 0 0 0.4rem 0;
+          line-height: 1.4;
         }
 
         .guide-industry-desc {
@@ -1811,20 +1814,42 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
           margin: 0 0 0.85rem 0;
         }
 
+        .guide-sectors-wrap {
+          padding-top: 0.75rem;
+          border-top: 1px solid #E2E8F0;
+        }
+
+        .guide-sectors-label {
+          display: block;
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          margin-bottom: 0.5rem;
+        }
+
         .guide-sectors-chips {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.4rem;
+          gap: 0.45rem;
         }
 
         .sector-chip {
           background-color: #FFFFFF;
-          border: 1px solid #CBD5E1;
-          color: #334155;
-          font-size: 0.78rem;
-          font-weight: 600;
-          padding: 0.2rem 0.55rem;
-          border-radius: 999px;
+          border: 1px solid #E2E8F0;
+          color: #1E293B;
+          font-size: 0.80rem;
+          font-weight: 500;
+          padding: 0.28rem 0.6rem;
+          border-radius: 4px;
+          line-height: 1.35;
+          transition: all 140ms ease;
+        }
+
+        .sector-chip:hover {
+          border-color: #CBD5E1;
+          color: #0A0A09;
         }
 
         /* Spec Table */
@@ -2282,19 +2307,32 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
           }
 
           .guide-industry-callout {
-            padding: 0.75rem 0.85rem;
+            padding: 0.85rem 0.95rem;
+            border-radius: 6px;
           }
 
           .guide-industry-title {
-            font-size: 0.88rem;
+            font-size: 0.90rem;
           }
 
           .guide-industry-desc {
-            font-size: 0.80rem;
+            font-size: 0.82rem;
+            margin-bottom: 0.65rem;
+          }
+
+          .guide-sectors-wrap {
+            padding-top: 0.65rem;
+          }
+
+          .guide-sectors-label {
+            font-size: 0.68rem;
+            margin-bottom: 0.4rem;
           }
 
           .sector-chip {
-            font-size: 0.72rem;
+            font-size: 0.75rem;
+            padding: 0.22rem 0.5rem;
+            border-radius: 3px;
           }
 
           .sizes-spec-table th, .sizes-spec-table td {
