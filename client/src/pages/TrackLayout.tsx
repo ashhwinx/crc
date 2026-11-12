@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { TrackVisualizerCanvas } from '../features/track-layout/TrackVisualizerCanvas';
 import { LAYOUT_PRESETS, RAILCAR_PROFILES } from '../features/track-layout/constants';
+import { SatelliteSitePlanner } from '../features/track-layout/SatelliteSitePlanner';
 import type {
   TrackLayoutPreset,
   RailcarCategoryKey,
@@ -28,6 +29,9 @@ import type {
 
 export const TrackLayout: React.FC = () => {
   const navigate = useNavigate();
+
+  // Primary Studio Mode: Interactive Satellite Site Planner vs 3D Geometry Studio
+  const [activeStudioMode, setActiveStudioMode] = useState<'satellite' | '3d'>('satellite');
 
   // State
   const [selectedPresetId, setSelectedPresetId] = useState<TrackLayoutPreset>('single-spur');
@@ -163,7 +167,7 @@ AAR & FRA Compliance: Verified 13-ft track centerlines and 8-ft-6-in dock cleara
         <div className="container">
           <div style={{ maxWidth: '880px' }}>
             <span className="eyebrow eyebrow-dark">
-              Engineering Architecture &bull; Phase 2 Interactive Visualization
+              Industrial Site Selection &bull; Rail Infrastructure &amp; Layout Planning
             </span>
             <h1
               style={{
@@ -175,11 +179,11 @@ AAR & FRA Compliance: Verified 13-ft track centerlines and 8-ft-6-in dock cleara
                 marginBottom: '1.25rem',
               }}
             >
-              3D Railway Track Layout Visualizer
+              Interactive Site Selection &amp; Track Planning Studio
             </h1>
             <p style={{ fontSize: '1.18rem', color: '#CBD5E1', lineHeight: 1.7, marginBottom: '2rem' }}>
-              Model private sidings, simulate railcar spotting capacity, verify switch clearance fouling points,
-              and optimize industrial freight flow using interactive browser-based 3D WebGL technology.
+              Identify prospective industrial properties, trace conceptual rail spurs over satellite imagery,
+              simulate railcar spotting capacity, and verify AREMA fouling clearance geometry using interactive visual tools.
             </p>
 
             {/* Highlights */}
@@ -195,15 +199,19 @@ AAR & FRA Compliance: Verified 13-ft track centerlines and 8-ft-6-in dock cleara
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
                 <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>AAR &amp; FRA Clearance Geometry</span>
+                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Satellite Property Layouts</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
                 <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>7 Industrial Freight Car Classes</span>
+                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Spur, Switch &amp; Dock Drawing</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
                 <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Live Siding Spotting &amp; Payload Calc</span>
+                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>Siding Spotting &amp; Cost Analysis</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#AA2E1F', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.88rem', color: '#E2E8F0', fontWeight: 500 }}>AREMA Clearance Geometry</span>
               </div>
             </div>
           </div>
@@ -211,19 +219,115 @@ AAR & FRA Compliance: Verified 13-ft track centerlines and 8-ft-6-in dock cleara
       </section>
 
       {/* =========================================================================
-          MAIN INTERACTIVE WORKSPACE (Canvas + Controls)
+          MAIN INTERACTIVE WORKSPACE (Satellite Planner or 3D Visualizer)
           ========================================================================= */}
       <section className="section section-white" style={{ paddingTop: '2.5rem', paddingBottom: '4.5rem' }}>
         <div className="container">
+          {/* Mode Switcher Tabs */}
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '2rem',
-              alignItems: 'start',
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '2.5rem',
             }}
-            className="track-visualizer-grid"
           >
+            <div
+              style={{
+                display: 'inline-flex',
+                padding: '6px',
+                backgroundColor: '#0F172A',
+                borderRadius: '10px',
+                border: '1px solid #334155',
+                gap: '8px',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveStudioMode('satellite')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.65rem',
+                  padding: '0.75rem 1.4rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: activeStudioMode === 'satellite' ? '#AA2E1F' : 'transparent',
+                  color: activeStudioMode === 'satellite' ? '#FFFFFF' : '#94A3B8',
+                  fontWeight: 700,
+                  fontSize: '0.92rem',
+                  cursor: 'pointer',
+                  transition: 'all 150ms ease',
+                }}
+              >
+                <Layers size={18} />
+                <span>Satellite Site Selection &amp; Spur Planner</span>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    backgroundColor: activeStudioMode === 'satellite' ? 'rgba(255,255,255,0.22)' : 'rgba(148, 163, 184, 0.15)',
+                    color: '#FFFFFF',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    fontWeight: 700,
+                  }}
+                >
+                  Satellite Map
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveStudioMode('3d')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.65rem',
+                  padding: '0.75rem 1.4rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: activeStudioMode === '3d' ? '#AA2E1F' : 'transparent',
+                  color: activeStudioMode === '3d' ? '#FFFFFF' : '#94A3B8',
+                  fontWeight: 700,
+                  fontSize: '0.92rem',
+                  cursor: 'pointer',
+                  transition: 'all 150ms ease',
+                }}
+              >
+                <Box size={18} />
+                <span>3D Clearance &amp; Spotting Studio</span>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    backgroundColor: activeStudioMode === '3d' ? 'rgba(255,255,255,0.22)' : 'rgba(148, 163, 184, 0.15)',
+                    color: '#FFFFFF',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    fontWeight: 700,
+                  }}
+                >
+                  3D WebGL
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {activeStudioMode === 'satellite' ? (
+            <SatelliteSitePlanner />
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr',
+                gap: '2rem',
+                alignItems: 'start',
+              }}
+              className="track-visualizer-grid"
+            >
             {/* -------------------------------------------------------------------
                 LEFT: 3D INTERACTIVE CANVAS & TOOLBAR
                 ------------------------------------------------------------------- */}
@@ -917,6 +1021,7 @@ AAR & FRA Compliance: Verified 13-ft track centerlines and 8-ft-6-in dock cleara
               </div>
             </div>
           </div>
+          )}
         </div>
       </section>
 

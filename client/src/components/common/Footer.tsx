@@ -36,18 +36,23 @@ export const Footer: React.FC = () => {
             </p>
             {/* Quick contact details */}
             <div className="footer-contacts">
-              <a href="tel:+18325551200" className="footer-contact-link">
+              <a href="tel:+19196707979" className="footer-contact-link">
                 <Phone size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                (832) 555-1200
+                919-670-7979
               </a>
               <a href="mailto:leasing@coastroadcapital.com" className="footer-contact-link">
                 <Mail size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
                 leasing@coastroadcapital.com
               </a>
-              <span className="footer-contact-item">
+              <a
+                href="https://www.google.com/maps/search/3730+Midtown+Drive,+%231228+Tampa,+Florida"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-link"
+              >
                 <MapPin size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                Houston, TX
-              </span>
+                3730 Midtown Dr, #1228, Tampa, FL
+              </a>
             </div>
           </div>
 
@@ -96,6 +101,11 @@ export const Footer: React.FC = () => {
                 <li>
                   <Link to="/about" className="footer-nav-link">
                     About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/railroad-partnerships" className="footer-nav-link">
+                    Railroad Partnerships
                   </Link>
                 </li>
                 <li>

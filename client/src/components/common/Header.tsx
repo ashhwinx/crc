@@ -45,6 +45,7 @@ export const Header: React.FC = () => {
     { path: '/railcar-leasing', label: 'Railcar Leasing' },
     { path: '/cost-estimator', label: 'Cost Estimator' },
     { path: '/railcar-viewer', label: '3D Viewer' },
+    { path: '/railroad-partnerships', label: 'Railroad Partnerships' },
     { path: '/company-values', label: 'Company Values' },
     { path: '/faq', label: 'FAQ' },
     { path: '/about', label: 'About Us' },
@@ -61,12 +62,12 @@ export const Header: React.FC = () => {
           {/* Left: Clickable Direct Contacts */}
           <div className="eyebrow-left">
             <a
-              href="tel:+18325551200"
+              href="tel:+19196707979"
               className="eyebrow-contact-link"
-              aria-label="Direct Phone Line: (832) 555-1200"
+              aria-label="Direct Phone Line: 919-670-7979"
             >
               <Phone size={12} className="eyebrow-icon" />
-              <span><span className="eyebrow-phone-label">Direct Line: </span><strong>(832) 555-1200</strong></span>
+              <span><span className="eyebrow-phone-label">Direct Line: </span><strong>919-670-7979</strong></span>
             </a>
             <span className="eyebrow-divider">|</span>
             <a
@@ -95,7 +96,7 @@ export const Header: React.FC = () => {
             </Link>
             <span className="eyebrow-divider">|</span>
             <Link to="/contact" className="eyebrow-quick-link">
-              Houston, TX HQ
+              Tampa, FL HQ
             </Link>
           </div>
         </div>
@@ -195,9 +196,9 @@ export const Header: React.FC = () => {
           <div style={{ display: 'none', alignItems: 'center' }} className="desktop-nav">
             {/* Clickable Phone Number on the Sticky Nav Bar */}
             <a
-              href="tel:+18325551200"
+              href="tel:+19196707979"
               className="sticky-nav-phone"
-              aria-label="Call Coast Road Capital at (832) 555-1200"
+              aria-label="Call Coast Road Capital at 919-670-7979"
               title="Call Coast Road Capital Direct Desk"
             >
               <div className="sticky-nav-phone-icon">
@@ -205,7 +206,7 @@ export const Header: React.FC = () => {
               </div>
               <div className="sticky-nav-phone-content">
                 <span className="sticky-nav-phone-label">Direct Line</span>
-                <span className="sticky-nav-phone-num">(832) 555-1200</span>
+                <span className="sticky-nav-phone-num">919-670-7979</span>
               </div>
             </a>
           </div>
@@ -214,10 +215,10 @@ export const Header: React.FC = () => {
           <div className="mobile-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {/* Mobile Clickable Phone */}
             <a
-              href="tel:+18325551200"
+              href="tel:+19196707979"
               className="mobile-quick-call-btn"
-              aria-label="Call (832) 555-1200"
-              title="Call (832) 555-1200"
+              aria-label="Call 919-670-7979"
+              title="Call 919-670-7979"
             >
               <PhoneCall size={17} />
             </a>
@@ -311,7 +312,7 @@ export const Header: React.FC = () => {
 
             {/* Mobile Prominent Clickable Phone Box */}
             <a
-              href="tel:+18325551200"
+              href="tel:+19196707979"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -345,7 +346,7 @@ export const Header: React.FC = () => {
                   Direct Sourcing Desk
                 </span>
                 <strong style={{ fontSize: '0.98rem', color: '#0A0A09' }}>
-                  (832) 555-1200
+                  919-670-7979
                 </strong>
               </div>
             </a>
@@ -389,12 +390,12 @@ export const Header: React.FC = () => {
                 Request a Quote
               </Link>
               <a
-                href="tel:+18325551200"
+                href="tel:+19196707979"
                 className="btn btn-secondary"
                 style={{ width: '100%' }}
               >
                 <PhoneCall size={15} />
-                Call (832) 555-1200
+                Call 919-670-7979
               </a>
             </div>
           </div>

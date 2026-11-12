@@ -16,6 +16,7 @@ const TrackLayout = lazy(() => import('./pages/TrackLayout').then((m) => ({ defa
 const RailcarViewer = lazy(() => import('./pages/RailcarViewer').then((m) => ({ default: m.RailcarViewer })));
 const Quote = lazy(() => import('./pages/Quote').then((m) => ({ default: m.Quote })));
 const Contact = lazy(() => import('./pages/Contact').then((m) => ({ default: m.Contact })));
+const RailroadPartnerships = lazy(() => import('./pages/RailroadPartnerships').then((m) => ({ default: m.RailroadPartnerships })));
 const BookCall = lazy(() => import('./pages/BookCall').then((m) => ({ default: m.BookCall })));
 const NotFound = lazy(() => import('./pages/NotFound').then((m) => ({ default: m.NotFound })));
 
@@ -68,6 +69,8 @@ export const App: React.FC = () => {
             <Route path="/railcar-viewer" element={<RailcarViewer />} />
             <Route path="/3d-viewer" element={<Navigate to="/railcar-viewer" replace />} />
             <Route path="/viewer" element={<Navigate to="/railcar-viewer" replace />} />
+            <Route path="/railroad-partnerships" element={<RailroadPartnerships />} />
+            <Route path="/partnerships" element={<Navigate to="/railroad-partnerships" replace />} />
             <Route path="/track-layout" element={<TrackLayout />} />
             <Route path="/quote" element={<Quote />} />
             <Route path="/contact" element={<Contact />} />

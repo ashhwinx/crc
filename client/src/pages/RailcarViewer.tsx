@@ -1869,6 +1869,9 @@ export const RailcarViewer: React.FC = () => {
   const [simLabel, setSimLabel] = useState<string>('');
   const [simProgress, setSimProgress] = useState<number>(0);
 
+  const simLabelElRef = useRef<HTMLDivElement | null>(null);
+  const simBarElRef = useRef<HTMLDivElement | null>(null);
+
   // Calculator state
   const [weeklyTons, setWeeklyTons] = useState<number>(500);
   const [weeklyGal, setWeeklyGal] = useState<number>(100000);
@@ -2013,10 +2016,13 @@ export const RailcarViewer: React.FC = () => {
   // Stop active demo
   const stopSimulation = useCallback(() => {
     setSimActive(false);
+    simStateRef.current.simActive = false;
     simRef.current = null;
     buildCurrentCar(currentCar);
     setSimLabel('');
     setSimProgress(0);
+    if (simLabelElRef.current) simLabelElRef.current.textContent = '';
+    if (simBarElRef.current) simBarElRef.current.style.width = '0%';
   }, [buildCurrentCar, currentCar]);
 
   // Start demo for the current car
@@ -2036,8 +2042,11 @@ export const RailcarViewer: React.FC = () => {
       carGroupRef.current.add(simInstance.group);
       simRef.current = simInstance;
 
-      setSimActive(true);
+      simStateRef.current.simActive = true;
+      simStateRef.current.simMode = mode;
+      simStateRef.current.simPaused = false;
       simTRef.current = 0;
+      setSimActive(true);
       setSimPaused(false);
 
       if (controlsRef.current) {
@@ -2229,8 +2238,12 @@ export const RailcarViewer: React.FC = () => {
         }
         const r = runTimeline(simRef.current, simTRef.current);
         simRef.current.render(r.S);
-        setSimLabel(r.label);
-        setSimProgress(100 * Math.min(1, simTRef.current / simRef.current.tl.dur));
+        if (simLabelElRef.current && simLabelElRef.current.textContent !== r.label) {
+          simLabelElRef.current.textContent = r.label;
+        }
+        if (simBarElRef.current) {
+          simBarElRef.current.style.width = `${(100 * Math.min(1, simTRef.current / simRef.current.tl.dur)).toFixed(1)}%`;
+        }
       }
 
       // Smooth camera interpolation
@@ -2275,9 +2288,16 @@ export const RailcarViewer: React.FC = () => {
 
   // When car selection changes, update 3D model
   useEffect(() => {
-    buildCurrentCar(currentCar);
-    setCameraView(activeView === 'load' ? 'three' : activeView, true);
-  }, [currentIdx, buildCurrentCar, currentCar, activeView, setCameraView]);
+    if (simRef.current) {
+      setSimActive(false);
+      simStateRef.current.simActive = false;
+      simRef.current = null;
+      if (simLabelElRef.current) simLabelElRef.current.textContent = '';
+      if (simBarElRef.current) simBarElRef.current.style.width = '0%';
+    }
+    buildCurrentCar(TYPES[currentIdx]);
+    setCameraView('three', true);
+  }, [currentIdx, buildCurrentCar, setCameraView]);
 
   const engineeringFaqs = [
     {
@@ -2851,6 +2871,7 @@ export const RailcarViewer: React.FC = () => {
 
                     {/* Step Description Label */}
                     <div
+                      ref={simLabelElRef}
                       style={{
                         fontSize: '0.84rem',
                         fontWeight: 600,
@@ -2861,7 +2882,7 @@ export const RailcarViewer: React.FC = () => {
                         lineHeight: 1.35,
                       }}
                     >
-                      {simLabel}
+                      {simLabel || 'Initializing simulation...'}
                     </div>
 
                     {/* Interactive Progress Bar Scrubber */}
@@ -2884,6 +2905,7 @@ export const RailcarViewer: React.FC = () => {
                       title="Click anywhere to scrub timeline"
                     >
                       <div
+                        ref={simBarElRef}
                         style={{
                           height: '100%',
                           width: `${simProgress}%`,

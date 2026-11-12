@@ -81,7 +81,7 @@ export const CompanyValues: React.FC = () => {
       number: '06',
       icon: Clock,
       title: 'Response',
-      text: 'In heavy manufacturing, delayed cars cause production shutdowns. Our Houston desk responds promptly with direct specialist access when minutes matter.',
+      text: 'In heavy manufacturing, delayed cars cause production shutdowns. Our commercial desk responds promptly with direct specialist access when minutes matter.',
       statLine: '24-hour quote turnaround · Direct line to a specialist',
     },
   ];
@@ -202,7 +202,7 @@ export const CompanyValues: React.FC = () => {
                   </blockquote>
                 </div>
                 <div className="promise-author-tag">
-                  <span>Houston Commercial Equipment Desk &bull; Coast Road Capital</span>
+                  <span>Commercial Equipment Desk &bull; Coast Road Capital</span>
                 </div>
               </div>
 
@@ -256,9 +256,9 @@ export const CompanyValues: React.FC = () => {
                     <IconShieldCheck size={16} stroke={1.75} style={{ color: '#AA2E1F' }} />
                     <span>AAR Rule 88 &amp; FRA Compliant Fleet</span>
                   </div>
-                  <a href="tel:+18325551200" className="promise-phone-btn">
+                  <a href="tel:+19196707979" className="promise-phone-btn">
                     <IconPhone size={14} stroke={1.75} />
-                    <span>Direct Desk: (832) 555-1200</span>
+                    <span>Direct Desk: 919-670-7979</span>
                   </a>
                 </div>
               </div>
@@ -391,7 +391,7 @@ export const CompanyValues: React.FC = () => {
                 How Our Standards Work on the Active Rail Line
               </h2>
               <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-                Rail equipment isn't leased in an abstract boardroom. It is operated on physical plant sidings and tight delivery windows. Here is how our Houston team maintains operational discipline every day.
+                Rail equipment isn't leased in an abstract boardroom. It is operated on physical plant sidings and tight delivery windows. Here is how our team maintains operational discipline every day.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -440,7 +440,7 @@ export const CompanyValues: React.FC = () => {
                 </div>
                 <h3 className="standard-title">Direct Specialist Desk</h3>
                 <p className="standard-desc">
-                  Direct phone access to Houston equipment professionals who know track geometry and mechanical codes — zero automated queues.
+                  Direct phone access to dedicated equipment professionals who know track geometry and mechanical codes — zero automated queues.
                 </p>
               </div>
 
@@ -595,7 +595,7 @@ export const CompanyValues: React.FC = () => {
                 About Coast Road <ArrowRight size={15} />
               </strong>
               <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
-                Learn about our heritage, Houston headquarters, and team background.
+                Learn about our heritage, Tampa headquarters, and leadership background.
               </span>
             </Link>
           </div>

@@ -558,12 +558,12 @@ export const FAQ: React.FC = () => {
                 Speak Directly With Our Railcar Sourcing Desk
               </h2>
               <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-                Every shipper's track layout, lading density, and interchange logistics are unique. Our commercial team in Houston is available to answer questions and prepare tailored availability schedules.
+                Every shipper's track layout, lading density, and interchange logistics are unique. Our commercial team is available to answer questions and prepare tailored availability schedules.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
                 <a
-                  href="tel:+18325551200"
+                  href="tel:+19196707979"
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -588,7 +588,7 @@ export const FAQ: React.FC = () => {
                   >
                     <PhoneCall size={18} />
                   </div>
-                  <span>(832) 555-1200</span>
+                  <span>919-670-7979</span>
                 </a>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#64748B' }}>

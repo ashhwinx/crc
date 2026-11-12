@@ -627,7 +627,7 @@ export const Home: React.FC = () => {
                             type="tel"
                             value={heroForm.phone}
                             onChange={(e) => setHeroForm({ ...heroForm, phone: e.target.value })}
-                            placeholder="e.g. (832) 555-0199"
+                            placeholder="e.g. (919) 670-7979"
                             className="hero-field-input"
                           />
                         </div>
@@ -799,10 +799,10 @@ export const Home: React.FC = () => {
                     {/* Direct Contact Hotline Footer */}
                     <div className="hero-card-footer">
                       <div className="hero-footer-item">
-                        <span>Direct Houston Desk:</span>
-                        <a href="tel:+18325551200" className="hero-phone-link">
+                        <span>Direct Desk:</span>
+                        <a href="tel:+19196707979" className="hero-phone-link">
                           <PhoneCall size={12} style={{ color: '#AA2E1F' }} />
-                          (832) 555-1200
+                          919-670-7979
                         </a>
                       </div>
                       <span className="hero-footer-spec">AAR &amp; FRA Verified</span>
@@ -1075,13 +1075,13 @@ export const Home: React.FC = () => {
                   lineHeight: 1.25,
                 }}
               >
-                Built For Shippers. Anchored in Houston, Serving North America.
+                Built For Shippers. Anchored in Tampa, Serving North America.
               </h2>
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '1.25rem' }}>
                 Coast Road Capital connects industrial enterprises with verified freight rail equipment solutions. Whether expanding an active private fleet, managing seasonal harvest surges, or transitioning high-volume freight from highway to rail, we provide transparent car matching and dependable lease terms.
               </p>
               <p style={{ color: '#334155', fontSize: '0.98rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
-                Our commercial desk operates in Houston, Texas — the epicenter of North American energy, chemical processing, and agricultural export corridors. Shippers deal directly with experienced equipment specialists who understand track curvature, draft gear, and interchange logistics.
+                Our commercial desk operates from Tampa, Florida — connecting shippers directly with experienced equipment specialists who understand track curvature, draft gear, and interchange logistics across North American rail corridors.
               </p>
 
               {/* 2 Callout Badges with internal links */}
@@ -1115,7 +1115,7 @@ export const Home: React.FC = () => {
                   <ChevronRight size={17} />
                 </Link>
                 <Link to="/contact" className="btn btn-outline-dark">
-                  Contact Houston HQ
+                  Contact Tampa HQ
                 </Link>
               </div>
             </div>
@@ -1600,7 +1600,7 @@ export const Home: React.FC = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
                   <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Dedicated Houston contact throughout
+                  Dedicated commercial contact throughout
                 </div>
               </div>
             </div>
@@ -1639,7 +1639,7 @@ export const Home: React.FC = () => {
                 marginBottom: '2rem',
               }}
             >
-              Submit a quote request, model your lease budget, or contact our commercial desk directly at (832) 555-1200.
+              Submit a quote request, model your lease budget, or contact our commercial desk directly at 919-670-7979.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.85rem' }}>

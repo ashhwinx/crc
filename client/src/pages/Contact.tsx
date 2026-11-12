@@ -215,8 +215,8 @@ export const Contact: React.FC = () => {
                   <strong style={{ display: 'block', fontSize: '0.92rem', color: '#0A0A09', marginBottom: '0.15rem' }}>
                     Phone
                   </strong>
-                  <a href="tel:+18325551200" style={{ fontSize: '0.92rem', color: '#475569', textDecoration: 'none' }}>
-                    (832) 555-1200
+                  <a href="tel:+19196707979" style={{ fontSize: '0.92rem', color: '#475569', textDecoration: 'none' }}>
+                    919-670-7979
                   </a>
                 </div>
               </div>
@@ -267,10 +267,16 @@ export const Contact: React.FC = () => {
                   <strong style={{ display: 'block', fontSize: '0.92rem', color: '#0A0A09', marginBottom: '0.15rem' }}>
                     Headquarters
                   </strong>
-                  <span style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.5, display: 'block' }}>
-                    Houston, TX<br />
-                    United States
-                  </span>
+                  <a
+                    href="https://www.google.com/maps/search/3730+Midtown+Drive,+%231228+Tampa,+Florida"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.5, display: 'block', textDecoration: 'none' }}
+                  >
+                    Coast Road Capital<br />
+                    3730 Midtown Drive, #1228<br />
+                    Tampa, Florida
+                  </a>
                 </div>
               </div>
 
