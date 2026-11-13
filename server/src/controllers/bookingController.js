@@ -1,7 +1,6 @@
 import { BookingRequest } from '../models/BookingRequest.js';
 import mongoose from 'mongoose';
-
-const memoryBookings = [];
+import { inMemoryBookings } from '../data/inMemoryStore.js';
 
 function sanitize(str) {
   if (typeof str !== 'string') return '';
@@ -61,7 +60,7 @@ export const createBookingRequest = async (req, res) => {
     } else {
       sanitizedData._id = 'book_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
       sanitizedData.createdAt = new Date();
-      memoryBookings.push(sanitizedData);
+      inMemoryBookings.unshift(sanitizedData);
       savedRecord = sanitizedData;
       storageMethod = 'memory_fallback';
       console.warn(`[CRC Booking] MongoDB not connected; saved booking request to memory: ID ${sanitizedData._id}`);

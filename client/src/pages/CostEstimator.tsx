@@ -12,6 +12,7 @@ import {
   Bookmark,
 } from 'lucide-react';
 import { IconTruck } from '@tabler/icons-react';
+import { useCms } from '../context/CmsContext';
 import {
   ESTIMATOR_EQUIPMENT_DATA,
   LEASE_TERM_OPTIONS,
@@ -24,6 +25,39 @@ import { saveEstimateAPI, type SaveEstimatePayload } from '../services/api';
 export const CostEstimator: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { cms } = useCms();
+
+  // Dynamically merge equipment data with CMS category pricing overrides
+  const equipmentData = useMemo(() => {
+    const ratesMap = new Map(
+      cms.costEstimator?.categoryRates?.map((r) => [r.id, r]) || []
+    );
+    return ESTIMATOR_EQUIPMENT_DATA.map((cat) => {
+      const customRate = ratesMap.get(cat.slug) || ratesMap.get(cat.id);
+      if (!customRate) return cat;
+      return {
+        ...cat,
+        baseMonthlyNet: [customRate.baseNetMin, customRate.baseNetMax] as [number, number],
+        baseMonthlyFull: [customRate.baseFullMin, customRate.baseFullMax] as [number, number],
+        truckloadEquivalent: customRate.truckloadEquivalent ?? cat.truckloadEquivalent,
+        avgPayloadTons: customRate.avgPayloadTons ?? cat.avgPayloadTons,
+      };
+    });
+  }, [cms.costEstimator?.categoryRates]);
+
+  const termOptions = useMemo(() => {
+    if (cms.costEstimator?.termFactors && cms.costEstimator.termFactors.length > 0) {
+      return cms.costEstimator.termFactors;
+    }
+    return LEASE_TERM_OPTIONS;
+  }, [cms.costEstimator?.termFactors]);
+
+  const regionOptions = useMemo(() => {
+    if (cms.costEstimator?.regionFactors && cms.costEstimator.regionFactors.length > 0) {
+      return cms.costEstimator.regionFactors;
+    }
+    return INTERCHANGE_REGIONS;
+  }, [cms.costEstimator?.regionFactors]);
 
   // Helper matching functions for incoming URL query parameters
   const matchSizeIndex = (category: EquipmentEstimatorItem, querySize: string | null): number => {
@@ -68,15 +102,15 @@ export const CostEstimator: React.FC = () => {
 
   const initialCategorySlug = useMemo(() => {
     if (!paramCategory) return 'boxcars';
-    const match = ESTIMATOR_EQUIPMENT_DATA.find(
+    const match = equipmentData.find(
       (c) => c.slug.toLowerCase() === paramCategory.toLowerCase() || c.name.toLowerCase().includes(paramCategory.toLowerCase())
     );
     return match ? match.slug : 'boxcars';
-  }, [paramCategory]);
+  }, [paramCategory, equipmentData]);
 
   const initialCategoryObj = useMemo(() => {
-    return ESTIMATOR_EQUIPMENT_DATA.find((c) => c.slug === initialCategorySlug) || ESTIMATOR_EQUIPMENT_DATA[0];
-  }, [initialCategorySlug]);
+    return equipmentData.find((c) => c.slug === initialCategorySlug) || equipmentData[0];
+  }, [initialCategorySlug, equipmentData]);
 
   const initialSizeIdx = useMemo(() => {
     return matchSizeIndex(initialCategoryObj, paramSize);
@@ -103,7 +137,7 @@ export const CostEstimator: React.FC = () => {
   useEffect(() => {
     let catSlug = selectedCategorySlug;
     if (paramCategory) {
-      const match = ESTIMATOR_EQUIPMENT_DATA.find(
+      const match = equipmentData.find(
         (c) => c.slug.toLowerCase() === paramCategory.toLowerCase() || c.name.toLowerCase().includes(paramCategory.toLowerCase())
       );
       if (match) {
@@ -112,7 +146,7 @@ export const CostEstimator: React.FC = () => {
         setActiveGuideTab(match.slug);
       }
     }
-    const cat = ESTIMATOR_EQUIPMENT_DATA.find((c) => c.slug === catSlug) || ESTIMATOR_EQUIPMENT_DATA[0];
+    const cat = equipmentData.find((c) => c.slug === catSlug) || equipmentData[0];
     if (paramSize) {
       const idx = matchSizeIndex(cat, paramSize);
       setSelectedSizeIndex(idx);
@@ -126,15 +160,15 @@ export const CostEstimator: React.FC = () => {
     if (paramLease) {
       setLeaseType(matchLeaseType(paramLease));
     }
-  }, [paramCategory, paramSize, paramQuantity, paramTerm, paramLease]);
+  }, [paramCategory, paramSize, paramQuantity, paramTerm, paramLease, equipmentData]);
 
   // Active equipment object
   const currentCategory: EquipmentEstimatorItem = useMemo(() => {
     return (
-      ESTIMATOR_EQUIPMENT_DATA.find((item) => item.slug === selectedCategorySlug) ||
-      ESTIMATOR_EQUIPMENT_DATA[0]
+      equipmentData.find((item) => item.slug === selectedCategorySlug) ||
+      equipmentData[0]
     );
-  }, [selectedCategorySlug]);
+  }, [equipmentData, selectedCategorySlug]);
 
   // Active size object
   const currentSize: CarSizeOption = useMemo(() => {
@@ -149,22 +183,30 @@ export const CostEstimator: React.FC = () => {
 
   // Term factor
   const termOption = useMemo(() => {
-    return LEASE_TERM_OPTIONS.find((t) => t.id === termId) || LEASE_TERM_OPTIONS[1];
-  }, [termId]);
+    return termOptions.find((t) => t.id === termId) || termOptions[1] || LEASE_TERM_OPTIONS[1];
+  }, [termId, termOptions]);
 
   // Region factor
   const regionOption = useMemo(() => {
-    return INTERCHANGE_REGIONS.find((r) => r.id === regionId) || INTERCHANGE_REGIONS[0];
-  }, [regionId]);
+    return regionOptions.find((r) => r.id === regionId) || regionOptions[0] || INTERCHANGE_REGIONS[0];
+  }, [regionId, regionOptions]);
 
   // Volume discount calculation
   const volumeDiscount = useMemo(() => {
-    if (quantity >= 50) return 0.90; // 10% discount
-    if (quantity >= 20) return 0.93; // 7% discount
-    if (quantity >= 10) return 0.96; // 4% discount
-    if (quantity >= 5) return 0.98;  // 2% discount
+    const tiers = cms.costEstimator?.volumeTiers || [
+      { minQty: 50, discountPercent: 10 },
+      { minQty: 20, discountPercent: 7 },
+      { minQty: 10, discountPercent: 4 },
+      { minQty: 5, discountPercent: 2 },
+    ];
+    const sorted = [...tiers].sort((a, b) => b.minQty - a.minQty);
+    for (const tier of sorted) {
+      if (quantity >= tier.minQty) {
+        return Math.max(0.5, 1 - tier.discountPercent / 100);
+      }
+    }
     return 1.0;
-  }, [quantity]);
+  }, [quantity, cms.costEstimator?.volumeTiers]);
 
   // Dynamic cost calculations
   const calculation = useMemo(() => {
@@ -416,7 +458,7 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                 </p>
 
                 <div className="equipment-selector-grid">
-                  {ESTIMATOR_EQUIPMENT_DATA.map((item) => {
+                  {equipmentData.map((item) => {
                     const isSelected = item.slug === selectedCategorySlug;
                     return (
                       <button
@@ -553,7 +595,7 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                 <div style={{ marginBottom: '1.75rem' }}>
                   <label className="sub-input-label">Lease Duration</label>
                   <div className="term-cards-grid">
-                    {LEASE_TERM_OPTIONS.map((t) => (
+                    {termOptions.map((t) => (
                       <button
                         key={t.id}
                         type="button"
@@ -623,7 +665,7 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
                     onChange={(e) => setRegionId(e.target.value)}
                     className="region-select"
                   >
-                    {INTERCHANGE_REGIONS.map((r) => (
+                    {regionOptions.map((r) => (
                       <option key={r.id} value={r.id}>
                         {r.name}
                       </option>
@@ -850,7 +892,7 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
 
           {/* Guide Category Tabs */}
           <div className="guide-tabs-container">
-            {ESTIMATOR_EQUIPMENT_DATA.map((item) => (
+            {equipmentData.map((item) => (
               <button
                 key={item.slug}
                 type="button"
@@ -865,8 +907,8 @@ Truckloads Replaced: ~${calculation.trucksReplacedMin} to ${calculation.trucksRe
           {/* Active Guide Card */}
           {(() => {
             const guideItem =
-              ESTIMATOR_EQUIPMENT_DATA.find((item) => item.slug === activeGuideTab) ||
-              ESTIMATOR_EQUIPMENT_DATA[0];
+              equipmentData.find((item) => item.slug === activeGuideTab) ||
+              equipmentData[0];
 
             return (
               <div className="guide-card-full">

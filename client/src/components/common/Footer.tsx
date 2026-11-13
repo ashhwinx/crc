@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipmentData';
+import { useCms } from '../../context/CmsContext';
 
 export const Footer: React.FC = () => {
+  const { cms } = useCms();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -36,22 +38,22 @@ export const Footer: React.FC = () => {
             </p>
             {/* Quick contact details */}
             <div className="footer-contacts">
-              <a href="tel:+19196707979" className="footer-contact-link">
+              <a href={`tel:${(cms.companyInfo?.phone || '919-670-7979').replace(/\D/g, '')}`} className="footer-contact-link">
                 <Phone size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                919-670-7979
+                {cms.companyInfo?.phone || '919-670-7979'}
               </a>
-              <a href="mailto:leasing@coastroadcapital.com" className="footer-contact-link">
+              <a href={`mailto:${cms.companyInfo?.email || 'leasing@coastroadcapital.com'}`} className="footer-contact-link">
                 <Mail size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                leasing@coastroadcapital.com
+                {cms.companyInfo?.email || 'leasing@coastroadcapital.com'}
               </a>
               <a
-                href="https://www.google.com/maps/search/3730+Midtown+Drive,+%231228+Tampa,+Florida"
+                href={cms.companyInfo?.googleMapsUrl || 'https://www.google.com/maps/search/3730+Midtown+Drive,+%231228+Tampa,+Florida'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-contact-link"
               >
                 <MapPin size={13} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                3730 Midtown Dr, #1228, Tampa, FL
+                {cms.companyInfo?.address || '3730 Midtown Dr, #1228, Tampa, FL'}
               </a>
             </div>
           </div>
@@ -128,6 +130,11 @@ export const Footer: React.FC = () => {
                     Request a Quote
                   </Link>
                 </li>
+                <li>
+                  <Link to="/admin" className="footer-nav-link" style={{ color: '#AA2E1F', fontWeight: 600 }}>
+                    Staff &amp; CMS Portal
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -153,7 +160,10 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="footer-bottom-bar">
           <div className="footer-copyright">
-            &copy; {currentYear} Coast Road Capital (CRC). All rights reserved.
+            &copy; {currentYear} Coast Road Capital (CRC). All rights reserved. &bull;{' '}
+            <Link to="/admin" style={{ color: '#64748B', textDecoration: 'none' }}>
+              Management Portal
+            </Link>
           </div>
           <div className="footer-disclaimer">
             Railcar specifications shown are standard industry references. Specific availability, series, and lease terms are confirmed upon review.

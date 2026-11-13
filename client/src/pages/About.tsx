@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, PhoneCall, ShieldCheck, TrendingUp } from 'lucide-react';
 import { IconRulerMeasure, IconScale, IconCertificate, IconTruck } from '@tabler/icons-react';
+import { useCms } from '../context/CmsContext';
 
 export const About: React.FC = () => {
+  const { cms } = useCms();
   return (
     <div className="about-page">
       {/* Hero Section */}
@@ -18,30 +20,27 @@ export const About: React.FC = () => {
         }}
       >
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          <picture>
-            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
-            <img
-              src="/images/hero/DSC_0004.jpg"
-              alt=""
-              aria-hidden="true"
-              fetchPriority="high"
-              decoding="async"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 38%',
-                opacity: 0.28,
-              }}
-            />
-          </picture>
+          <img
+            src={cms.about?.hero?.bgImage || '/images/hero/DSC_0004.jpg'}
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            decoding="async"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 38%',
+              opacity: 0.28,
+            }}
+          />
         </div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ maxWidth: '780px' }}>
             <span className="eyebrow eyebrow-dark">
-              Corporate Heritage &bull; Leadership &bull; Operating Philosophy
+              {cms.about?.hero?.eyebrow || 'Corporate Heritage • Leadership • Operating Philosophy'}
             </span>
             <h1
               style={{
@@ -53,10 +52,10 @@ export const About: React.FC = () => {
                 marginBottom: '1.25rem',
               }}
             >
-              About Coast Road Capital
+              {cms.about?.hero?.headline || 'About Coast Road Capital'}
             </h1>
             <p style={{ fontSize: '1.14rem', color: '#CBD5E1', lineHeight: 1.7, maxWidth: '680px' }}>
-              Founded on an appreciation for the history of American railroading and a belief in its future — bridging the gap between freight railroads and the commercial enterprises they serve.
+              {cms.about?.hero?.subheadline || 'Founded on an appreciation for the history of American railroading and a belief in its future — bridging the gap between freight railroads and the commercial enterprises they serve.'}
             </p>
           </div>
         </div>
@@ -78,16 +77,20 @@ export const About: React.FC = () => {
             <div>
               <span className="eyebrow">Our Heritage</span>
               <h2 style={{ color: '#0A0A09', marginBottom: '1.25rem', lineHeight: 1.25 }}>
-                Our History &amp; Identity
+                {cms.about?.heritage?.headline || 'Our History & Identity'}
               </h2>
               <p style={{ color: '#334155', fontSize: '1.04rem', lineHeight: 1.75, marginBottom: '1.2rem' }}>
-                Coast Road Capital was founded on an appreciation for the history of American railroading and a belief in its future. Our name and identity draw inspiration from two historic railroads, the <strong>Seaboard Coast Line</strong> and the <strong>Milwaukee Road</strong>, whose legacies reflect the importance of connecting industries, communities, and markets.
+                {cms.about?.heritage?.p1 || (
+                  <>
+                    Coast Road Capital was founded on an appreciation for the history of American railroading and a belief in its future. Our name and identity draw inspiration from two historic railroads, the <strong>Seaboard Coast Line</strong> and the <strong>Milwaukee Road</strong>, whose legacies reflect the importance of connecting industries, communities, and markets.
+                  </>
+                )}
               </p>
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '1.2rem' }}>
-                The visual identity of Coast Road Capital draws from the bold lettering and distinctive branding of these historic railroads, combining a respect for the industry&apos;s past with a forward-looking approach to its future.
+                {cms.about?.heritage?.p2 || "The visual identity of Coast Road Capital draws from the bold lettering and distinctive branding of these historic railroads, combining a respect for the industry's past with a forward-looking approach to its future."}
               </p>
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
-                While the railroads that inspired our identity belong to an earlier era, we believe the opportunities they helped create remain just as relevant today. Our objective is to carry that same spirit of industrial development, connectivity, and commercial opportunity into the modern freight transportation industry.
+                {cms.about?.heritage?.p3 || "While the railroads that inspired our identity belong to an earlier era, we believe the opportunities they helped create remain just as relevant today. Our objective is to carry that same spirit of industrial development, connectivity, and commercial opportunity into the modern freight transportation industry."}
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
@@ -265,16 +268,16 @@ export const About: React.FC = () => {
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0A0A09', margin: 0, lineHeight: 1.2 }}>
-                    Samuel Lowe
+                    {cms.about?.leadership?.name || 'Samuel Lowe'}
                   </h3>
                   <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#AA2E1F', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Founder &amp; Principal
+                    {cms.about?.leadership?.role || 'Founder & Principal'}
                   </span>
                 </div>
               </div>
 
               <p style={{ color: '#334155', fontSize: '0.96rem', lineHeight: 1.7, marginBottom: '1.15rem' }}>
-                Samuel Lowe founded Coast Road Capital with the goal of making freight rail transportation more accessible to businesses seeking opportunities for growth and expansion. A business student at the University of Tampa with a lifelong interest in railroad history, operations, and commercial development, Samuel brings an entrepreneurial perspective to the industry.
+                {cms.about?.leadership?.bio || 'Samuel Lowe founded Coast Road Capital with the goal of making freight rail transportation more accessible to businesses seeking opportunities for growth and expansion. A business student at the University of Tampa with a lifelong interest in railroad history, operations, and commercial development, Samuel brings an entrepreneurial perspective to the industry.'}
               </p>
 
               <p style={{ color: '#475569', fontSize: '0.92rem', lineHeight: 1.7, margin: '0 0 1.5rem 0', flexGrow: 1 }}>

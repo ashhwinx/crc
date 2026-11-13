@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { Menu, X, PhoneCall, Phone, Mail, ChevronRight, FileText, Shield } from 'lucide-react';
+import { Menu, X, PhoneCall, Phone, Mail, ChevronRight, ChevronDown, FileText, Shield } from 'lucide-react';
+import { useCms } from '../../context/CmsContext';
 
 export const Header: React.FC = () => {
+  const { cms } = useCms();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Close mobile menu on route change
+  // Close mobile menu & dropdown on route change
   useEffect(() => {
     setMobileMenuOpen(false);
+    setAboutDropdownOpen(false);
   }, [location.pathname]);
 
   // Track scroll position for subtle elevation shadow and compacting
@@ -40,17 +45,24 @@ export const Header: React.FC = () => {
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
+  // Primary Desktop Nav Links
+  const primaryNavLinks = [
     { path: '/', label: 'Home' },
     { path: '/railcar-leasing', label: 'Railcar Leasing' },
     { path: '/cost-estimator', label: 'Cost Estimator' },
     { path: '/railcar-viewer', label: '3D Viewer' },
     { path: '/railroad-partnerships', label: 'Railroad Partnerships' },
-    { path: '/company-values', label: 'Company Values' },
-    { path: '/faq', label: 'FAQ' },
-    { path: '/about', label: 'About Us' },
-    { path: '/contact', label: 'Contact' },
   ];
+
+  // About Us Dropdown Links (Contains About Us, Company Values, FAQ, Contact)
+  const aboutDropdownLinks = [
+    { path: '/about', label: 'About Coast Road Capital', desc: 'Our History, Identity & Leadership' },
+    { path: '/company-values', label: 'Company Values', desc: 'Operational Transparency & Standards' },
+    { path: '/faq', label: 'FAQ', desc: 'Frequently Asked Questions' },
+    { path: '/contact', label: 'Contact', desc: 'Inquiries & Tampa Headquarters' },
+  ];
+
+  const isAboutActive = ['/about', '/company-values', '/values', '/faq', '/faqs', '/contact'].includes(location.pathname);
 
   return (
     <>
@@ -62,21 +74,21 @@ export const Header: React.FC = () => {
           {/* Left: Clickable Direct Contacts */}
           <div className="eyebrow-left">
             <a
-              href="tel:+19196707979"
+              href={`tel:${(cms.companyInfo?.phone || '919-670-7979').replace(/\D/g, '')}`}
               className="eyebrow-contact-link"
-              aria-label="Direct Phone Line: 919-670-7979"
+              aria-label={`Direct Phone Line: ${cms.companyInfo?.phone || '919-670-7979'}`}
             >
               <Phone size={12} className="eyebrow-icon" />
-              <span><span className="eyebrow-phone-label">Direct Line: </span><strong>919-670-7979</strong></span>
+              <span><span className="eyebrow-phone-label">Direct Line: </span><strong>{cms.companyInfo?.phone || '919-670-7979'}</strong></span>
             </a>
             <span className="eyebrow-divider">|</span>
             <a
-              href="mailto:leasing@coastroadcapital.com"
+              href={`mailto:${cms.companyInfo?.email || 'leasing@coastroadcapital.com'}`}
               className="eyebrow-contact-link"
-              aria-label="Email: leasing@coastroadcapital.com"
+              aria-label={`Email: ${cms.companyInfo?.email || 'leasing@coastroadcapital.com'}`}
             >
               <Mail size={12} className="eyebrow-icon" />
-              <span>leasing@coastroadcapital.com</span>
+              <span>{cms.companyInfo?.email || 'leasing@coastroadcapital.com'}</span>
             </a>
           </div>
 
@@ -165,11 +177,11 @@ export const Header: React.FC = () => {
             style={{
               display: 'none',
               alignItems: 'center',
-              gap: '1.65rem',
+              gap: '1.75rem',
             }}
             className="desktop-nav"
           >
-            {navLinks.map((item) => (
+            {primaryNavLinks.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
@@ -190,6 +202,67 @@ export const Header: React.FC = () => {
                 {item.label}
               </NavLink>
             ))}
+
+            {/* About Us Hover Dropdown Menu */}
+            <div
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => setAboutDropdownOpen(true)}
+              onMouseLeave={() => setAboutDropdownOpen(false)}
+            >
+              <button
+                type="button"
+                className={`nav-dropdown-trigger ${isAboutActive ? 'nav-item-active' : 'nav-item'}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '0.94rem',
+                  fontWeight: isAboutActive ? 700 : 500,
+                  color: isAboutActive ? '#AA2E1F' : '#334155',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '0.5rem 0',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  transition: 'color 180ms ease',
+                  whiteSpace: 'nowrap',
+                }}
+                aria-expanded={aboutDropdownOpen}
+                aria-haspopup="true"
+              >
+                <span>About Us</span>
+                <ChevronDown
+                  size={14}
+                  style={{
+                    color: isAboutActive ? '#AA2E1F' : '#64748B',
+                    transform: aboutDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 200ms ease',
+                  }}
+                />
+              </button>
+
+              {/* Dropdown Menu Box */}
+              <div className="nav-dropdown-menu">
+                <div className="nav-dropdown-header">
+                  <span>Company &amp; Resources</span>
+                </div>
+                {aboutDropdownLinks.map((sub) => {
+                  const isSubActive = location.pathname === sub.path;
+                  return (
+                    <Link
+                      key={sub.path}
+                      to={sub.path}
+                      onClick={() => setAboutDropdownOpen(false)}
+                      className={`nav-dropdown-item ${isSubActive ? 'nav-dropdown-item-active' : ''}`}
+                    >
+                      <div className="nav-dropdown-item-title">{sub.label}</div>
+                      <div className="nav-dropdown-item-desc">{sub.desc}</div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </nav>
 
           {/* Desktop Right Action (Clickable Direct Line Phone) */}
@@ -353,21 +426,22 @@ export const Header: React.FC = () => {
 
             {/* Mobile Nav Links */}
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
-              {navLinks.map((item) => (
+              {primaryNavLinks.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   end={item.path === '/'}
+                  onClick={() => setMobileMenuOpen(false)}
                   style={({ isActive }) => ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '1rem',
+                    fontSize: '0.98rem',
                     fontWeight: isActive ? 700 : 500,
                     color: isActive ? '#AA2E1F' : '#0A0A09',
                     textDecoration: 'none',
-                    padding: '0.75rem 0.75rem',
+                    padding: '0.70rem 0.75rem',
                     borderRadius: '8px',
                     backgroundColor: isActive ? 'var(--color-red-light)' : 'transparent',
                     transition: 'all 150ms ease',
@@ -377,6 +451,66 @@ export const Header: React.FC = () => {
                   <ChevronRight size={16} style={{ color: '#94A3B8' }} />
                 </NavLink>
               ))}
+
+              {/* Mobile About Us & Company Sub-section */}
+              <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid #F1F5F9' }}>
+                <button
+                  type="button"
+                  onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '0.98rem',
+                    fontWeight: isAboutActive ? 700 : 600,
+                    color: isAboutActive ? '#AA2E1F' : '#0A0A09',
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '0.70rem 0.75rem',
+                    cursor: 'pointer',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <span>About Us &amp; Company</span>
+                  <ChevronDown
+                    size={16}
+                    style={{
+                      color: '#94A3B8',
+                      transform: mobileAboutOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 180ms ease',
+                    }}
+                  />
+                </button>
+                {mobileAboutOpen && (
+                  <div style={{ paddingLeft: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', marginTop: '0.25rem' }}>
+                    {aboutDropdownLinks.map((item) => (
+                      <NavLink
+                        key={item.path}
+                        to={item.path}
+                        onClick={() => setMobileMenuOpen(false)}
+                        style={({ isActive }) => ({
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.90rem',
+                          fontWeight: isActive ? 700 : 500,
+                          color: isActive ? '#AA2E1F' : '#475569',
+                          textDecoration: 'none',
+                          padding: '0.50rem 0.65rem',
+                          borderRadius: '6px',
+                          backgroundColor: isActive ? 'var(--color-red-light)' : 'transparent',
+                        })}
+                      >
+                        {item.label}
+                        <ChevronRight size={14} style={{ color: '#94A3B8' }} />
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+              </div>
             </nav>
 
             {/* Mobile Actions */}
@@ -570,6 +704,96 @@ export const Header: React.FC = () => {
           height: 2px;
           background-color: #AA2E1F;
           border-radius: 2px;
+        }
+
+        /* About Us Hover Dropdown Menu Styles */
+        .nav-dropdown-wrapper {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          height: 100%;
+        }
+        .nav-dropdown-trigger {
+          outline: none;
+        }
+        .nav-dropdown-wrapper:hover .nav-dropdown-menu,
+        .nav-dropdown-wrapper:focus-within .nav-dropdown-menu {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(-50%) translateY(0);
+          pointer-events: auto;
+        }
+        /* Invisible hover bridge */
+        .nav-dropdown-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          height: 18px;
+        }
+        .nav-dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 50%;
+          transform: translateX(-50%) translateY(6px);
+          width: 290px;
+          background-color: #FFFFFF;
+          border-radius: 8px;
+          border: 1px solid #E2E8F0;
+          box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+          padding: 0.5rem;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
+          z-index: 1000;
+          pointer-events: none;
+        }
+        .nav-dropdown-header {
+          padding: 0.35rem 0.65rem 0.45rem;
+          border-bottom: 1px solid #F1F5F9;
+          margin-bottom: 0.35rem;
+        }
+        .nav-dropdown-header span {
+          font-size: 0.68rem;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          font-weight: 700;
+          color: #AA2E1F;
+        }
+        .nav-dropdown-item {
+          display: block;
+          padding: 0.60rem 0.75rem;
+          border-radius: 6px;
+          text-decoration: none;
+          transition: background-color 140ms ease;
+        }
+        .nav-dropdown-item:hover {
+          background-color: #F8FAFC;
+        }
+        .nav-dropdown-item:hover .nav-dropdown-item-title {
+          color: #AA2E1F;
+        }
+        .nav-dropdown-item-active {
+          background-color: rgba(170, 46, 31, 0.05);
+        }
+        .nav-dropdown-item-active .nav-dropdown-item-title {
+          color: #AA2E1F;
+          font-weight: 700;
+        }
+        .nav-dropdown-item-title {
+          font-family: var(--font-heading);
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: #0F172A;
+          line-height: 1.25;
+          transition: color 140ms ease;
+        }
+        .nav-dropdown-item-desc {
+          font-size: 0.74rem;
+          color: #64748B;
+          margin-top: 2px;
+          line-height: 1.35;
         }
 
         @keyframes drawerFadeIn {

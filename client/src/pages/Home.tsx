@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -32,6 +32,7 @@ import {
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
 import { submitInquiry } from '../services/api';
 import type { InquiryResponse, InquiryPayload } from '../types';
+import { useCms } from '../context/CmsContext';
 
 // Interactive Sample Estimates for Homepage Benchmark Card
 const HOME_SAMPLE_ESTIMATES = {
@@ -315,8 +316,24 @@ const SERVICES_DATA = [
 ];
 
 export const Home: React.FC = () => {
+  const { cms } = useCms();
   const [sampleCategory, setSampleCategory] = useState<'covered-hoppers' | 'boxcars' | 'tank-cars'>('covered-hoppers');
-  const activeSample = HOME_SAMPLE_ESTIMATES[sampleCategory];
+  const activeSample = useMemo(() => {
+    const defaultSample = HOME_SAMPLE_ESTIMATES[sampleCategory];
+    const catRate = cms.costEstimator?.categoryRates?.find((r) => r.id === sampleCategory);
+    if (!catRate) return defaultSample;
+    const rateMinNum = catRate.baseFullMin;
+    const rateMaxNum = catRate.baseFullMax;
+    const totalMinNum = rateMinNum * defaultSample.quantity;
+    const totalMaxNum = rateMaxNum * defaultSample.quantity;
+    return {
+      ...defaultSample,
+      rateMin: `$${rateMinNum.toLocaleString()}`,
+      rateMax: `$${rateMaxNum.toLocaleString()}`,
+      totalMin: `$${totalMinNum.toLocaleString()}`,
+      totalMax: `$${totalMaxNum.toLocaleString()}`,
+    };
+  }, [sampleCategory, cms.costEstimator?.categoryRates]);
 
   // Hero Equipment Sourcing Form State
   const [heroForm, setHeroForm] = useState({
@@ -424,25 +441,22 @@ export const Home: React.FC = () => {
       >
         {/* Background Image Container with overflow hidden to clip scaled image */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 1, pointerEvents: 'none' }}>
-          <picture>
-            <source srcSet="/images/hero/DSC_0004.webp" type="image/webp" />
-            <img
-              src="/images/hero/DSC_0004.jpg"
-              alt=""
-              aria-hidden="true"
-              fetchPriority="high"
-              decoding="async"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 38%',
-                transform: 'scale(1.02)',
-              }}
-            />
-          </picture>
+          <img
+            src={cms.home?.hero?.bgImage || cms.hero?.bgImage || '/images/hero/DSC_0004.jpg'}
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            decoding="async"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 38%',
+              transform: 'scale(1.02)',
+            }}
+          />
           <div
             style={{
               position: 'absolute',
@@ -483,8 +497,7 @@ export const Home: React.FC = () => {
                   marginBottom: '0.85rem',
                 }}
               >
-                Railcar Leasing &amp; Fleet Sourcing <br />
-                <span style={{ color: '#F87171' }}>Built Around</span> Your Operation.
+                {cms.home?.hero?.headline || cms.hero?.headline || 'Railcar Leasing & Fleet Sourcing Built Around Your Operation.'}
               </h1>
 
               <p
@@ -497,7 +510,7 @@ export const Home: React.FC = () => {
                   maxWidth: '520px',
                 }}
               >
-                Coast Road Capital connects industrial shippers with verified railcar equipment and flexible lease frameworks across North America.
+                {cms.home?.hero?.subheadline || cms.hero?.subheadline || 'Coast Road Capital connects industrial shippers with verified railcar equipment and flexible lease frameworks across North America.'}
               </p>
 
               {/* Primary Action Buttons & Internal Links */}
@@ -890,17 +903,26 @@ export const Home: React.FC = () => {
           {/* Section Header */}
           <div className="services-section-header">
             <h2 className="services-main-title">
-              Comprehensive Rail Equipment &amp; Sourcing Services
+              {cms.home?.servicesHeader?.title || 'Comprehensive Rail Equipment & Sourcing Services'}
             </h2>
             <p className="services-main-desc">
-              From initial fleet sizing to Class I interchange and routine mechanical maintenance, Coast Road Capital provides end-to-end support for industrial shippers across North America.
+              {cms.home?.servicesHeader?.desc || 'From initial fleet sizing to Class I interchange and routine mechanical maintenance, Coast Road Capital provides end-to-end support for industrial shippers across North America.'}
             </p>
           </div>
 
           {/* Services Text Rows (Per Client Phase 1 Spec: Large Icon on Left, Title + 1 Line on Right, Dashed Dividers) */}
           <div className="services-text-rows-list" style={{ maxWidth: '960px', margin: '0 auto' }}>
-            {SERVICES_DATA.map((srv) => {
-              const IconComp = srv.icon;
+            {(cms.home?.services && cms.home.services.length > 0 ? cms.home.services : SERVICES_DATA).map((srv) => {
+              const serviceIconsMap: Record<string, any> = {
+                'full-service': IconStack2,
+                'net-leases': IconScale,
+                'fleet-sourcing': IconAdjustmentsHorizontal,
+                'logistics-advisory': IconGitFork,
+              };
+              const IconComp = (srv as any).icon || serviceIconsMap[srv.id] || IconStack2;
+              const linkTarget = srv.linkTo || '/cost-estimator';
+              const linkLabel = srv.linkText || 'Learn More';
+              const detailText = srv.points && srv.points[0] ? `${srv.subtitle}. ${srv.points[0]}` : srv.subtitle;
               return (
                 <div
                   key={srv.id}
@@ -947,7 +969,7 @@ export const Home: React.FC = () => {
                       </h3>
 
                       <Link
-                        to={srv.linkTo}
+                        to={linkTarget}
                         className="service-action-link"
                         style={{
                           display: 'inline-flex',
@@ -959,7 +981,7 @@ export const Home: React.FC = () => {
                           textDecoration: 'none',
                         }}
                       >
-                        <span>{srv.linkText}</span>
+                        <span>{linkLabel}</span>
                         <ArrowRight size={13} strokeWidth={2} />
                       </Link>
                     </div>
@@ -972,7 +994,7 @@ export const Home: React.FC = () => {
                         lineHeight: 1.6,
                       }}
                     >
-                      {srv.subtitle}. {srv.points[0]}
+                      {detailText}
                     </p>
                   </div>
                 </div>
@@ -1066,7 +1088,7 @@ export const Home: React.FC = () => {
             }}
           >
             <div>
-              <span className="eyebrow">Who We Are</span>
+              <span className="eyebrow">{cms.home?.whoWeAre?.eyebrow || 'Who We Are'}</span>
               <h2
                 style={{
                   fontSize: 'clamp(1.8rem, 3.2vw, 2.5rem)',
@@ -1075,13 +1097,13 @@ export const Home: React.FC = () => {
                   lineHeight: 1.25,
                 }}
               >
-                Built For Shippers. Anchored in Tampa, Serving North America.
+                {cms.home?.whoWeAre?.title || 'Built For Shippers. Anchored in Tampa, Serving North America.'}
               </h2>
               <p style={{ color: '#334155', fontSize: '1.02rem', lineHeight: 1.75, marginBottom: '1.25rem' }}>
-                Coast Road Capital connects industrial enterprises with verified freight rail equipment solutions. Whether expanding an active private fleet, managing seasonal harvest surges, or transitioning high-volume freight from highway to rail, we provide transparent car matching and dependable lease terms.
+                {cms.home?.whoWeAre?.p1 || 'Coast Road Capital connects industrial enterprises with verified freight rail equipment solutions. Whether expanding an active private fleet, managing seasonal harvest surges, or transitioning high-volume freight from highway to rail, we provide transparent car matching and dependable lease terms.'}
               </p>
               <p style={{ color: '#334155', fontSize: '0.98rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
-                Our commercial desk operates from Tampa, Florida — connecting shippers directly with experienced equipment specialists who understand track curvature, draft gear, and interchange logistics across North American rail corridors.
+                {cms.home?.whoWeAre?.p2 || 'Our commercial desk operates from Tampa, Florida — connecting shippers directly with experienced equipment specialists who understand track curvature, draft gear, and interchange logistics across North American rail corridors.'}
               </p>
 
               {/* 2 Callout Badges with internal links */}
@@ -1091,8 +1113,8 @@ export const Home: React.FC = () => {
                     <IconShieldCheck size={18} stroke={1.8} />
                   </div>
                   <div className="who-callout-body">
-                    <span className="who-callout-title">Operating Values</span>
-                    <span className="who-callout-sub">Safety &amp; transparent terms</span>
+                    <span className="who-callout-title">{cms.home?.whoWeAre?.callout1Title || 'Operating Values'}</span>
+                    <span className="who-callout-sub">{cms.home?.whoWeAre?.callout1Sub || 'Safety & transparent terms'}</span>
                   </div>
                   <ArrowRight size={13} className="who-callout-arrow" />
                 </Link>
@@ -1102,8 +1124,8 @@ export const Home: React.FC = () => {
                     <IconHelpCircle size={18} stroke={1.8} />
                   </div>
                   <div className="who-callout-body">
-                    <span className="who-callout-title">Leasing FAQs</span>
-                    <span className="who-callout-sub">Net vs full-service &amp; siding</span>
+                    <span className="who-callout-title">{cms.home?.whoWeAre?.callout2Title || 'Leasing FAQs'}</span>
+                    <span className="who-callout-sub">{cms.home?.whoWeAre?.callout2Sub || 'Net vs full-service & siding'}</span>
                   </div>
                   <ArrowRight size={13} className="who-callout-arrow" />
                 </Link>
@@ -1111,11 +1133,11 @@ export const Home: React.FC = () => {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
                 <Link to="/about" className="btn btn-secondary">
-                  About Coast Road Capital
+                  {cms.home?.whoWeAre?.btn1Text || 'About Coast Road Capital'}
                   <ChevronRight size={17} />
                 </Link>
                 <Link to="/contact" className="btn btn-outline-dark">
-                  Contact Tampa HQ
+                  {cms.home?.whoWeAre?.btn2Text || 'Contact Tampa HQ'}
                 </Link>
               </div>
             </div>
@@ -1130,7 +1152,7 @@ export const Home: React.FC = () => {
                 }}
               >
                 <img
-                  src="/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg"
+                  src={cms.home?.whoWeAre?.image || '/images/Trains serving industries-additional railcar images/DSC06309 (1).jpg'}
                   alt="Trains serving industrial shippers across North American rail corridors"
                   width={600}
                   height={400}
@@ -1308,7 +1330,7 @@ export const Home: React.FC = () => {
                   letterSpacing: '-0.02em',
                 }}
               >
-                Model Real-Time Equipment Lease Rates Before Committing Capital
+                {cms.home?.estimatorCallout?.title || 'Model Real-Time Equipment Lease Rates Before Committing Capital'}
               </h2>
               <p
                 style={{
@@ -1318,7 +1340,7 @@ export const Home: React.FC = () => {
                   marginBottom: '2rem',
                 }}
               >
-                Eliminate the guesswork of freight logistics budgeting. Model realistic per-car and fleet monthly lease costs across North America's seven primary equipment classes in seconds — with instant maintenance scope comparisons.
+                {cms.home?.estimatorCallout?.desc || "Eliminate the guesswork of freight logistics budgeting. Model realistic per-car and fleet monthly lease costs across North America's seven primary equipment classes in seconds — with instant maintenance scope comparisons."}
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.25rem' }}>
@@ -1341,10 +1363,10 @@ export const Home: React.FC = () => {
                   </div>
                   <div>
                     <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
-                      7 Railcar Categories &amp; Sizing Specs
+                      {cms.home?.estimatorCallout?.feature1Title || '7 Railcar Categories & Sizing Specs'}
                     </strong>
                     <span style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5, display: 'block' }}>
-                      Detailed cubic volume, GRL weight limits, and commodity matching across Boxcars, Hoppers, Gondolas, Flatcars, and Tank Cars.
+                      {cms.home?.estimatorCallout?.feature1Desc || 'Detailed cubic volume, GRL weight limits, and commodity matching across Boxcars, Hoppers, Gondolas, Flatcars, and Tank Cars.'}
                     </span>
                   </div>
                 </div>
@@ -1368,10 +1390,10 @@ export const Home: React.FC = () => {
                   </div>
                   <div>
                     <strong style={{ display: 'block', fontSize: '0.98rem', color: '#0A0A09', marginBottom: '0.2rem' }}>
-                      Full-Service vs. Net Lease Modeling
+                      {cms.home?.estimatorCallout?.feature2Title || 'Full-Service vs. Net Lease Modeling'}
                     </strong>
                     <span style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5, display: 'block' }}>
-                      Compare lessor-managed AAR Rule 88 mechanical maintenance and wheelset renewals against shipper-managed net leases.
+                      {cms.home?.estimatorCallout?.feature2Desc || 'Compare lessor-managed AAR Rule 88 mechanical maintenance and wheelset renewals against shipper-managed net leases.'}
                     </span>
                   </div>
                 </div>
@@ -1380,10 +1402,10 @@ export const Home: React.FC = () => {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
                 <Link to="/cost-estimator" className="btn btn-primary btn-lg">
                   <Calculator size={18} />
-                  Launch Cost Estimator
+                  {cms.home?.estimatorCallout?.btn1Text || 'Launch Cost Estimator'}
                 </Link>
                 <Link to="/railcar-leasing" className="btn btn-secondary btn-lg">
-                  View Full Catalog
+                  {cms.home?.estimatorCallout?.btn2Text || 'View Full Catalog'}
                   <ArrowRight size={17} />
                 </Link>
               </div>
@@ -1510,12 +1532,14 @@ export const Home: React.FC = () => {
       <section className="section section-subtle" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="container">
           <div style={{ maxWidth: '680px', margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span className="eyebrow" style={{ justifyContent: 'center' }}>Step-by-Step Delivery</span>
+            <span className="eyebrow" style={{ justifyContent: 'center' }}>
+              {cms.home?.deliveryProcess?.eyebrow || 'Step-by-Step Delivery'}
+            </span>
             <h2 style={{ color: '#0A0A09', marginBottom: '0.75rem' }}>
-              How Railcar Equipment Reaches Your Siding
+              {cms.home?.deliveryProcess?.title || 'How Railcar Equipment Reaches Your Siding'}
             </h2>
             <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
-              A straightforward, transparent three-step process from initial specification matching to on-track delivery.
+              {cms.home?.deliveryProcess?.desc || 'A straightforward, transparent three-step process from initial specification matching to on-track delivery.'}
             </p>
           </div>
 
@@ -1527,83 +1551,58 @@ export const Home: React.FC = () => {
             }}
             className="steps-grid"
           >
-            <div className="timeline-card">
-              <div className="timeline-node" style={{ borderColor: '#0A0A09', color: '#0A0A09' }}>
-                01
-              </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                Match &amp; Verify Equipment
-              </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                We analyze your commodity, loading rack clearances, and siding curvature against AAR dimensions and weight limits.
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Clearance &amp; dock alignment
+            {(cms.home?.deliveryProcess?.steps && cms.home.deliveryProcess.steps.length > 0
+              ? cms.home.deliveryProcess.steps
+              : [
+                  {
+                    num: '01',
+                    title: 'Match & Verify Equipment',
+                    desc: 'We analyze your commodity, loading rack clearances, and siding curvature against AAR dimensions and weight limits.',
+                    checks: ['Clearance & dock alignment', 'Payload density optimization', 'Discharge interface matching'],
+                  },
+                  {
+                    num: '02',
+                    title: 'Sourcing & Terms',
+                    desc: 'We secure the car set from verified regional pools and prepare flexible full-service or net lease structures.',
+                    checks: ['Regional car set sourcing', 'Full-service vs. net lease options', 'Delivery timeline commitment'],
+                  },
+                  {
+                    num: '03',
+                    title: 'Inspection & Delivery',
+                    desc: 'Pre-trip mechanical certification is completed and Class I interchange routing delivers the cars directly to your facility siding.',
+                    checks: ['Pre-trip mechanical sign-off', 'Class I interchange dispatch', 'Dedicated commercial contact throughout'],
+                  },
+                ]
+            ).map((step, idx) => {
+              const nodeColors = ['#0A0A09', '#AA2E1F', '#059669'];
+              const nodeColor = nodeColors[idx % nodeColors.length];
+              return (
+                <div key={step.num || idx} className="timeline-card">
+                  <div className="timeline-node" style={{ borderColor: nodeColor, color: nodeColor }}>
+                    {step.num || `0${idx + 1}`}
+                  </div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
+                    {step.title}
+                  </h3>
+                  <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
+                    {step.desc}
+                  </p>
+                  {step.checks && step.checks.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {step.checks.map((chk, chkIdx) => (
+                        <div
+                          key={chkIdx}
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}
+                        >
+                          <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
+                          {chk}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Payload density optimization
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Discharge interface matching
-                </div>
-              </div>
-            </div>
-
-            <div className="timeline-card">
-              <div className="timeline-node" style={{ borderColor: '#AA2E1F', color: '#AA2E1F' }}>
-                02
-              </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                Sourcing &amp; Terms
-              </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                We secure the car set from verified regional pools and prepare flexible full-service or net lease structures.
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Regional car set sourcing
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Full-service vs. net lease options
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Delivery timeline commitment
-                </div>
-              </div>
-            </div>
-
-            <div className="timeline-card">
-              <div className="timeline-node" style={{ borderColor: '#059669', color: '#059669' }}>
-                03
-              </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0A0A09', marginBottom: '0.65rem' }}>
-                Inspection &amp; Delivery
-              </h3>
-              <p style={{ color: '#64748B', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.25rem', flex: 1 }}>
-                Pre-trip mechanical certification is completed and Class I interchange routing delivers the cars directly to your facility siding.
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Pre-trip mechanical sign-off
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Class I interchange dispatch
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.86rem', color: '#334155' }}>
-                  <Check size={14} style={{ color: '#AA2E1F', flexShrink: 0 }} />
-                  Dedicated commercial contact throughout
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>

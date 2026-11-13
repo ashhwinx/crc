@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 import { connectDB } from './config/db.js';
@@ -13,6 +14,7 @@ import equipmentRoutes from './routes/equipmentRoutes.js';
 import inquiryRoutes from './routes/inquiryRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
 import estimatorRoutes from './routes/estimatorRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import { notFoundHandler, globalErrorHandler } from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -52,8 +54,16 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('dev'));
+
+// Static serving for uploaded and optimized media
+const uploadsDir = path.resolve(__dirname, '../../client/public/uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
 
 // Rate limiting for public submission endpoints
 const submissionLimiter = rateLimit({
@@ -71,8 +81,11 @@ const submissionLimiter = rateLimit({
 app.use('/api', healthRoutes);
 app.use('/api', equipmentRoutes);
 app.use('/api', estimatorRoutes);
-app.use('/api', submissionLimiter, inquiryRoutes);
-app.use('/api', submissionLimiter, bookingRoutes);
+app.use('/api/inquiries', submissionLimiter);
+app.use('/api/bookings', submissionLimiter);
+app.use('/api', inquiryRoutes);
+app.use('/api', bookingRoutes);
+app.use('/api', adminRoutes);
 
 // 404 & Centralized Error Handler
 app.use(notFoundHandler);

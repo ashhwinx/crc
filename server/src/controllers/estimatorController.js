@@ -1,4 +1,6 @@
 import { Estimate } from '../models/Estimate.js';
+import { CmsContent } from '../models/CmsContent.js';
+import { DEFAULT_CMS_CONTENT } from '../data/cmsDefaultData.js';
 import mongoose from 'mongoose';
 
 // Master canonical equipment benchmarks
@@ -148,8 +150,26 @@ export const calculateEstimate = async (req, res) => {
     } = req.body;
 
     const qty = Math.max(1, Math.min(500, parseInt(quantity, 10) || 5));
+
+    // Fetch dynamic CMS pricing configuration if available
+    let cmsData = DEFAULT_CMS_CONTENT;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const cmsDoc = await CmsContent.findOne({ key: 'main' }).lean();
+        if (cmsDoc) {
+          cmsData = { ...DEFAULT_CMS_CONTENT, ...cmsDoc };
+        }
+      } catch (cmsErr) {
+        console.warn('[Estimator Calculate] CMS fetch fallback to defaults:', cmsErr?.message);
+      }
+    }
+
     const cat = ESTIMATOR_BENCHMARKS[categorySlug] || ESTIMATOR_BENCHMARKS['boxcars'];
-    const baseRange = leaseType === 'net' ? cat.baseNet : cat.baseFull;
+    const cmsCat = cmsData.costEstimator?.categoryRates?.find((c) => c.id === categorySlug);
+
+    const baseNet = cmsCat ? [Number(cmsCat.baseNetMin), Number(cmsCat.baseNetMax)] : cat.baseNet;
+    const baseFull = cmsCat ? [Number(cmsCat.baseFullMin), Number(cmsCat.baseFullMax)] : cat.baseFull;
+    const baseRange = leaseType === 'net' ? baseNet : baseFull;
 
     // Size multiplier
     let sizeMultiplier = 1.0;
@@ -161,9 +181,25 @@ export const calculateEstimate = async (req, res) => {
       sizeMultiplier = cat.sizes[keys[0]] || 1.0;
     }
 
-    const term = TERM_FACTORS[termId] || TERM_FACTORS['medium'];
-    const region = REGION_FACTORS[regionId] || REGION_FACTORS['gulf-coast'];
-    const volumeMultiplier = getVolumeDiscount(qty);
+    const cmsTerm = cmsData.costEstimator?.termFactors?.find((t) => t.id === termId);
+    const term = cmsTerm ? { name: cmsTerm.name, factor: Number(cmsTerm.factor) } : (TERM_FACTORS[termId] || TERM_FACTORS['medium']);
+
+    const cmsRegion = cmsData.costEstimator?.regionFactors?.find((r) => r.id === regionId);
+    const region = cmsRegion ? { name: cmsRegion.name, factor: Number(cmsRegion.factor) } : (REGION_FACTORS[regionId] || REGION_FACTORS['gulf-coast']);
+
+    // Dynamic volume discount calculation
+    let volumeMultiplier = 1.0;
+    if (cmsData.costEstimator?.volumeTiers && cmsData.costEstimator.volumeTiers.length > 0) {
+      const sortedTiers = [...cmsData.costEstimator.volumeTiers].sort((a, b) => b.minQty - a.minQty);
+      for (const tier of sortedTiers) {
+        if (qty >= tier.minQty) {
+          volumeMultiplier = 1 - (Number(tier.discountPercent) / 100);
+          break;
+        }
+      }
+    } else {
+      volumeMultiplier = getVolumeDiscount(qty);
+    }
     const volumeDiscountPct = Math.round((1 - volumeMultiplier) * 100);
 
     const minMonthlyPerCar = Math.round(baseRange[0] * sizeMultiplier * term.factor * region.factor * volumeMultiplier);
@@ -175,9 +211,12 @@ export const calculateEstimate = async (req, res) => {
     const totalMinAnnual = totalMinMonthly * 12;
     const totalMaxAnnual = totalMaxMonthly * 12;
 
-    const trucksReplacedMin = Math.round(qty * (cat.truckloadRatio - 0.5));
-    const trucksReplacedMax = Math.round(qty * (cat.truckloadRatio + 0.5));
-    const totalPayloadTons = Math.round(qty * cat.avgPayloadTons);
+    const truckloadRatio = cmsCat?.truckloadEquivalent || cat.truckloadRatio;
+    const avgPayloadTons = cmsCat?.avgPayloadTons || cat.avgPayloadTons;
+
+    const trucksReplacedMin = Math.round(qty * (truckloadRatio - 0.5));
+    const trucksReplacedMax = Math.round(qty * (truckloadRatio + 0.5));
+    const totalPayloadTons = Math.round(qty * avgPayloadTons);
 
     return res.status(200).json({
       success: true,

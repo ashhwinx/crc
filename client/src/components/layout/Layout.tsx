@@ -43,6 +43,19 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     canonical.setAttribute('href', `https://coastroadcapital.com${cleanPath || '/'}`);
   }, [pathname]);
 
+  // Isolate Admin Portal: Do NOT render public header (with announcement bar) or footer
+  const isAdminRoute =
+    pathname === '/admin' ||
+    pathname.startsWith('/admin/') ||
+    pathname === '/portal' ||
+    pathname.startsWith('/portal/') ||
+    pathname === '/cms' ||
+    pathname.startsWith('/cms/');
+
+  if (isAdminRoute) {
+    return <main style={{ minHeight: '100vh', width: '100%', margin: 0, padding: 0 }}>{children}</main>;
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />

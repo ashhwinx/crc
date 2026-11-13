@@ -1,8 +1,6 @@
 import { Inquiry } from '../models/Inquiry.js';
 import mongoose from 'mongoose';
-
-// In-memory fallback in case MongoDB connection temporarily drops
-const memoryInquiries = [];
+import { inMemoryInquiries } from '../data/inMemoryStore.js';
 
 function sanitize(str) {
   if (typeof str !== 'string') return '';
@@ -67,7 +65,7 @@ export const createInquiry = async (req, res) => {
     } else {
       sanitizedData._id = 'mem_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
       sanitizedData.createdAt = new Date();
-      memoryInquiries.push(sanitizedData);
+      inMemoryInquiries.unshift(sanitizedData);
       savedRecord = sanitizedData;
       storageMethod = 'memory_fallback';
       console.warn(`[CRC Inquiry] MongoDB not connected; saved inquiry to memory buffer: ID ${sanitizedData._id}`);

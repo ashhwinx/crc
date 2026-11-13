@@ -21,8 +21,10 @@ import {
   IconShieldCheck,
   IconPhone,
 } from '@tabler/icons-react';
+import { useCms } from '../context/CmsContext';
 
 export const CompanyValues: React.FC = () => {
+  const { cms } = useCms();
   // Update document title and canonical tag for SEO
   useEffect(() => {
     document.title = 'Company Values & Operating Principles | Coast Road Capital';
@@ -283,8 +285,10 @@ export const CompanyValues: React.FC = () => {
           </div>
 
           <div className="values-sketch-grid">
-            {values.map((v, vIdx) => {
-              const Icon = v.icon;
+            {(cms.companyValues?.values && cms.companyValues.values.length > 0 ? cms.companyValues.values : values).map((v, vIdx) => {
+              const defaultIcons = [ShieldCheck, Scale, Zap, Handshake, Leaf, Clock];
+              const Icon = (v as any).icon || defaultIcons[vIdx % defaultIcons.length];
+              const itemNum = v.number || `0${vIdx + 1}`;
               return (
                 <div
                   key={v.id}
@@ -303,7 +307,7 @@ export const CompanyValues: React.FC = () => {
                       display: 'block',
                     }}
                   >
-                    {v.number}
+                    {itemNum}
                   </span>
 
                   {/* 1. Large Lead Icon: 64–80px, brand red line icon, no box or pill behind it */}

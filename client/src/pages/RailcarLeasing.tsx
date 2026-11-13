@@ -9,6 +9,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { EQUIPMENT_CATEGORIES } from '../data/equipmentData';
+import { useCms } from '../context/CmsContext';
 
 // Technical highlights for quick visual identification
 const CATEGORY_KEY_METRICS: Record<string, { label: string; value: string }[]> = {
@@ -137,10 +138,29 @@ export const RailcarLeasing: React.FC = () => {
     }
   }, [location.hash]);
 
+  const { cms } = useCms();
+
+  const mergedCategories = EQUIPMENT_CATEGORIES.map((cat) => {
+    const override = (cms.equipmentOverrides || []).find(
+      (o) => o.id === cat.id || o.id === cat.slug
+    );
+    if (!override) return cat;
+    return {
+      ...cat,
+      name: override.name || cat.name,
+      fullDescription: override.description || cat.fullDescription,
+      shortDescription: override.description ? override.description.slice(0, 160) + '...' : cat.shortDescription,
+      image: override.image || cat.image,
+      typicalCommodities: override.typicalCommodities
+        ? override.typicalCommodities.split(',').map((s) => s.trim())
+        : cat.typicalCommodities,
+    };
+  });
+
   const filteredCategories =
     activeCategory === 'all'
-      ? EQUIPMENT_CATEGORIES
-      : EQUIPMENT_CATEGORIES.filter((c) => c.slug === activeCategory);
+      ? mergedCategories
+      : mergedCategories.filter((c) => c.slug === activeCategory);
 
   const getActiveTab = (catId: string) => cardTabs[catId] || 'specs';
   const handleTabClick = (catId: string, tab: 'specs' | 'overview' | 'commodities') => {
@@ -360,7 +380,7 @@ export const RailcarLeasing: React.FC = () => {
                           <h3 className="catalog-specs-title">
                             Standard Configurations &amp; Capacities
                           </h3>
-                          <span className="badge badge-dark">
+                          <span className="badge badge-dark catalog-specs-badge">
                             {cat.configurations.length} Options
                           </span>
                         </div>
@@ -940,8 +960,9 @@ export const RailcarLeasing: React.FC = () => {
           display: flex;
           justifyContent: space-between;
           align-items: center;
-          margin-bottom: 1rem;
-          padding-bottom: 0.5rem;
+          gap: 1.5rem;
+          margin-bottom: 1.25rem;
+          padding-bottom: 0.75rem;
           border-bottom: 1px solid #E2E8F0;
         }
         .catalog-specs-title {
@@ -949,6 +970,14 @@ export const RailcarLeasing: React.FC = () => {
           font-weight: 700;
           color: #0A0A09;
           margin: 0;
+          line-height: 1.35;
+        }
+        .catalog-specs-badge {
+          white-space: nowrap;
+          flex-shrink: 0;
+          padding: 0.35rem 0.75rem;
+          font-size: 0.76rem;
+          letter-spacing: 0.02em;
         }
         .catalog-spec-panel {
           border: 1px solid #E2E8F0;
@@ -1280,10 +1309,17 @@ export const RailcarLeasing: React.FC = () => {
 
           /* Spec Rows on Mobile */
           .catalog-specs-header {
-            margin-bottom: 0.75rem !important;
+            gap: 1rem !important;
+            margin-bottom: 1rem !important;
+            padding-bottom: 0.65rem !important;
           }
           .catalog-specs-title {
-            font-size: 1rem !important;
+            font-size: 0.98rem !important;
+            line-height: 1.35 !important;
+          }
+          .catalog-specs-badge {
+            font-size: 0.72rem !important;
+            padding: 0.25rem 0.55rem !important;
           }
           .catalog-spec-panel {
             border-radius: 8px !important;
